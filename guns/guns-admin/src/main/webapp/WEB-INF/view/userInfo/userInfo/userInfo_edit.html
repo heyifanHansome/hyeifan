@@ -1,0 +1,39 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="自增主键" value="${item.id}" underline="true"/>
+                            <#input id="userId" name="用户ID" value="${item.userId}" underline="true"/>
+                            <#input id="apiToken" name="密钥" value="${item.apiToken}" underline="true"/>
+                            <#input id="credits" name="积分" value="${item.credits}" underline="true"/>
+                            <#input id="money" name="钱" value="${item.money}" underline="true"/>
+                            <#input id="loginIp" name="登陆IP" value="${item.loginIp}" underline="true"/>
+                            <#input id="createTime" name="创建时间" value="${item.createTime}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="updateTime" name="结束时间" value="${item.updateTime}" underline="true"/>
+                            <#input id="realName" name="实名" value="${item.realName}" underline="true"/>
+                            <#input id="idCard" name="身份证" value="${item.idCard}" underline="true"/>
+                            <#input id="cityId" name="城市ID，当为0时表示是全国" value="${item.cityId}" underline="true"/>
+                            <#input id="joinClub" name="是否加入俱乐部(0：否，1：是)" value="${item.joinClub}" underline="true"/>
+                            <#input id="appointment" name="是否开启预约(0：否，1：是)" value="${item.appointment}" underline="true"/>
+                            <#input id="enlightening" name="是否开启收徒(0：否，1：是)" value="${item.enlightening}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="UserInfoInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="UserInfoInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/userInfo/userInfo/userInfo_info.js"></script>
+@}

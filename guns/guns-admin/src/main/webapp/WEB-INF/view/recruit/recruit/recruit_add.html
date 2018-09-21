@@ -1,0 +1,38 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="自增主键" underline="true"/>
+                            <#input id="columnId" name="栏目类型ID为招聘的ID" underline="true"/>
+                            <#input id="title" name="招聘名" underline="true"/>
+                            <#input id="thumb" name="缩略图" underline="true"/>
+                            <#input id="description" name="描述" underline="true"/>
+                            <#input id="cityId" name="城市ID（0：表示全国）" underline="true"/>
+                            <#input id="address" name="工作详细地址"/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="sourceId" name="来源ID（0：官方，1：个人）" underline="true"/>
+                            <#input id="uid" name="当是官方时为管理员的ID，是个人时，表示用户的ID" underline="true"/>
+                            <#input id="publishIp" name="发布IP" underline="true"/>
+                            <#input id="content" name="内容" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="updatedTime" name="更新时间" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RecruitInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="RecruitInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/recruit/recruit/recruit_info.js"></script>
+@}

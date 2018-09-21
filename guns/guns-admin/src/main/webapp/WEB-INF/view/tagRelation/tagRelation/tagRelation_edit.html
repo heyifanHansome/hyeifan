@@ -1,0 +1,31 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="ID" value="${item.id}" underline="true"/>
+                            <#input id="columnId" name="栏目类型ID（当为0时表示通用标签）" value="${item.columnId}" underline="true"/>
+                            <#input id="commonTypeId" name="公共标签ID（单选）" value="${item.commonTypeId}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
+                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" underline="true"/>
+                            <#input id="relationId" name="关联ID（可能一样，来源作品表、课堂表、活动表、资讯表等）" value="${item.relationId}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="TagRelationInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="TagRelationInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/tagRelation/tagRelation/tagRelation_info.js"></script>
+@}

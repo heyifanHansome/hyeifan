@@ -1,0 +1,38 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="主键ID" value="${item.id}" underline="true"/>
+                            <#input id="userId" name="用户ID" value="${item.userId}" underline="true"/>
+                            <#input id="restaurant" name="餐厅名" value="${item.restaurant}" underline="true"/>
+                            <#input id="thumb" name="餐厅缩略图" value="${item.thumb}" underline="true"/>
+                            <#input id="images" name="餐厅图集(无序列表)" value="${item.images}" underline="true"/>
+                            <#input id="cityId" name="餐厅所在城市" value="${item.cityId}" underline="true"/>
+                            <#input id="address" name="餐厅详细地址" value="${item.address}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="longitude" name="餐厅经度" value="${item.longitude}" underline="true"/>
+                            <#input id="latitude" name="餐厅纬度" value="${item.latitude}" underline="true"/>
+                            <#input id="businessHours" name="营业时间" value="${item.businessHours}" underline="true"/>
+                            <#input id="status" name="加入状态（0：未审查，1：考察，2：通过，3：拒绝）" value="${item.status}" underline="true"/>
+                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
+                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RestaurantInfoManagerInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="RestaurantInfoManagerInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/restaurantManager/restaurantInfoManager/restaurantInfoManager_info.js"></script>
+@}

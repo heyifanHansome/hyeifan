@@ -1,0 +1,39 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="自增主键" underline="true"/>
+                            <#input id="columnId" name="栏目类型ID为课堂的ID" underline="true"/>
+                            <#input id="title" name="标题" underline="true"/>
+                            <#input id="thumb" name="缩略图" underline="true"/>
+                            <#input id="url" name="视频链接地址（视频类课堂会存在）" underline="true"/>
+                            <#input id="description" name="描述（本期看点）" underline="true"/>
+                            <#input id="startTime" name="开播时间"/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="cityId" name="城市ID（0：表示全国）" underline="true"/>
+                            <#input id="sourceId" name="来源ID（0：官方，1：个人）" underline="true"/>
+                            <#input id="uid" name="当是官方时为管理员的ID，是个人时，表示用户的ID" underline="true"/>
+                            <#input id="publishIp" name="发布IP" underline="true"/>
+                            <#input id="content" name="内容（文章类课堂会存在）" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="updateTime" name="更新时间" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ClassroomInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="ClassroomInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/classroom/classroom/classroom_info.js"></script>
+@}

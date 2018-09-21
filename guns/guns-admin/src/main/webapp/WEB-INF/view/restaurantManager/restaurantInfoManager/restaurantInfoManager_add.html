@@ -1,0 +1,38 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="主键ID" underline="true"/>
+                            <#input id="userId" name="用户ID" underline="true"/>
+                            <#input id="restaurant" name="餐厅名" underline="true"/>
+                            <#input id="thumb" name="餐厅缩略图" underline="true"/>
+                            <#input id="images" name="餐厅图集(无序列表)" underline="true"/>
+                            <#input id="cityId" name="餐厅所在城市" underline="true"/>
+                            <#input id="address" name="餐厅详细地址"/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="longitude" name="餐厅经度" underline="true"/>
+                            <#input id="latitude" name="餐厅纬度" underline="true"/>
+                            <#input id="businessHours" name="营业时间" underline="true"/>
+                            <#input id="status" name="加入状态（0：未审查，1：考察，2：通过，3：拒绝）" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="updateTime" name="更新时间" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RestaurantInfoManagerInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="RestaurantInfoManagerInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/restaurantManager/restaurantInfoManager/restaurantInfoManager_info.js"></script>
+@}

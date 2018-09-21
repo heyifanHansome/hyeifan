@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.modular.system.dao.RecruitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.Recruit">
+        <id column="id" property="id" />
+        <result column="column_id" property="columnId" />
+        <result column="title" property="title" />
+        <result column="thumb" property="thumb" />
+        <result column="description" property="description" />
+        <result column="city_id" property="cityId" />
+        <result column="address" property="address" />
+        <result column="source_id" property="sourceId" />
+        <result column="uid" property="uid" />
+        <result column="publish_ip" property="publishIp" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, column_id, title, thumb, description, city_id, address, source_id, uid, publish_ip, content, create_time, updated_time
+    </sql>
+
+</mapper>

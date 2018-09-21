@@ -1,0 +1,39 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="自增主键" underline="true"/>
+                            <#input id="userId" name="用户ID" underline="true"/>
+                            <#input id="name" name="姓名" underline="true"/>
+                            <#input id="applyStatus" name="状态（0：离职-随时到岗，1：在职-暂不考虑，2：在职-考虑机会，3：在职-月内到岗）" underline="true"/>
+                            <#input id="sex" name="性别（0：未知，1：男，2：女）" underline="true"/>
+                            <#input id="birthday" name="会员生日" underline="true"/>
+                            <#input id="workTime" name="开始工作日期（工龄）"/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="wechatId" name="微信号（选填）" underline="true"/>
+                            <#input id="phone" name="手机号" underline="true"/>
+                            <#input id="email" name="邮箱（选填）" underline="true"/>
+                            <#input id="advantage" name="优势" underline="true"/>
+                            <#input id="info" name="无序列表（薪资要求、期望城市）" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="updateTime" name="更新时间" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="UserResumeInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="UserResumeInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/userResume/userResume/userResume_info.js"></script>
+@}

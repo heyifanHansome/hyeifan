@@ -21,7 +21,7 @@ import com.stylefeng.guns.modular.works.service.IWorksService;
 @Controller
 @RequestMapping("/works")
 public class WorksController extends BaseController {
-
+    /*FuckingCrazying*/
     private String PREFIX = "/works/works/";
 
     @Autowired

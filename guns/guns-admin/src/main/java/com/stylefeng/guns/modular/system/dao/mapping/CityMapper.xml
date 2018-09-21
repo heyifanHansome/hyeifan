@@ -16,4 +16,12 @@
         id, type_id, name, create_time, update_time
     </sql>
 
+    <select id="list" resultType="map">
+        select  * from sys_city s
+            <if test="condition != null and condition != ''">
+                where s.name like CONCAT('%',#{condition},'%')
+            </if>
+        order by create_time ASC
+    </select>
+
 </mapper>

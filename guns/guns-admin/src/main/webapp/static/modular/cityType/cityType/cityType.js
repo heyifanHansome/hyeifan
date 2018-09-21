@@ -14,8 +14,8 @@ var CityType = {
 CityType.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '分类名（如一线城市、二线城市、三线城市）', field: 'name', visible: true, align: 'center', valign: 'middle'},
+            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '分类名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updatedTime', visible: true, align: 'center', valign: 'middle'}
     ];

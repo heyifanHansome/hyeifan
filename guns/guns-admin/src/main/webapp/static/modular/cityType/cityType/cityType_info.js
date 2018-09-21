@@ -47,8 +47,6 @@ CityTypeInfoDlg.collectData = function() {
     this
     .set('id')
     .set('name')
-    .set('createTime')
-    .set('updatedTime');
 }
 
 /**

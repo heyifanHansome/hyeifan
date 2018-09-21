@@ -14,20 +14,20 @@ var UserInfo = {
 UserInfo.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户ID', field: 'userId', visible: true, align: 'center', valign: 'middle'},
+            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '用户名称', field: 'userId', visible: true, align: 'center', valign: 'middle'},
             {title: '密钥', field: 'apiToken', visible: true, align: 'center', valign: 'middle'},
             {title: '积分', field: 'credits', visible: true, align: 'center', valign: 'middle'},
             {title: '钱', field: 'money', visible: true, align: 'center', valign: 'middle'},
             {title: '登陆IP', field: 'loginIp', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '结束时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'},
             {title: '实名', field: 'realName', visible: true, align: 'center', valign: 'middle'},
             {title: '身份证', field: 'idCard', visible: true, align: 'center', valign: 'middle'},
-            {title: '城市ID，当为0时表示是全国', field: 'cityId', visible: true, align: 'center', valign: 'middle'},
-            {title: '是否加入俱乐部(0：否，1：是)', field: 'joinClub', visible: true, align: 'center', valign: 'middle'},
-            {title: '是否开启预约(0：否，1：是)', field: 'appointment', visible: true, align: 'center', valign: 'middle'},
-            {title: '是否开启收徒(0：否，1：是)', field: 'enlightening', visible: true, align: 'center', valign: 'middle'}
+            {title: '城市', field: 'cityId', visible: true, align: 'center', valign: 'middle'},
+            {title: '俱乐部', field: 'joinClub', visible: true, align: 'center', valign: 'middle'},
+            {title: '预约', field: 'appointment', visible: true, align: 'center', valign: 'middle'},
+            {title: '收徒', field: 'enlightening', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

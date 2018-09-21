@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.cityType.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -69,7 +70,9 @@ public class CityTypeController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(CityType cityType) {
+        cityType.setCreateTime(new DateTime());
         cityTypeService.insert(cityType);
+
         return SUCCESS_TIP;
     }
 
@@ -89,7 +92,9 @@ public class CityTypeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(CityType cityType) {
+        cityType.setUpdatedTime(new DateTime());
         cityTypeService.updateById(cityType);
+
         return SUCCESS_TIP;
     }
 

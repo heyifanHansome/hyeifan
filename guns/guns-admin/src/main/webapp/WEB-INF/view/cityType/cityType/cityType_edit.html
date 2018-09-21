@@ -2,16 +2,15 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input type="hidden" id="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" value="${item.id}" underline="true"/>
-                            <#input id="name" name="分类名（如一线城市、二线城市、三线城市）" value="${item.name}" />
+                            <#input id="name" name="分类名" value="${item.name}" />
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="updatedTime" name="更新时间" value="${item.updatedTime}" />
+                            <#input id="createTime" name="创建时间" value="${item.createTime}" readonly="readonly" underline="true"/>
+                            <#input id="updatedTime" name="更新时间" value="${item.updatedTime}"   readonly="readonly"  underline="true"/>
                 </div>
             </div>
 

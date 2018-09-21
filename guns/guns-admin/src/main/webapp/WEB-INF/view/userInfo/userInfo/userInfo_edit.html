@@ -2,11 +2,10 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input type="hidden" id="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" value="${item.id}" underline="true"/>
-                            <#input id="userId" name="用户ID" value="${item.userId}" underline="true"/>
+                            <#input id="userId" name="用户" value="${item.userId}" underline="true"/>
                             <#input id="apiToken" name="密钥" value="${item.apiToken}" underline="true"/>
                             <#input id="credits" name="积分" value="${item.credits}" underline="true"/>
                             <#input id="money" name="钱" value="${item.money}" underline="true"/>
@@ -15,13 +14,13 @@
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="updateTime" name="结束时间" value="${item.updateTime}" underline="true"/>
+                            <#input id="updateTime" name="更新时间" value="${item.updateTime}"  underline="true"/>
                             <#input id="realName" name="实名" value="${item.realName}" underline="true"/>
                             <#input id="idCard" name="身份证" value="${item.idCard}" underline="true"/>
-                            <#input id="cityId" name="城市ID，当为0时表示是全国" value="${item.cityId}" underline="true"/>
-                            <#input id="joinClub" name="是否加入俱乐部(0：否，1：是)" value="${item.joinClub}" underline="true"/>
-                            <#input id="appointment" name="是否开启预约(0：否，1：是)" value="${item.appointment}" underline="true"/>
-                            <#input id="enlightening" name="是否开启收徒(0：否，1：是)" value="${item.enlightening}" />
+                            <#input id="cityId" name="城市" value="${item.cityId}" underline="true"/>
+                            <#input id="joinClub" name="俱乐部" value="${item.joinClub}" underline="true"/>
+                            <#input id="appointment" name="预约" value="${item.appointment}" underline="true"/>
+                            <#input id="enlightening" name="收徒" value="${item.enlightening}" />
                 </div>
             </div>
 

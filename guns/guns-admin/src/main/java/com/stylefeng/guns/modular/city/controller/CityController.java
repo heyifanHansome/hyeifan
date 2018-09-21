@@ -1,6 +1,8 @@
 package com.stylefeng.guns.modular.city.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.CityWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +13,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.City;
 import com.stylefeng.guns.modular.city.service.ICityService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 城市管理控制器
@@ -60,7 +65,9 @@ public class CityController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return cityService.selectList(null);
+
+        List<Map<String, Object>> list  = cityService.list(null);
+        return super.warpObject(new CityWarpper(list));
     }
 
     /**
@@ -69,7 +76,10 @@ public class CityController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(City city) {
+
+        city.setCreateTime(new DateTime());
         cityService.insert(city);
+
         return SUCCESS_TIP;
     }
 
@@ -89,7 +99,9 @@ public class CityController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(City city) {
+        city.setUpdateTime(new DateTime());
         cityService.updateById(city);
+
         return SUCCESS_TIP;
     }
 

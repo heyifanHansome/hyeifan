@@ -24,6 +24,7 @@ public class WorksController extends BaseController {
     /*FuckingCrazying*/
     private String PREFIX = "/works/works/";
 
+    private String heyifna ="";
     @Autowired
     private IWorksService worksService;
 

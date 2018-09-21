@@ -17,7 +17,6 @@ import java.io.Serializable;
 @TableName("sys_user_collection")
 public class UserCollection extends Model<UserCollection> {
     private static final long serialVersionUID = 1L;
-String heyifan = "dsf";
     /**
      * ID
      */

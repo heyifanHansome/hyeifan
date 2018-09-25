@@ -4,17 +4,13 @@
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="ID" underline="true"/>
-                            <#input id="parentId" name="父级栏目ID(0表示一级栏目)" underline="true"/>
-                            <#input id="order" name="排序"/>
-                </div>
 
-                <div class="col-sm-6">
+                <div class="row">
+                            <#select id="parentId" name="父级栏目" underline="true"></#select>
+                            <#input id="orders" name="排序"/>
                             <#input id="name" name="栏目类型名" underline="true"/>
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
-                </div>
+            </div>
+
             </div>
 
             <div class="row btn-group-m-t">
@@ -26,6 +22,11 @@
         </div>
 
     </div>
+
+<#input id="createTime" name="" underline="true" type="hidden"/>
+<#input id="updateTime" name="" underline="true" type="hidden"/>
+<#input id="id" name="" underline="true" type="hidden"/>
+<#input id="parentId_" name="" underline="true" type="hidden"/>
 </div>
 <script src="${ctxPath}/static/modular/cloumnType/columnType/columnType_info.js"></script>
 @}

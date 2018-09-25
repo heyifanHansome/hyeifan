@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.modular.system.dao.Dao">
+	<select id="selectBySQL" resultType="map" parameterType="string">
+		${_parameter}
+	</select>
+	
+	<insert id="insertBySQL"  parameterType="string">
+		${_parameter}
+	</insert>
+	
+	<update id="updateBySQL" parameterType="string">
+		${_parameter}
+	</update>
+	
+	<delete id="deleteBySQL" parameterType="string">${_parameter}</delete>
+</mapper>

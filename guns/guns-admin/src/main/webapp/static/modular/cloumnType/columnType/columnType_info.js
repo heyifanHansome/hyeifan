@@ -47,10 +47,10 @@ ColumnTypeInfoDlg.collectData = function() {
     this
     .set('id')
     .set('parentId')
-    .set('order')
+    .set('orders')
     .set('name')
-    .set('createTime')
-    .set('updateTime');
+    // .set('createTime')
+    // .set('updateTime');
 }
 
 /**
@@ -94,5 +94,13 @@ ColumnTypeInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-
+    $("#parentId").append('<option value="0">顶级栏目</option>');
+    $.post(Feng.ctxPath + "/columnType/getColumnTypeList",{id:$('#id').val()}, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#parentId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+            $("#parentId").append(option);
+        }
+    });
 });

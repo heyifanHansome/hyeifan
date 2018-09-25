@@ -30,11 +30,11 @@ public class ColumnType extends Model<ColumnType> {
      * 父级栏目ID(0表示一级栏目)
      */
     @TableField("parent_id")
-    private Integer parentId;
+    private String parentId;
     /**
      * 排序
      */
-    private String order;
+    private String orders;
     /**
      * 栏目类型名
      */
@@ -59,20 +59,20 @@ public class ColumnType extends Model<ColumnType> {
         this.id = id;
     }
 
-    public Integer getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
-    public void setParentId(Integer parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public void setOrder(String order) {
-        this.order = order;
+    public void setOrders(String orders) {
+        this.orders = orders;
     }
 
     public String getName() {
@@ -109,7 +109,7 @@ public class ColumnType extends Model<ColumnType> {
         return "ColumnType{" +
         "id=" + id +
         ", parentId=" + parentId +
-        ", order=" + order +
+        ", orders=" + orders +
         ", name=" + name +
         ", createTime=" + createTime +
         ", updateTime=" + updateTime +

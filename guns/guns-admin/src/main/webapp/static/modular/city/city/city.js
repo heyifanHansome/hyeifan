@@ -19,7 +19,7 @@ City.initColumn = function () {
             {title: '城市名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: false, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updateTime', visible: false, align: 'center', valign: 'middle'},
-            {title: '城市名称', field: 'cityTypeName', visible: true, align: 'center', valign: 'middle'},
+            {title: '城市分类', field: 'cityTypeName', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'},
 

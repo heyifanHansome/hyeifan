@@ -49,7 +49,6 @@ UserInfoInfoDlg.collectData = function() {
     .set('userId')
     .set('apiToken')
     .set('credits')
-    .set('money')
     .set('loginIp')
     .set('createTime')
     .set('updateTime')
@@ -102,5 +101,19 @@ UserInfoInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+    /**
+     * 动态获取城市类型
+     */
+    var ajax = new $ax(Feng.ctxPath + "/cityType/getAllCityType", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            console.log(jsonObj)
+            $("#enlightening").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
 
+    }, function (data) {
+
+    });
+    ajax.start();
 });

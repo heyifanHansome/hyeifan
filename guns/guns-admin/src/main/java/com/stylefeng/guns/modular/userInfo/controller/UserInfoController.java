@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.userInfo.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -69,6 +70,7 @@ public class UserInfoController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(UserInfo userInfo) {
+        userInfo.setCreateTime(new DateTime());
         userInfoService.insert(userInfo);
         return SUCCESS_TIP;
     }
@@ -89,6 +91,7 @@ public class UserInfoController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(UserInfo userInfo) {
+        userInfo.setUpdateTime(new DateTime());
         userInfoService.updateById(userInfo);
         return SUCCESS_TIP;
     }

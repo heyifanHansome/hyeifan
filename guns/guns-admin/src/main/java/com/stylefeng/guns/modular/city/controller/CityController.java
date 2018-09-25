@@ -66,7 +66,7 @@ public class CityController extends BaseController {
     @ResponseBody
     public Object list(String condition) {
 
-        List<Map<String, Object>> list  = cityService.list(null);
+        List<Map<String, Object>> list  = cityService.list(condition);
         return super.warpObject(new CityWarpper(list));
     }
 
@@ -99,11 +99,25 @@ public class CityController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(City city) {
+
         city.setUpdateTime(new DateTime());
         cityService.updateById(city);
 
         return SUCCESS_TIP;
     }
+
+
+    /**
+     * 获取所以城市
+     */
+    @RequestMapping(value = "/getAllCity")
+    @ResponseBody
+    public List<City> getAllCity(City city) {
+        List<City> citys  = cityService.selectList(null);
+        return citys;
+    }
+
+
 
     /**
      * 城市管理详情

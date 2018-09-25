@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.CityType;
 import com.stylefeng.guns.modular.cityType.service.ICityTypeService;
 
+import java.util.List;
+
 /**
  * 城市分类控制器
  *
@@ -50,7 +52,7 @@ public class CityTypeController extends BaseController {
     @RequestMapping("/cityType_update/{cityTypeId}")
     public String cityTypeUpdate(@PathVariable Integer cityTypeId, Model model) {
         CityType cityType = cityTypeService.selectById(cityTypeId);
-        model.addAttribute("item",cityType);
+        model.addAttribute("item", cityType);
         LogObjectHolder.me().set(cityType);
         return PREFIX + "cityType_edit.html";
     }
@@ -97,6 +99,19 @@ public class CityTypeController extends BaseController {
 
         return SUCCESS_TIP;
     }
+
+
+    /**
+     * 获取全部城市分类
+     * @return
+     */
+    @RequestMapping(value = "getAllCityType")
+    @ResponseBody
+    public List<CityType> getAllCityType() {
+        List<CityType> cityTypes = cityTypeService.selectList(null);
+        return cityTypes;
+    }
+
 
     /**
      * 城市分类详情

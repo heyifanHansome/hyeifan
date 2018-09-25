@@ -1,11 +1,7 @@
 package com.stylefeng.guns.modular.system.warpper;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.warpper.BaseControllerWarpper;
-import com.stylefeng.guns.core.common.constant.factory.ConstantFactory;
 import com.stylefeng.guns.core.util.SpringContextHolder;
-import com.stylefeng.guns.core.util.ToolUtil;
-import com.stylefeng.guns.modular.system.dao.CityMapper;
 import com.stylefeng.guns.modular.system.dao.CityTypeMapper;
 import com.stylefeng.guns.modular.system.model.CityType;
 

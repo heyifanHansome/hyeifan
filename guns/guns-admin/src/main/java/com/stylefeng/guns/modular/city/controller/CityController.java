@@ -106,7 +106,6 @@ public class CityController extends BaseController {
         return SUCCESS_TIP;
     }
 
-
     /**
      * 获取所以城市
      */
@@ -116,8 +115,6 @@ public class CityController extends BaseController {
         List<City> citys  = cityService.selectList(null);
         return citys;
     }
-
-
 
     /**
      * 城市管理详情

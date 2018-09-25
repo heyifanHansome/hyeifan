@@ -7,14 +7,25 @@
 
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="userId" name="用户" underline="true"/>
+                            <!--<#input id="userId" name="用户"   readonly="readonly" underline="true"/>-->
+                            <#select id="userId" name="用户" underline="true">
+                            </#select>
                             <!--<#input id="enlightening" name="收徒" underline="true"/>-->
                             <#select id="enlightening" name="收徒" underline="true">
                             <option value="1">是</option>
                             <option value="2">否</option>
                             </#select>
-                            <#input id="appointment" name="预约" underline="true"/>
-                            <#input id="joinClub" name="俱乐部" underline="true"/>
+                            <!--<#input id="appointment" name="预约" underline="true"/>-->
+
+                            <#select id="appointment" name="预约" underline="true">
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                            </#select>
+                            <!--<#input id="joinClub" name="俱乐部" underline="true"/>-->
+                            <#select id="joinClub" name="俱乐部" underline="true">
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                            </#select>
                 </div>
 
                 <div class="col-sm-6">

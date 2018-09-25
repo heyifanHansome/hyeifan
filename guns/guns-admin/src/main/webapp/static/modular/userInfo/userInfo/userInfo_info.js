@@ -49,10 +49,8 @@ UserInfoInfoDlg.collectData = function() {
     .set('userId')
     .set('apiToken')
     .set('credits')
-    .set('money')
     .set('loginIp')
     .set('createTime')
-    .set('updateTime')
     .set('realName')
     .set('idCard')
     .set('cityId')
@@ -102,5 +100,36 @@ UserInfoInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+    /**
+     * 动态获取城市类型
+     */
+    var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            console.log(jsonObj)
+            $("#cityId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            console.log(jsonObj)
+            $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
 
 });

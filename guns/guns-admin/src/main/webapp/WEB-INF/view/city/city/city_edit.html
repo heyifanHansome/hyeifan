@@ -5,7 +5,8 @@
             <input type="hidden" id="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="typeId" name="城市分类" value="${item.typeId}" underline="true"/>
+                    <#select id="typeId" name="选择城市分类"   value="${item.typeId}" underline="true">
+                    </#select>
                             <#input id="name" name="城市名" value="${item.name}"  />
                 </div>
 
@@ -25,5 +26,11 @@
 
     </div>
 </div>
-<script src="${ctxPath}/static/modular/city/city/city_info.js"></script>
+<script src="${ctxPath}/static/modular/city/city/city_info.js">
+</script>
+<script>
+    $(document).ready(function(){
+        $("#typeId").val(${item.typeId});
+    });
+</script>
 @}

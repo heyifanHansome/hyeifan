@@ -1,6 +1,10 @@
 package com.stylefeng.guns.modular.userInfo.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.CityWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +15,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.UserInfo;
 import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户详情控制器
@@ -60,7 +67,9 @@ public class UserInfoController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return userInfoService.selectList(null);
+        List<Map<String, Object>> list  = userInfoService.list(condition);
+        return super.warpObject(new UserInfoWarpper(list));
+
     }
 
     /**
@@ -69,6 +78,7 @@ public class UserInfoController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(UserInfo userInfo) {
+        userInfo.setCreateTime(new DateTime());
         userInfoService.insert(userInfo);
         return SUCCESS_TIP;
     }
@@ -89,6 +99,7 @@ public class UserInfoController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(UserInfo userInfo) {
+        userInfo.setUpdateTime(new DateTime());
         userInfoService.updateById(userInfo);
         return SUCCESS_TIP;
     }

@@ -19,6 +19,7 @@ import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
 import com.stylefeng.guns.modular.system.factory.UserFactory;
+import com.stylefeng.guns.modular.system.model.City;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.transfer.UserDto;
@@ -351,6 +352,16 @@ public class UserMgrController extends BaseController {
             throw new GunsException(BizExceptionEnum.UPLOAD_ERROR);
         }
         return pictureName;
+    }
+
+    /**
+     * 获取所有用户
+     */
+    @RequestMapping(value = "/getAllUser")
+    @ResponseBody
+    public List<User> getAllUser(City city) {
+        List<User> users  = userService.selectList(null);
+        return users;
     }
 
     /**

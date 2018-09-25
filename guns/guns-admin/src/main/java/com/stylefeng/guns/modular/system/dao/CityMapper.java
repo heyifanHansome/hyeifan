@@ -18,4 +18,5 @@ import java.util.Map;
 public interface CityMapper extends BaseMapper<City> {
 
     List<Map<String, Object>> list(@Param("condition") String condition);
+
 }

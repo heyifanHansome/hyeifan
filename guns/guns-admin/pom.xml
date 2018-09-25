@@ -26,6 +26,13 @@
             <artifactId>guns-generator</artifactId>
         </dependency>
 
+        <!--lombok依赖-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+        </dependency>
+
         <!--spring boot依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,12 +93,12 @@
 
         <!--需要分布式session的话需要放开注释-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.session</groupId>-->
-            <!--<artifactId>spring-session-data-redis</artifactId>-->
+        <!--<groupId>org.springframework.session</groupId>-->
+        <!--<artifactId>spring-session-data-redis</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
         <!--</dependency>-->
 
         <dependency>

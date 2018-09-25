@@ -14,20 +14,20 @@ var UserResume = {
 UserResume.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户ID', field: 'userId', visible: true, align: 'center', valign: 'middle'},
+            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '用户', field: 'Pname', visible: false, align: 'center', valign: 'middle'},
             {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '状态（0：离职-随时到岗，1：在职-暂不考虑，2：在职-考虑机会，3：在职-月内到岗）', field: 'applyStatus', visible: true, align: 'center', valign: 'middle'},
-            {title: '性别（0：未知，1：男，2：女）', field: 'sex', visible: true, align: 'center', valign: 'middle'},
+            {title: '状态', field: 'PapplyStatus', visible: true, align: 'center', valign: 'middle'},
+            {title: '性别', field: 'Psex', visible: true, align: 'center', valign: 'middle'},
             {title: '会员生日', field: 'birthday', visible: true, align: 'center', valign: 'middle'},
-            {title: '开始工作日期（工龄）', field: 'workTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '微信号（选填）', field: 'wechatId', visible: true, align: 'center', valign: 'middle'},
+            {title: '工龄', field: 'work_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '微信号', field: 'wechat_id', visible: true, align: 'center', valign: 'middle'},
             {title: '手机号', field: 'phone', visible: true, align: 'center', valign: 'middle'},
-            {title: '邮箱（选填）', field: 'email', visible: true, align: 'center', valign: 'middle'},
+            {title: '邮箱', field: 'email', visible: true, align: 'center', valign: 'middle'},
             {title: '优势', field: 'advantage', visible: true, align: 'center', valign: 'middle'},
-            {title: '无序列表（薪资要求、期望城市）', field: 'info', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '无序列表', field: 'info', visible: false, align: 'center', valign: 'middle'},
+            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

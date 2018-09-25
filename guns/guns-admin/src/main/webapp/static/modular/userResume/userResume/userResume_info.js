@@ -44,6 +44,7 @@ UserResumeInfoDlg.close = function() {
  * 收集数据
  */
 UserResumeInfoDlg.collectData = function() {
+    this.userResumeInfoData['info'] = UserResumeInfoDlg.editor.txt.html();
     this
     .set('id')
     .set('userId')
@@ -56,9 +57,7 @@ UserResumeInfoDlg.collectData = function() {
     .set('phone')
     .set('email')
     .set('advantage')
-    .set('info')
     .set('createTime')
-    .set('updateTime');
 }
 
 /**
@@ -103,4 +102,28 @@ UserResumeInfoDlg.editSubmit = function() {
 
 $(function() {
 
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            console.log(jsonObj)
+            $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+
+
+    //初始化编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
+    editor.txt.html($("#info").val());
+    UserResumeInfoDlg.editor = editor;
 });

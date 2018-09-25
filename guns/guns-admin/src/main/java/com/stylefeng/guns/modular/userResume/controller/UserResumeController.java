@@ -1,6 +1,9 @@
 package com.stylefeng.guns.modular.userResume.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserResumeWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +14,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.UserResume;
 import com.stylefeng.guns.modular.userResume.service.IUserResumeService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户简历管理控制器
@@ -60,7 +66,8 @@ public class UserResumeController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return userResumeService.selectList(null);
+        List<Map<String, Object>> list  = userResumeService.list(condition);
+        return super.warpObject(new UserResumeWarpper(list));
     }
 
     /**
@@ -69,6 +76,7 @@ public class UserResumeController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(UserResume userResume) {
+        userResume.setCreateTime(new DateTime());
         userResumeService.insert(userResume);
         return SUCCESS_TIP;
     }
@@ -89,6 +97,7 @@ public class UserResumeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(UserResume userResume) {
+        userResume.setUpdateTime(new DateTime());
         userResumeService.updateById(userResume);
         return SUCCESS_TIP;
     }

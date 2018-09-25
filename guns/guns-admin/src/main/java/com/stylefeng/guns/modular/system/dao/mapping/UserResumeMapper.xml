@@ -25,4 +25,14 @@
         id, user_id, name, apply_status, sex, birthday, work_time, wechat_id, phone, email, advantage, info, create_time, update_time
     </sql>
 
+
+    <!--用户简历管理条件查询-->
+    <select id="list" resultType="map">
+        select a.* from sys_user_resume  a LEFT JOIN sys_user b  on a.user_id =b.id
+        <if test="condition != null and condition != ''">
+            where b.name like CONCAT('%',#{condition},'%')
+        </if>
+        order by create_time ASC
+    </select>
+
 </mapper>

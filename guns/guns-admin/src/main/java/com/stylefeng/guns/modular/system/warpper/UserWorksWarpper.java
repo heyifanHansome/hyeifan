@@ -33,9 +33,25 @@ public class UserWorksWarpper extends BaseControllerWarpper {
         User user = userMapper.selectById(userId);
         Works works = worksMapper.selectById(worksId);
         Role role = roleMapper.selectById(roleId);
-        map.put("Pname",user.getName());
-        map.put("Prole",role.getName());
-        map.put("Pworks",works.getName());
+        if(user!=null){
+            map.put("Pname",user.getName());
+        }else{
+            map.put("Pname","没有对应用户");
+        }
+        if(role!=null){
+            map.put("Prole",role.getName());
+        }else {
+
+            map.put("Prole","没有对应角色");
+        }
+        if(works!=null){
+            map.put("Pworks",works.getName());
+        }else {
+            map.put("Pworks","没有对应作品");
+        }
+
+
+
 
     }
 }

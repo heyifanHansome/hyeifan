@@ -8,13 +8,14 @@
                 <div class="col-sm-6 b-r" >
                             <#select id="userId" name="用户" underline="true">
                             </#select>
+                            <#input id="name" name="作品名称 " value="" underline="true"/>
                             <#select id="columnId" name="栏目类型" underline="true">
                             </#select>
                             <#select id="type" name="类型" underline="true">
                             <option value="0">图文</option>
                             <option value="1">视频</option>
                             </#select>
-                            <#input id="createTime" name="创建时间"  readonly="readonly" underline="true"/>
+                            <!--<#input id="createTime" name="创建时间"  readonly="readonly" underline="true"/>-->
                     <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
                         <div class='col-sm-12'> <input  class='form-control main_ingredient'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>

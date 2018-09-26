@@ -15,18 +15,18 @@ Works.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
             {title: '主键ID', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '用户名称', field: 'name', visible: true, align: 'center', valign: 'middle'},
+            {title: '作品名称', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '类型', field: 'type', visible: true, align: 'center', valign: 'middle'},
-            {title: '资源', field: 'images', visible: true, align: 'center', valign: 'middle'},
+            {title: '资源', field: 'images', visible: false, align: 'center', valign: 'middle'},
             {title: '主料', field: 'mainIngredient', visible: false, align: 'center', valign: 'middle'},
             {title: '辅料', field: 'supplementaryMaterial', visible: false, align: 'center', valign: 'middle'},
             {title: '调料', field: 'seasoning', visible: false, align: 'center', valign: 'middle'},
             {title: '做法', field: 'practice', visible: true, align: 'center', valign: 'middle'},
             {title: '备注', field: 'remark', visible: true, align: 'center', valign: 'middle'},
             {title: '加入状态', field: 'status', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '栏目类型', field: 'columnId', visible: true, align: 'center', valign: 'middle'}
+            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '栏目类型', field: 'columnTypeName', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

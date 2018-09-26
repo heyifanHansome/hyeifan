@@ -9,6 +9,8 @@ import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Picture;
 import com.stylefeng.guns.modular.system.model.Role;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
+import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import com.stylefeng.guns.modular.system.model.Works;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 作品管理控制器
@@ -75,8 +78,10 @@ public class WorksController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
-        return worksService.selectList(null);
+    public Object list(String condition)
+    {
+        List<Map<String, Object>> list  = worksService.list(condition);
+        return super.warpObject(new WorksWarpper(list));
     }
 
     /**

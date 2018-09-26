@@ -24,4 +24,16 @@
         id, name, type, images, main_ingredient, supplementary_material, seasoning, practice, remark, status, create_time, update_time, column_id
     </sql>
 
+
+    <!--用户条件查询-->
+    <select id="list" resultType="map">
+        select a.* from sys_works a
+        <if test="condition != null and condition != ''">
+            where a.name like CONCAT('%',#{condition},'%')
+        </if>
+        order by create_time ASC
+    </select>
+
+
+
 </mapper>

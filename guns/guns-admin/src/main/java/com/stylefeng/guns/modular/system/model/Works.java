@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +21,9 @@ import java.io.Serializable;
  * @since 2018-09-20
  */
 @TableName("sys_works")
+@ToString
+@Getter
+@Setter
 public class Works extends Model<Works> {
 
     private static final long serialVersionUID = 1L;
@@ -82,132 +89,13 @@ public class Works extends Model<Works> {
     @TableField("column_id")
     private Integer columnId;
 
+    @TableField("base_id")
+    private String baseId;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getImages() {
-        return images;
-    }
-
-    public void setImages(String images) {
-        this.images = images;
-    }
-
-    public String getMainIngredient() {
-        return mainIngredient;
-    }
-
-    public void setMainIngredient(String mainIngredient) {
-        this.mainIngredient = mainIngredient;
-    }
-
-    public String getSupplementaryMaterial() {
-        return supplementaryMaterial;
-    }
-
-    public void setSupplementaryMaterial(String supplementaryMaterial) {
-        this.supplementaryMaterial = supplementaryMaterial;
-    }
-
-    public String getSeasoning() {
-        return seasoning;
-    }
-
-    public void setSeasoning(String seasoning) {
-        this.seasoning = seasoning;
-    }
-
-    public String getPractice() {
-        return practice;
-    }
-
-    public void setPractice(String practice) {
-        this.practice = practice;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getColumnId() {
-        return columnId;
-    }
-
-    public void setColumnId(Integer columnId) {
-        this.columnId = columnId;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "Works{" +
-        "id=" + id +
-        ", name=" + name +
-        ", type=" + type +
-        ", images=" + images +
-        ", mainIngredient=" + mainIngredient +
-        ", supplementaryMaterial=" + supplementaryMaterial +
-        ", seasoning=" + seasoning +
-        ", practice=" + practice +
-        ", remark=" + remark +
-        ", status=" + status +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        ", columnId=" + columnId +
-        "}";
-    }
 }

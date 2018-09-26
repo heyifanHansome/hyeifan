@@ -19,7 +19,6 @@ WorksInfoDlg.clearData = function() {
  * @param val 数据的具体值
  */
 WorksInfoDlg.set = function(key, val,val2, isClass ) {
-    debugger;
     if(isClass !== undefined) {
         var rightinputs =$("#"+val2+" ."+isClass);
         var leftinput =$("#"+val+" ."+isClass);
@@ -74,7 +73,8 @@ WorksInfoDlg.collectData = function() {
     .set('practice')
     .set('remark')
     .set('status')
-    .set('columnId');
+    .set('columnId')
+    .set('baseId');
 }
 
 /**

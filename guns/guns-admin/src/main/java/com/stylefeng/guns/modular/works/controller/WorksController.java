@@ -1,17 +1,22 @@
 package com.stylefeng.guns.modular.works.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.core.util.ResultMsg;
+import com.stylefeng.guns.modular.picture.service.IPictureService;
+import com.stylefeng.guns.modular.system.model.Picture;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Works;
 import com.stylefeng.guns.modular.works.service.IWorksService;
+
+import java.util.List;
 
 /**
  * 作品管理控制器
@@ -25,9 +30,11 @@ public class WorksController extends BaseController {
     /*FuckingCrazying*/
     private String PREFIX = "/works/works/";
 
-    private String heyifna ="";
     @Autowired
     private IWorksService worksService;
+
+    @Autowired
+    private IPictureService pictureService;
 
     /**
      * 跳转到作品管理首页
@@ -97,6 +104,35 @@ public class WorksController extends BaseController {
         worksService.updateById(works);
         return SUCCESS_TIP;
     }
+
+
+
+
+    @GetMapping(value = "/img")
+    @ResponseBody
+    public ResponseEntity<?> getUser(String baseId) {
+        ResultMsg resultMsg = new ResultMsg();
+        try {
+            EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
+            entityWrapper.like("base_id",baseId);
+            List<Picture> picture = pictureService.selectList(entityWrapper);
+            StringBuffer sbBuffer = new StringBuffer();
+
+            for (int i = 0; i < picture.size(); i++) {
+                sbBuffer.append("," + picture.get(i).getId());
+            }
+
+            resultMsg = ResultMsg.success("查询成功", "查询成功", sbBuffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<ResultMsg>(ResultMsg.fail("系统错误", "系统错误", ""), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
+
+    }
+
+
 
     /**
      * 作品管理详情

@@ -19,7 +19,7 @@ WorksInfoDlg.clearData = function() {
  * @param val 数据的具体值
  */
 WorksInfoDlg.set = function(key, val,val2, isClass ) {
-    debugger
+    debugger;
     if(isClass !== undefined) {
         var rightinputs =$("#"+val2+" ."+isClass);
         var leftinput =$("#"+val+" ."+isClass);
@@ -118,6 +118,14 @@ WorksInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-    console.log($("#mainIngredient"));
+    var threeArr;
+    var twoArr;
+    var oneArr;
+    var onerightbuttons ;
+    var oneleftbuttons;
+    var tworightbuttons ;
+    var twoleftbuttons ;
+    var threerightbuttons ;
+    var threeleftbuttons ;
 
 });

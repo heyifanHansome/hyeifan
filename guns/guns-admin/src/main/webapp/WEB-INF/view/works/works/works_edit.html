@@ -5,13 +5,18 @@
                       <input id="id" name="主键ID" value="${item.id}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
-
                             <#input id="name" name="用户名称 " value="${item.name}" underline="true"/>
                             <#input id="type" name="类型" value="${item.type}" underline="true"/>
                             <#input id="images" name="资源" value="${item.images}" underline="true"/>
                             <#input id="updateTime" name="更新时间" value="${item.updateTime}" underline="true"/>
-
-                    <div id='leftbuttons'>
+                    <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
+                    <div id='oneleftbuttons'>
+                    </div>
+                    <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(2)"/>
+                    <div id='twoleftbuttons'>
+                    </div>
+                    <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(3)"/>
+                    <div id='threeleftbuttons'>
                     </div>
                 </div>
 
@@ -20,11 +25,16 @@
                             <#input id="remark" name="备注" value="${item.remark}" underline="true"/>
                             <#input id="status" name="加入状态" value="${item.status}" underline="true"/>
                             <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-
-                    <div id='rightbuttons'>
-                        <label>主料value</label>
+                    <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
+                    <div id='onerightbuttons'>
                     </div>
-                            <#input id="columnId" name="栏目类型ID为作品的ID" value="${item.columnId}" />
+                    <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(2)"/>
+                    <div id='tworightbuttons'>
+                    </div>
+                    <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(3)"/>
+                    <div id='threerightbuttons'>
+                    </div>
+                            <#input id="columnId" name="栏目类型" value="${item.columnId}" />
                 </div>
             </div>
 
@@ -40,19 +50,72 @@
 </div>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
-    var arr = ${item.mainIngredient}
+    /*定义回显数组*/
+         oneArr =${item.mainIngredient}
+         twoArr = ${item.supplementaryMaterial}
+         threeArr = ${item.seasoning}
+    /*定义回显框*/
+          onerightbuttons = $('#onerightbuttons');
+          oneleftbuttons =$('#oneleftbuttons');
+          tworightbuttons = $('#tworightbuttons');
+          twoleftbuttons =$('#twoleftbuttons');
+          threerightbuttons = $('#threerightbuttons');
+          threeleftbuttons =$('#threeleftbuttons');
+    /*页面初始化方法*/
     $(document).ready(function () {
+        oneArr.forEach(function (v) {
+           oneleftbuttons.append("<div class='col-sm-12'> <input  class='form-control main_ingredient'  value='"+v.key+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+           onerightbuttons.append("<div class='col-sm-12'> <input   class='form-control main_ingredient' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+       });
+        twoArr.forEach(function (v) {
+            twoleftbuttons.append("<div class='col-sm-12'> <input  class='form-control supplementary_material'  value='"+v.key+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+            tworightbuttons.append("<div class='col-sm-12'> <input   class='form-control supplementary_material' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+        });
+        threeArr.forEach(function (v) {
+            threeleftbuttons.append("<div class='col-sm-12'> <input  class='form-control seasoning'  value='"+v.key+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+            threerightbuttons.append("<div class='col-sm-12'> <input   class='form-control seasoning' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+        })
 
-       arr.forEach(function (v) {
-           console.log(v)
-           var rightbuttons = $('#rightbuttons');
-           var leftbuttons =$('#leftbuttons');
-           leftbuttons.append("<div class='col-sm-12'> <input  class='form-control'  value='"+v.key+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
-           rightbuttons.append("<div class='col-sm-12'> <input   class='form-control' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+    });
 
-       })
-
-    })
+    function goAdd(v){
+        if(v=='1'){
+            addInputs('onerightbuttons','oneleftbuttons','main_ingredient')
+        }
+        if(v=='2'){
+            addInputs('tworightbuttons','twoleftbuttons','supplementary_material')
+        }
+        if(v=='3'){
+            addInputs('threerightbuttons','threeleftbuttons','seasoning')
+        }
+    }
+    function addInputs(rightInputId,leftInputId,inputClass) {
+        var rightbuttons = $('#'+rightInputId);
+        var leftbuttons =$('#'+leftInputId);
+        rightbuttons.append("<div class='col-sm-12'> <input  class='form-control "+inputClass+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+        leftbuttons.append("<div class='col-sm-12'> <input   class='form-control "+inputClass+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+    }
+    function goDel(v){
+        if(v=='1'){
+            deleteInputs('onerightbuttons','oneleftbuttons','main_ingredient')
+        }
+        if(v=='2'){
+            deleteInputs('tworightbuttons','twoleftbuttons','supplementary_material')
+        }
+        if(v=='3'){
+            deleteInputs('threerightbuttons','threeleftbuttons','seasoning')
+        }
+        // deleteInputs('rightbuttons','leftbuttons','main_ingredient')
+    }
+    function  deleteInputs(rightInputId,leftInputId,inputClass) {
+        var rightinputs =$("#"+rightInputId+" ."+inputClass);
+        if(rightinputs.length>0){
+            rightinputs[rightinputs.length-1].remove();
+        }
+        var leftinput =$("#"+leftInputId+" ."+inputClass);
+        if(leftinput.length>0){
+            leftinput[leftinput.length-1].remove();
+        }
+    }
 </script>
-
 @}

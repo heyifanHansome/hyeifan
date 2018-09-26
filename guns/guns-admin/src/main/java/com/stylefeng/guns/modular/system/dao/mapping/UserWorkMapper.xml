@@ -17,4 +17,14 @@
         id, role_id, user_id, works_id, created_time, updated_time
     </sql>
 
+
+    <!--用户作品管理条件查询-->
+    <select id="list" resultType="map">
+        select a.* from sys_user_work  a LEFT JOIN sys_user b  on a.user_id =b.id
+        <if test="condition != null and condition != ''">
+            where b.name like CONCAT('%',#{condition},'%')
+        </if>
+        order by create_time ASC
+    </select>
+
 </mapper>

@@ -1,6 +1,9 @@
 package com.stylefeng.guns.modular.userWork.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserWorksWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +14,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.UserWork;
 import com.stylefeng.guns.modular.userWork.service.IUserWorkService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户作品控制器
@@ -60,7 +66,9 @@ public class UserWorkController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return userWorkService.selectList(null);
+        List<Map<String, Object>> list  = userWorkService.list(condition);
+        return super.warpObject(new UserWorksWarpper(list));
+
     }
 
     /**
@@ -69,6 +77,7 @@ public class UserWorkController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(UserWork userWork) {
+        userWork.setCreateTime(new DateTime());
         userWorkService.insert(userWork);
         return SUCCESS_TIP;
     }
@@ -89,6 +98,7 @@ public class UserWorkController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(UserWork userWork) {
+        userWork.setUpdateTime(new DateTime());
         userWorkService.updateById(userWork);
         return SUCCESS_TIP;
     }

@@ -15,6 +15,7 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.node.ZTreeNode;
 import com.stylefeng.guns.core.util.Convert;
 import com.stylefeng.guns.core.util.ToolUtil;
+import com.stylefeng.guns.modular.system.model.City;
 import com.stylefeng.guns.modular.system.model.Role;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IRoleService;
@@ -209,6 +210,7 @@ public class RoleController extends BaseController {
         return roleTreeList;
     }
 
+
     /**
      * 获取角色列表
      */
@@ -225,6 +227,15 @@ public class RoleController extends BaseController {
             List<ZTreeNode> roleTreeListByUserId = this.roleService.roleTreeListByRoleId(strArray);
             return roleTreeListByUserId;
         }
+    }
+    /**
+     * 获取所有用户
+     */
+    @RequestMapping(value = "/getAllRoles")
+    @ResponseBody
+    public List<Role> getAllRoles() {
+        List<Role> roles  = roleService.selectList(null);
+        return roles;
     }
 
 }

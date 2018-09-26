@@ -2,18 +2,20 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+                    <input id="id"  value="${item.id}" type="hidden">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="主键" value="${item.id}" underline="true"/>
-                            <#input id="roleId" name="角色ID" value="${item.roleId}" underline="true"/>
-                            <#input id="userId" name="用户ID" value="${item.userId}" />
+                                <#select id="roleId" name="角色" underline="true">
+                                </#select>
+                                <#select id="userId" name="用户" underline="true">
+                                </#select>
+                                <#select id="worksId" name="用户" underline="true">
+                                </#select>
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="worksId" name="作品ID" value="${item.worksId}" underline="true"/>
-                            <#input id="createdTime" name="创建时间" value="${item.createdTime}" underline="true"/>
-                            <#input id="updatedTime" name="结束时间" value="${item.updatedTime}" />
+                            <#input id="createTime" name="创建时间" value="${item.createTime}" readonly="readonly" underline="true"/>
+                            <#input id="updateTime" name="结束时间" value="${item.updateTime}" readonly="readonly" />
                 </div>
             </div>
 
@@ -28,4 +30,13 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/userWork/userWork/userWork_info.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#worksId").val(${item.worksId});
+
+        $("#roleId").val(${item.roleId});
+
+        $("#worksId").val(${item.worksId});
+    })
+</script>
 @}

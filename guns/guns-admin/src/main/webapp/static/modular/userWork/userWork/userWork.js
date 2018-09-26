@@ -14,12 +14,12 @@ var UserWork = {
 UserWork.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '角色ID', field: 'roleId', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户ID', field: 'userId', visible: true, align: 'center', valign: 'middle'},
-            {title: '作品ID', field: 'worksId', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createdTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '结束时间', field: 'updatedTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '角色', field: 'Prole', visible: true, align: 'center', valign: 'middle'},
+            {title: '用户', field: 'Pname', visible: true, align: 'center', valign: 'middle'},
+            {title: '作品', field: 'Pworks', visible: true, align: 'center', valign: 'middle'},
+            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

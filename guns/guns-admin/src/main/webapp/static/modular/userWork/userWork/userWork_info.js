@@ -48,9 +48,7 @@ UserWorkInfoDlg.collectData = function() {
     .set('id')
     .set('roleId')
     .set('userId')
-    .set('worksId')
-    .set('createdTime')
-    .set('updatedTime');
+    .set('worksId');
 }
 
 /**
@@ -94,5 +92,49 @@ UserWorkInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+    /**
+     * 动态获取所有角色
+     */
+    var ajax = new $ax(Feng.ctxPath + "/role/getAllRoles", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            $("#roleId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+    });
+    ajax.start();
+
+    /**
+     * 动态获取作品
+     */
+    var ajax = new $ax(Feng.ctxPath + "/works/getAllWorks", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            $("#worksId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+    }, function (data) {
+    });
+    ajax.start();
+
+
 
 });

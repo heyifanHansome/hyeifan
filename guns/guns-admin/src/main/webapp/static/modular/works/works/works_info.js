@@ -134,8 +134,23 @@ $(function() {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             var optionstring = "";
-            console.log(jsonObj)
             $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
         }
 
     }, function (data) {

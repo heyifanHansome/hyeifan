@@ -4,8 +4,12 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
+import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Picture;
+import com.stylefeng.guns.modular.system.model.Role;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,6 +39,9 @@ public class WorksController extends BaseController {
 
     @Autowired
     private IPictureService pictureService;
+
+    @Autowired
+    private IColumnTypeService columnTypeService;
 
     /**
      * 跳转到作品管理首页
@@ -130,6 +137,28 @@ public class WorksController extends BaseController {
 
         return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
 
+    }
+
+
+    /**
+     * 获取所有用户
+     */
+    @RequestMapping(value = "/getAllWorks")
+    @ResponseBody
+    public List<Works> getAllWorks() {
+        List<Works> Works  = worksService.selectList(null);
+        return Works;
+    }
+
+
+    /**
+     * 获取所有用户
+     */
+    @RequestMapping(value = "/getAllColumnType")
+    @ResponseBody
+    public List<ColumnType> getAllColumnType() {
+        List<ColumnType> ColumnType  = columnTypeService.selectList(null);
+        return ColumnType;
     }
 
 

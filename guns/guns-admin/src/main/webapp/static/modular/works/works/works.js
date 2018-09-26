@@ -14,19 +14,19 @@ var Works = {
 Works.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '主键ID', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '主键ID', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '用户名称', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '类型（0：图文，1：视频）', field: 'type', visible: true, align: 'center', valign: 'middle'},
-            {title: '资源（无序列表）就是图片或视频地址组成的无序列表', field: 'images', visible: true, align: 'center', valign: 'middle'},
-            {title: '主料（无序列表）main_name:’肉’，danwei:’1斤’', field: 'mainIngredient', visible: true, align: 'center', valign: 'middle'},
-            {title: '辅料（无序列表）main_name:’肉’，danwei:’1斤’', field: 'supplementaryMaterial', visible: true, align: 'center', valign: 'middle'},
-            {title: '调料（无序列表）main_name:’肉’，danwei:’1斤’', field: 'seasoning', visible: true, align: 'center', valign: 'middle'},
+            {title: '类型', field: 'type', visible: true, align: 'center', valign: 'middle'},
+            {title: '资源', field: 'images', visible: true, align: 'center', valign: 'middle'},
+            {title: '主料', field: 'mainIngredient', visible: false, align: 'center', valign: 'middle'},
+            {title: '辅料', field: 'supplementaryMaterial', visible: false, align: 'center', valign: 'middle'},
+            {title: '调料', field: 'seasoning', visible: false, align: 'center', valign: 'middle'},
             {title: '做法', field: 'practice', visible: true, align: 'center', valign: 'middle'},
-            {title: '做法（无序列表）备注', field: 'remark', visible: true, align: 'center', valign: 'middle'},
-            {title: '加入状态（0：未审查，1：通过，2：拒绝）', field: 'status', visible: true, align: 'center', valign: 'middle'},
+            {title: '备注', field: 'remark', visible: true, align: 'center', valign: 'middle'},
+            {title: '加入状态', field: 'status', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '栏目类型ID为作品的ID', field: 'columnId', visible: true, align: 'center', valign: 'middle'}
+            {title: '栏目类型', field: 'columnId', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

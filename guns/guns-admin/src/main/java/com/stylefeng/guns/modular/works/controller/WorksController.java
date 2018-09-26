@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.works.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -70,6 +71,8 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Works works) {
+
+        works.setCreateTime(new DateTime());
         worksService.insert(works);
         return SUCCESS_TIP;
     }
@@ -90,6 +93,7 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Works works) {
+        works.setUpdateTime(new DateTime());
         worksService.updateById(works);
         return SUCCESS_TIP;
     }

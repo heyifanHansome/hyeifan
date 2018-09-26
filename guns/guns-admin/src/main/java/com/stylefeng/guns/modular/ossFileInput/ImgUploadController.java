@@ -1,11 +1,12 @@
 package com.stylefeng.guns.modular.ossFileInput;
+
 /**
  * Created by Heyifan Cotter on 2018/9/26.
  */
+
 import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.PictureMapper;
 import com.stylefeng.guns.modular.system.model.Picture;
@@ -39,52 +40,6 @@ public class ImgUploadController {
     @Autowired
     public IPictureService pictureService;
 
-
-    @PostMapping("/new")
-    public String imgUpdate(MultipartFile file) {
-        String uploadPath = FinalStaticString.FILEPATHIMG;
-        if (file.isEmpty()) {
-            return "error";
-        }
-        // 获取文件名
-        String fileName = file.getOriginalFilename();
-        // 获取文件的后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        // 这里我使用随机字符串来重新命名图片
-        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
-        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
-        File dest = new File(uploadPath + fileName);
-        // 检测是否存在目录
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
-        try {
-            file.transferTo(dest);
-            // 创建图片对象
-            Picture picture = new Picture();
-            picture.setPicturename(fileName.replace(suffixName, ""));// 图片名称
-            picture.setRelativepath(uploadPath);// 相对路径
-            picture.setServerpath(uploadPath);// 服务器路径
-            picture.setAbsolutepath(uploadPath);// 绝对路径
-            picture.setType("");// 图片类型
-            picture.setSuffixname(suffixName);// 图片后缀名
-
-            pictureService.insert(picture);
-            // url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
-            String config = "{\"state\": \"SUCCESS\"," + "\"url\": \"" + "/img/getImage/" + picture.getId() + "\","
-                    + "\"pictureId\": \"" + picture.getId() + "\"," + "\"original\": \"" + fileName + "\"}";
-
-            return config;
-
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "error";
-    }
-
-
     /**
      * 文件上传删除方法
      *
@@ -97,7 +52,7 @@ public class ImgUploadController {
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
         Integer pid = Integer.parseInt(id);
-        String uploadPath = FinalStaticString.FILEPATHIMG;//图片保存路径
+        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
         Picture picture = pictureService.selectById(id);
         try {
             if (picture != null) {
@@ -115,6 +70,7 @@ public class ImgUploadController {
         return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
     }
 
+    /*文件上传的方法*/
     @PostMapping(value = "/imgUploadMul")
     @ResponseBody
     public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
@@ -127,7 +83,8 @@ public class ImgUploadController {
             multipartFile = (MultipartFile) map.get(obj);
 
         }
-        String uploadPath = FinalStaticString.FILEPATHIMG;
+
+        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
         if (multipartFile.isEmpty()) {
             return "error";
         }
@@ -199,55 +156,6 @@ public class ImgUploadController {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-//
-//            //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-//            response.setContentType("multipart/form-data");
-//            //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
-//            ServletOutputStream out;
-//            try {
-//                FileInputStream inputStream = new FileInputStream(file);
-//                //3.通过response获取ServletOutputStream对象(out)
-//                out = response.getOutputStream();
-//                int b = 0;
-//                byte[] buffer = new byte[512];
-//                while (b != -1){
-//                    b = inputStream.read(buffer);
-//                    //4.写到输出流(out)中
-//                    out.write(buffer,0,b);
-//                }
-//                inputStream.close();
-//                out.close();
-//                out.flush();
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-        }
-    }
-
-    /**
-     * 上传文件
-     *
-     * @param request
-     * @param response
-     * @param file     上传的文件，支持多文件
-     * @throws Exception
-     */
-    @RequestMapping("/fileInsert")
-    public void insert(HttpServletRequest request, HttpServletResponse response
-            , @RequestParam("reportFile") MultipartFile[] file) throws Exception {
-        if (file != null && file.length > 0) {
-            try {
-                for (int i = 0; i < file.length; i++) {
-                    if (!file[i].isEmpty()) {
-                        imgUpdate(file[i]);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
 
         }
     }
@@ -260,74 +168,10 @@ public class ImgUploadController {
         if (id != null && !"".equals(id)) {
             Picture p = pictureService.selectById(id);// 获取图片对象
             imgpath = p.getAbsolutepath() + p.getPicturename() + p.getSuffixname();//
-            //File file = new File(imgpath);
             response.setContentType("image/jpg");
-		/*	InputStream in = null;
-			try {
-				in = new FileInputStream(file);
-				try {
-					IOUtils.copy(in, response.getOutputStream());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}*/
             resultMsg.setData(imgpath);
         }
         return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
     }
 
-    /**
-     * 订单评论图片上传处理
-     *
-     * @param file
-     * @return
-     */
-    @PostMapping("/commentsImg")
-    @ResponseBody
-    public ResultMsg commentsImgUpdate(String commentsId, MultipartFile file) {
-        String uploadPath = FinalStaticString.FILEPATHIMG;
-        if (file.isEmpty()) {
-            return ResultMsg.success("", null, "false");
-        }
-        // 获取文件名
-        String fileName = file.getOriginalFilename();
-        // 获取文件的后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        // 这里我使用随机字符串来重新命名图片
-        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
-        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
-        File dest = new File(uploadPath + fileName);
-        // 检测是否存在目录
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
-        try {
-            file.transferTo(dest);
-            // 创建图片对象
-            Picture picture = new Picture();
-            picture.setBaseId(commentsId);
-            picture.setPicturename(fileName.replace(suffixName, ""));// 图片名称
-            picture.setRelativepath(uploadPath);// 相对路径
-            picture.setServerpath(uploadPath);// 服务器路径
-            picture.setAbsolutepath(uploadPath);// 绝对路径
-            picture.setType("");// 图片类型
-            picture.setSuffixname(suffixName);// 图片后缀名
-
-            pictureService.insert(picture);
-            // url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
-//			String config = "{\"state\": \"SUCCESS\"," + "\"url\": \"" + "/img/getImage/" + picture.getId() + "\","
-//					+ "\"pictureId\": \"" + picture.getId() + "\"," + "\"original\": \"" + fileName + "\"}";
-//			System.out.println(config);
-            return ResultMsg.success("", null, "true");
-
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ResultMsg.success("", null, "false");
-    }
 }

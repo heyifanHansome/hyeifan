@@ -128,6 +128,7 @@ public class ColumnTypeController extends BaseController {
         return columnTypeService.selectById(columnTypeId);
     }
 
+
     @RequestMapping("/getColumnTypeList")
     @ResponseBody
     public Object getColumnTypeList(Integer id){

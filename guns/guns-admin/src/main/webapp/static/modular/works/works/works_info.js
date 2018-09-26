@@ -18,9 +18,27 @@ WorksInfoDlg.clearData = function() {
  * @param key 数据的名称
  * @param val 数据的具体值
  */
-WorksInfoDlg.set = function(key, val) {
-    this.worksInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
-    return this;
+WorksInfoDlg.set = function(key, val,val2, isClass ) {
+    debugger
+    if(isClass !== undefined) {
+        var rightinputs =$("#"+val2+" ."+isClass);
+        var leftinput =$("#"+val+" ."+isClass);
+     var arr =[];
+        console.log(rightinputs)
+        for (var i=0;i< rightinputs.length;i++){
+            var map={
+                key:$(leftinput[i]).val(),
+                value:$(rightinputs[i]).val()
+            };
+            arr.push(map);
+        }
+        this.worksInfoData[key] = JSON.stringify(arr).toString();
+        return this;
+    }else{
+        this.worksInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
+        return this;
+    }
+
 }
 
 /**
@@ -44,19 +62,18 @@ WorksInfoDlg.close = function() {
  * 收集数据
  */
 WorksInfoDlg.collectData = function() {
+    console.log(this)
     this
     .set('id')
     .set('name')
     .set('type')
     .set('images')
-    .set('mainIngredient')
-    .set('supplementaryMaterial')
-    .set('seasoning')
+    .set('mainIngredient','oneleftbuttons', 'onerightbuttons','main_ingredient')
+    .set('supplementaryMaterial','twoleftbuttons','tworightbuttons','supplementary_material')
+    .set('seasoning','threeleftbuttons','threerightbuttons','seasoning')
     .set('practice')
     .set('remark')
     .set('status')
-    .set('createTime')
-    .set('updateTime')
     .set('columnId');
 }
 
@@ -101,5 +118,6 @@ WorksInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+    console.log($("#mainIngredient"));
 
 });

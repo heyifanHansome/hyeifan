@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.*;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +19,11 @@ import java.io.Serializable;
  * @author stylefeng
  * @since 2018-09-20
  */
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("sys_user_info")
 public class UserInfo extends Model<UserInfo> {
 
@@ -89,141 +96,8 @@ public class UserInfo extends Model<UserInfo> {
      */
     private Integer enlightening;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getApiToken() {
-        return apiToken;
-    }
-
-    public void setApiToken(String apiToken) {
-        this.apiToken = apiToken;
-    }
-
-    public Integer getCredits() {
-        return credits;
-    }
-
-    public void setCredits(Integer credits) {
-        this.credits = credits;
-    }
-
-    public BigDecimal getMoney() {
-        return money;
-    }
-
-    public void setMoney(BigDecimal money) {
-        this.money = money;
-    }
-
-    public String getLoginIp() {
-        return loginIp;
-    }
-
-    public void setLoginIp(String loginIp) {
-        this.loginIp = loginIp;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getIdCard() {
-        return idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
-    }
-
-    public Integer getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
-    }
-
-    public Integer getJoinClub() {
-        return joinClub;
-    }
-
-    public void setJoinClub(Integer joinClub) {
-        this.joinClub = joinClub;
-    }
-
-    public Integer getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Integer appointment) {
-        this.appointment = appointment;
-    }
-
-    public Integer getEnlightening() {
-        return enlightening;
-    }
-
-    public void setEnlightening(Integer enlightening) {
-        this.enlightening = enlightening;
-    }
-
     @Override
     protected Serializable pkVal() {
         return this.id;
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-        "id=" + id +
-        ", userId=" + userId +
-        ", apiToken=" + apiToken +
-        ", credits=" + credits +
-        ", money=" + money +
-        ", loginIp=" + loginIp +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        ", realName=" + realName +
-        ", idCard=" + idCard +
-        ", cityId=" + cityId +
-        ", joinClub=" + joinClub +
-        ", appointment=" + appointment +
-        ", enlightening=" + enlightening +
-        "}";
     }
 }

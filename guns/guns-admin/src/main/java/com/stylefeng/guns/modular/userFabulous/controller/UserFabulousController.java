@@ -1,6 +1,8 @@
 package com.stylefeng.guns.modular.userFabulous.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.modular.system.dao.ColumnTypeMapper;
+import com.stylefeng.guns.modular.system.model.ColumnType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +13,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.UserFabulous;
 import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * 用户点赞控制器
@@ -26,6 +31,9 @@ public class UserFabulousController extends BaseController {
 
     @Autowired
     private IUserFabulousService userFabulousService;
+
+    @Autowired
+    private ColumnTypeMapper columnTypeMapper;
 
     /**
      * 跳转到用户点赞首页
@@ -92,6 +100,22 @@ public class UserFabulousController extends BaseController {
         userFabulousService.updateById(userFabulous);
         return SUCCESS_TIP;
     }
+
+
+    /**
+     * 获取所有栏目类型
+     */
+    @RequestMapping(value = "/getAllColumnType")
+    @ResponseBody
+    public List<ColumnType> getAllColumnType() {
+
+        List<ColumnType>  list=     columnTypeMapper.selectList(null);
+        System.out.println(list);
+        return  list;
+    }
+
+
+
 
     /**
      * 用户点赞详情

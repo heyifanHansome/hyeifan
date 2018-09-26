@@ -106,4 +106,7 @@ $(function () {
     var table = new BSTable(Works.id, "/works/list", defaultColunms);
     table.setPaginationType("client");
     Works.table = table.init();
+
+
+
 });

@@ -2,27 +2,53 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input value="" type="hidden" id="id">
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="主键ID" underline="true"/>
+                <div class="col-sm-6 b-r" >
                             <#input id="name" name="用户名称 " underline="true"/>
-                            <#input id="type" name="类型（0：图文，1：视频）" underline="true"/>
-                            <#input id="images" name="资源（无序列表）就是图片或视频地址组成的无序列表" underline="true"/>
-                            <#input id="mainIngredient" name="主料（无序列表）" underline="true"/>
-                            <#input id="supplementaryMaterial" name="辅料（无序列表） " underline="true"/>
-                            <#input id="seasoning" name="调料（无序列表） "/>
-                </div>
+                            <#input id="type" name="类型" underline="true"/>
+                            <#input id="images" name="资源" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                    <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
+                    <div id='oneleftbuttons'>
+                        <div class='col-sm-12'> <input  class='form-control main_ingredient'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                    </div>
+                    <#button btnCss="info" name="添加辅料"  icon="fa-check" clickFun="goAdd(2)"/>
+                    <div id='twoleftbuttons'>
+                        <div class='col-sm-12'> <input  class='form-control supplementary_material'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                    </div>
+                    <#button btnCss="info" name="添加调料"  icon="fa-check" clickFun="goAdd(3)"/>
+                    <div id='threeleftbuttons'>
+                        <div class='col-sm-12'> <input  class='form-control seasoning'   type='text' underline='true'/></div> <div class='col-sm-12' underline="true"> </div>
+                    </div>
+                    <hr></hr>
+                    <#input id="columnId" name="栏目类型"/>
+                     </div>
 
                 <div class="col-sm-6">
                             <#input id="practice" name="做法" underline="true"/>
-                            <#input id="remark" name="做法（无序列表" underline="true"/>
-                            <#input id="status" name="加入状态（0：未审查，1：通过，2：拒绝）" underline="true"/>
-                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="remark" name="备注" underline="true"/>
+                            <#input id="status" name="加入状态" underline="true"/>
                             <#input id="updateTime" name="更新时间" underline="true"/>
-                            <#input id="columnId" name="栏目类型ID为作品的ID" underline="true"/>
+
+                    <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
+                    <div id='onerightbuttons'>
+                        <div class='col-sm-12'> <input  class='form-control main_ingredient'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                    </div>
+                    <#button btnCss="danger" name="取消添加辅料" icon="fa-eraser" clickFun="goDel(2)"/>
+                    <div id='tworightbuttons'>
+                        <div class='col-sm-12'> <input  class='form-control supplementary_material'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                    </div>
+                    <#button btnCss="danger" name="取消添加调料" icon="fa-eraser" clickFun="goDel(3)"/>
+                    <div id='threerightbuttons'>
+                        <div class='col-sm-12'> <input  class='form-control seasoning'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                    </div>
+
                 </div>
             </div>
+
+
+
 
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
@@ -35,4 +61,45 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
+<script>
+    function goAdd(v){
+        if(v=='1'){
+            addInputs('onerightbuttons','oneleftbuttons','main_ingredient')
+        }
+        if(v=='2'){
+            addInputs('tworightbuttons','twoleftbuttons','supplementary_material')
+        }
+        if(v=='3'){
+            addInputs('threerightbuttons','threeleftbuttons','seasoning')
+        }
+    }
+   function addInputs(rightInputId,leftInputId,inputClass) {
+       var rightbuttons = $('#'+rightInputId);
+       var leftbuttons =$('#'+leftInputId);
+       leftbuttons.append("<div class='col-sm-12'> <input  class='form-control "+inputClass+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+       rightbuttons.append("<div class='col-sm-12'> <input   class='form-control "+inputClass+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+        }
+    function goDel(v){
+        if(v=='1'){
+            deleteInputs('onerightbuttons','oneleftbuttons','main_ingredient')
+        }
+        if(v=='2'){
+            deleteInputs('tworightbuttons','twoleftbuttons','supplementary_material')
+        }
+        if(v=='3'){
+            deleteInputs('threerightbuttons','threeleftbuttons','seasoning')
+        }
+        // deleteInputs('rightbuttons','leftbuttons','main_ingredient')
+    }
+    function  deleteInputs(rightInputId,leftInputId,inputClass) {
+        var rightinputs =$("#"+rightInputId+" ."+inputClass);
+        if(rightinputs.length>0){
+            rightinputs[rightinputs.length-1].remove();
+        }
+        var leftinput =$("#"+leftInputId+" ."+inputClass);
+        if(leftinput.length>0){
+            leftinput[leftinput.length-1].remove();
+         }
+        }
+</script>
 @}

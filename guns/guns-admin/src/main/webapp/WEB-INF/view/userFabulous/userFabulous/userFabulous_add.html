@@ -2,16 +2,18 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+                <input id="id" value="" type="hidden">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="id" underline="true"/>
-                            <#input id="userId" name="用户ID" underline="true"/>
-                            <#input id="columnId" name="栏目类型ID（当为作品类型时，works_id表示作品ID, 当为资讯类型时，works_id表示资讯ID）"/>
-                </div>
+                            <#select id="userId" name="用户名称" underline="true">
+                            </#select>
+                            <!--<#input id="columnId" name="栏目类型ID"/>-->
+                            <#select id="columnId" name="栏目名称" underline="true">
+                            </#select>
+                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="worksId" name="作品（资讯、课堂、活动）ID" underline="true"/>
+                            <#input id="worksId" name="作品" underline="true"/>
                             <#input id="createTime" name="创建时间" underline="true"/>
                             <#input id="updateTime" name="更新时间" underline="true"/>
                 </div>

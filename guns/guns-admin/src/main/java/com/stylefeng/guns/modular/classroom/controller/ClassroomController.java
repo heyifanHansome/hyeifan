@@ -1,6 +1,9 @@
 package com.stylefeng.guns.modular.classroom.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.ClassroomWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +14,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Classroom;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 星厨课堂控制器
@@ -60,7 +66,9 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return classroomService.selectList(null);
+        List<Map<String,Object>> list = classroomService.list(condition);
+
+     return  super.warpObject(new ClassroomWarpper(list));
     }
 
     /**
@@ -69,6 +77,7 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Classroom classroom) {
+        classroom.setCreateTime(new DateTime());
         classroomService.insert(classroom);
         return SUCCESS_TIP;
     }
@@ -89,6 +98,7 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Classroom classroom) {
+        classroom.setUpdateTime(new DateTime());
         classroomService.updateById(classroom);
         return SUCCESS_TIP;
     }

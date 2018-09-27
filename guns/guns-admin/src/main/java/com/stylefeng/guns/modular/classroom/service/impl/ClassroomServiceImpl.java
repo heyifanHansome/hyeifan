@@ -6,6 +6,9 @@ import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 星厨课堂 服务实现类
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClassroomServiceImpl extends ServiceImpl<ClassroomMapper, Classroom> implements IClassroomService {
 
+    @Override
+    public List<Map<String, Object>> list(String condition) {
+        return this.baseMapper.list(condition);
+    }
 }

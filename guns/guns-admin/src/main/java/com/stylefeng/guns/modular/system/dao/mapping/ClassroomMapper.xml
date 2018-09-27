@@ -25,4 +25,14 @@
         id, column_id, title, thumb, url, description, start_time, city_id, source_id, uid, publish_ip, content, create_time, update_time
     </sql>
 
+
+
+    <select id="list" resultType="map">
+        select * from sys_classroom a
+        <if test="condition != null and condition != ''">
+            where a.title like CONCAT('%',#{condition},'%')
+        </if>
+        order by create_time ASC
+    </select>
+
 </mapper>

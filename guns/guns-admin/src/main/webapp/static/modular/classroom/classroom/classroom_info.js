@@ -31,14 +31,14 @@ ClassroomInfoDlg.set = function(key, val) {
  */
 ClassroomInfoDlg.get = function(key) {
     return $("#" + key).val();
-}
+};
 
 /**
  * 关闭此对话框
  */
 ClassroomInfoDlg.close = function() {
     parent.layer.close(window.parent.Classroom.layerIndex);
-}
+};
 
 /**
  * 收集数据
@@ -57,9 +57,7 @@ ClassroomInfoDlg.collectData = function() {
     .set('uid')
     .set('publishIp')
     .set('content')
-    .set('createTime')
-    .set('updateTime');
-}
+};
 
 /**
  * 提交添加
@@ -79,7 +77,7 @@ ClassroomInfoDlg.addSubmit = function() {
     });
     ajax.set(this.classroomInfoData);
     ajax.start();
-}
+};
 
 /**
  * 提交修改
@@ -102,5 +100,54 @@ ClassroomInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+
+
+    /**
+     * 动态获取所有栏目
+     */
+    var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#cityId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+    // 初始化缩略图上传
+    var avatarUp = new $WebUpload("thumb");
+    avatarUp.setUploadBarId("progressBar");
+    avatarUp.init();
 
 });

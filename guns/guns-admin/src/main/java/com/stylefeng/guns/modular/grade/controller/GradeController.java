@@ -1,6 +1,8 @@
 package com.stylefeng.guns.modular.grade.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +13,8 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Grade;
 import com.stylefeng.guns.modular.grade.service.IGradeService;
+
+import java.util.List;
 
 /**
  * 厨师等级表控制器
@@ -59,8 +63,12 @@ public class GradeController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
-        return gradeService.selectList(null);
+    public   List<Grade> list(String condition) {
+
+        EntityWrapper<Grade> entityWrapper = new EntityWrapper<>();
+        entityWrapper.like("name",condition);
+         List<Grade>  grades = gradeService.selectList(entityWrapper);
+         return  grades;
     }
 
     /**
@@ -69,6 +77,7 @@ public class GradeController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Grade grade) {
+        grade.setCreateTime(new DateTime());
         gradeService.insert(grade);
         return SUCCESS_TIP;
     }
@@ -89,6 +98,7 @@ public class GradeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Grade grade) {
+        grade.setUpdateTime(new DateTime());
         gradeService.updateById(grade);
         return SUCCESS_TIP;
     }

@@ -14,7 +14,7 @@ var Grade = {
 Grade.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '等级名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '结束时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}

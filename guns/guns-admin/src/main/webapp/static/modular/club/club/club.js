@@ -14,8 +14,8 @@ var Club = {
 Club.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户ID', field: 'userId', visible: true, align: 'center', valign: 'middle'},
+            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '用户', field: 'userId', visible: true, align: 'center', valign: 'middle'},
             {title: '等级ID', field: 'gradeId', visible: true, align: 'center', valign: 'middle'},
             {title: '实名', field: 'realName', visible: true, align: 'center', valign: 'middle'},
             {title: '身份证号', field: 'idCard', visible: true, align: 'center', valign: 'middle'},

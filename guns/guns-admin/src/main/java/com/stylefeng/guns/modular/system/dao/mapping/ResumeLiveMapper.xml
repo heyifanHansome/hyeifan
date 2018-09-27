@@ -20,4 +20,11 @@
         id, resume _id, company, position_name, start_time, end_time, remark, create_time, update_time
     </sql>
 
+    <select id="list" resultType="map">
+          select * from sys_resume_live a
+          <if test="condition !=null and condition != ''"  >
+          </if>
+        order by create_time ASC
+    </select>
+
 </mapper>

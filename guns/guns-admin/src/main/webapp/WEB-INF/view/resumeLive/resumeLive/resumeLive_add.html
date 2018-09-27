@@ -2,21 +2,23 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input type="hidden" id="id">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="主键ID" underline="true"/>
-                            <#input id="resumeId" name="简历ID" underline="true"/>
-                            <#input id="company" name="公司部门" underline="true"/>
-                            <#input id="positionName" name="职位" underline="true"/>
-                            <#input id="startTime" name="在职起始时间"/>
+                <#select id="resumeId" name="简历" underline="true">
+                </#select>
+                <#input id="remark" name="备注" underline="true"/>
+                <#input id="startTime" name="任职时间" underline="true"/>
+
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="endTime" name="在职结束时间" underline="true"/>
-                            <#input id="remark" name="备注" underline="true"/>
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
+                    <#input id="company" name="公司部门" underline="true"/>
+                    <#input id="positionName" name="职位" underline="true"/>
+
+                    <#input id="endTime" name="结束时间" underline="true"/>
+
+
                 </div>
             </div>
 
@@ -31,4 +33,12 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/resumeLive/resumeLive/resumeLive_info.js"></script>
+<script>
+    laydate.render({
+        elem: '#startTime'
+    });
+    laydate.render({
+        elem: '#endTime'
+    });
+</script>
 @}

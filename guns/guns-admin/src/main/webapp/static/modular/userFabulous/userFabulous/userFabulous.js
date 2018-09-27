@@ -14,10 +14,10 @@ var UserFabulous = {
 UserFabulous.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: 'id', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户ID', field: 'userId', visible: true, align: 'center', valign: 'middle'},
-            {title: '栏目类型ID（当为作品类型时，works_id表示作品ID, 当为资讯类型时，works_id表示资讯ID）', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
-            {title: '作品（资讯、课堂、活动）ID', field: 'worksId', visible: true, align: 'center', valign: 'middle'},
+            {title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '用户名称', field: 'userId', visible: true, align: 'center', valign: 'middle'},
+            {title: '栏目类型', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
+            {title: '作品', field: 'worksId', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
     ];

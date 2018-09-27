@@ -51,9 +51,7 @@ ResumeLiveInfoDlg.collectData = function() {
     .set('positionName')
     .set('startTime')
     .set('endTime')
-    .set('remark')
-    .set('createTime')
-    .set('updateTime');
+    .set('remark');
 }
 
 /**
@@ -97,5 +95,18 @@ ResumeLiveInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/userResume/getAllResume", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#resumeId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
 
 });

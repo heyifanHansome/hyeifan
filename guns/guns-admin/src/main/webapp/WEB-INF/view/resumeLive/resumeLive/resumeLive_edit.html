@@ -2,21 +2,21 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input id="id" name="主键ID" value="${item.id}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="主键ID" value="${item.id}" underline="true"/>
-                            <#input id="resume Id" name="简历ID" value="${item.resumeId}" underline="true"/>
+
+                            <#select id="resumeId" name="简历" underline="true">
+                            </#select>
                             <#input id="company" name="公司部门" value="${item.company}" underline="true"/>
-                            <#input id="positionName" name="职位" value="${item.positionName}" underline="true"/>
-                            <#input id="startTime" name="在职起始时间" value="${item.startTime}" />
+
+                            <#input id="startTime" name="任职时间" value="${item.startTime}" />
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="endTime" name="在职结束时间" value="${item.endTime}" underline="true"/>
+                            <#input id="positionName" name="职位" value="${item.positionName}" underline="true"/>
                             <#input id="remark" name="备注" value="${item.remark}" underline="true"/>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" />
+                            <#input id="endTime" name="结束时间" value="${item.endTime}" underline="true"/>
                 </div>
             </div>
 
@@ -31,4 +31,9 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/resumeLive/resumeLive/resumeLive_info.js"></script>
+<script>
+    $(document).ready(function () {
+      $("#resumeId").val(${item.resumeId});
+    });
+</script>
 @}

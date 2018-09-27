@@ -4,16 +4,12 @@
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="id" underline="true"/>
-                            <#input id="columnId" name="栏目类型ID（当为0时表示通用标签）" underline="true"/>
-                            <#input id="name" name="标签名"/>
+                <div class="row">
+                            <!--<#input id="columnId" name="栏目类型" underline="true"/>-->
+                    <#select name="栏目类型" id="columnId"></#select>
+                <#input id="name" name="标签名"/>
                 </div>
 
-                <div class="col-sm-6">
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
-                </div>
             </div>
 
             <div class="row btn-group-m-t">
@@ -24,6 +20,9 @@
             </div>
         </div>
 
+        <#input id="id" name="" underline="true" type="hidden"/>
+        <#input id="createTime" name="" underline="true" type="hidden"/>
+        <#input id="updateTime" name="" type="hidden"/>
     </div>
 </div>
 <script src="${ctxPath}/static/modular/tag/tag/tag_info.js"></script>

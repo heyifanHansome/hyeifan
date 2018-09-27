@@ -1,6 +1,16 @@
 package com.stylefeng.guns.modular.recruit.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.modular.city.service.ICityService;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.dao.Dao;
+import com.stylefeng.guns.modular.system.model.City;
+import com.stylefeng.guns.modular.system.model.ColumnType;
+import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +21,12 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Recruit;
 import com.stylefeng.guns.modular.recruit.service.IRecruitService;
+
+import javax.servlet.http.HttpSession;
+import java.sql.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 招聘管理控制器
@@ -26,7 +42,17 @@ public class RecruitController extends BaseController {
 
     @Autowired
     private IRecruitService recruitService;
+    @Autowired
+    private Dao dao;
 
+    @Autowired
+    private IColumnTypeService columnTypeService;
+
+    @Autowired
+    private ICityService cityService;
+
+    @Autowired
+    private IUserService userService;
     /**
      * 跳转到招聘管理首页
      */
@@ -49,6 +75,22 @@ public class RecruitController extends BaseController {
     @RequestMapping("/recruit_update/{recruitId}")
     public String recruitUpdate(@PathVariable Integer recruitId, Model model) {
         Recruit recruit = recruitService.selectById(recruitId);
+        User user=new User();
+        user.setId(Integer.valueOf(recruit.getUid()));
+        EntityWrapper<User>userEntityWrapper=new EntityWrapper<>();
+        userEntityWrapper.setEntity(user);
+        user=userService.selectOne(userEntityWrapper);
+        switch (recruit.getUid()){
+            case "0":
+                recruit.setUid((user.getName()+"<span style='color:red;'>(管理员)</span>"));
+                break;
+            case "1":
+                recruit.setUid((user.getName()+"<span style='color:red;'>(管理员)</span>"));
+                break;
+            default:
+                recruit.setUid((user.getName()+"<span style='color:red;'>(未知角色)</span>"));
+                break;
+        }
         model.addAttribute("item",recruit);
         LogObjectHolder.me().set(recruit);
         return PREFIX + "recruit_edit.html";
@@ -60,7 +102,23 @@ public class RecruitController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return recruitService.selectList(null);
+        EntityWrapper ew=new EntityWrapper(new Recruit());
+        if(!Tool.isNull(condition))ew.like("name",condition);
+        List<Recruit> recruits=recruitService.selectList(ew);
+        for (Recruit recruit : recruits) {
+            EntityWrapper ew_=new EntityWrapper(new ColumnType());
+            ew_.eq("id",recruit.getColumnId());
+            List<ColumnType>columnTypeList=columnTypeService.selectList(ew_);
+            recruit.setColumnId(!Tool.listIsNull(columnTypeList)?columnTypeList.get(0).getName():"<span style='color:red;'>*对应栏目已被删除*</span>");
+
+            EntityWrapper ew2=new EntityWrapper(new City());
+            ew2.eq("id",recruit.getCityId());
+            List<City>cityList=cityService.selectList(ew2);
+            recruit.setCityId(!Tool.listIsNull(cityList)?cityList.get(0).getName():"<span style='color:red;'>*对应城市已被删除*</span>");
+
+            recruit.setSourceId(Tool.isNull(recruit.getSourceId())?"<span style='color:red;'>*未知来源*</span>":recruit.getSourceId().equals("0")?"官方":recruit.getSourceId().equals("1")?"个人":"<span style='color:red;'>*未知来源*</span>");
+        }
+        return recruits;
     }
 
     /**
@@ -69,6 +127,9 @@ public class RecruitController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Recruit recruit) {
+        recruit.setUid(String.valueOf(ShiroKit.getUser().getId()));
+        recruit.setPublishIp(Tool.getIpAdrress());
+        recruit.setCreateTime(new Date(System.currentTimeMillis()));
         recruitService.insert(recruit);
         return SUCCESS_TIP;
     }
@@ -89,6 +150,10 @@ public class RecruitController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Recruit recruit) {
+        System.err.println(recruit);
+        recruit.setUid(String.valueOf(ShiroKit.getUser().getId()));
+        recruit.setPublishIp(Tool.getIpAdrress());
+        recruit.setUpdatedTime(new Date(System.currentTimeMillis()));
         recruitService.updateById(recruit);
         return SUCCESS_TIP;
     }

@@ -1,45 +1,21 @@
 package com.stylefeng.guns.modular.lijun.util;
 
 public class FinalStaticString {
-	/**
-	 * 后台没有权限拦截跳转页面
-	 */
-	public final static String MANAGE_NO_POTENCE_URI="/manage/main.htm";
-	/**
-	 * 后台未登录拦截跳转页面
-	 */
-	public final static String MANAGE_LOGIN_URI="/manage/tologin.htm";
-	/**
-	 * 前台未登录拦截跳转页面
-	 */
-	public final static String PAGE_LOGIN_URI="/page/tologin.htm";
-	
+
+	public static final String ALI_OSS_ENDPOINT="http://oss-cn-beijing.aliyuncs.com";
+	public static final String ALI_OSS_BUCKET="cheshi654321";
+	public static final String ALI_OSS_ACCESS_KEY="o253yE8pCkLxA08nAcVlEYPI1a6sev";
+	public static final String ALI_OSS_ACCESS_ID="LTAIPAfHfcl2Ycjs";
+	public static final String ALI_OSS_CALLBACK="http://380810b3.nat123.cc/tool/callback";
 
 	/**
-	 * session中admin角色的key
+	 * 图片上传路径
 	 */
-	public final static String MANAGE_ADMIN="admin";
-	/**
-	 * session中admin管理权限的key
-	 */
-	public final static String ADMIN_GROUP_MENU_POTENCE="admin_potence";
-	/**
-	 * session中后台登录页面验证码的key
-	 */
-	public final static String MANAGE_CODE="manage_code";
-	/**
-	 * session中前台登录页面验证码的key
-	 */
-	public final static String PAGE_CODE="manage_code";
-	/**
-	 * session中前台用户的key
-	 */
-	public final static String PAGE_USER="page_user";
-
-
 	public static final String FILEPATHIMG = "/lijun/zhyk/uploadFiles/uploadImgs/";		//图片上传路径
-//	public static final String FILEPATHFILE = "/lijun/zhyk/uploadFiles/file/";			//文件上传路径
-
-//	public static final String FILEPATHIMG = "D:/zhyk/uploadFiles/uploadImgs/";		//图片上传路径
+// 	public static final String FILEPATHIMG = "D:/zhyk/uploadFiles/uploadImgs/";		//图片上传路径
+	/**
+	 * 文件上传路径
+	 */
 	public static final String FILEPATHFILE = "D:/zhyk/uploadFiles/file/";			//文件上传路径
+//	public static final String FILEPATHFILE = "/lijun/zhyk/uploadFiles/file/";			//文件上传路径
 }

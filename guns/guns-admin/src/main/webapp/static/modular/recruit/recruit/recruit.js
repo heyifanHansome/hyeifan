@@ -14,17 +14,17 @@ var Recruit = {
 Recruit.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '栏目类型ID为招聘的ID', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
+            // {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '栏目', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
             {title: '招聘名', field: 'title', visible: true, align: 'center', valign: 'middle'},
-            {title: '缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
-            {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
-            {title: '城市ID（0：表示全国）', field: 'cityId', visible: true, align: 'center', valign: 'middle'},
-            {title: '工作详细地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
-            {title: '来源ID（0：官方，1：个人）', field: 'sourceId', visible: true, align: 'center', valign: 'middle'},
-            {title: '当是官方时为管理员的ID，是个人时，表示用户的ID', field: 'uid', visible: true, align: 'center', valign: 'middle'},
-            {title: '发布IP', field: 'publishIp', visible: true, align: 'center', valign: 'middle'},
-            {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
+            // {title: '缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
+            // {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
+            {title: '城市', field: 'cityId', visible: true, align: 'center', valign: 'middle'},
+            // {title: '工作详细地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
+            {title: '来源', field: 'sourceId', visible: true, align: 'center', valign: 'middle'},
+            // {title: '当是官方时为管理员的ID，是个人时，表示用户的ID', field: 'uid', visible: true, align: 'center', valign: 'middle'},
+            // {title: '发布IP', field: 'publishIp', visible: true, align: 'center', valign: 'middle'},
+            // {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updatedTime', visible: true, align: 'center', valign: 'middle'}
     ];

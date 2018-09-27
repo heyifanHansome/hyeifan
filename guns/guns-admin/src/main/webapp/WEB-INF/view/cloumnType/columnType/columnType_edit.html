@@ -1,4 +1,6 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
@@ -6,7 +8,8 @@
             <div class="row">
                 <div class="row">
                     <#select id="parentId" name="父级栏目" underline="true"></#select>
-                    <#input id="orders" name="排序" value="${item.orders}" />
+                    <#input id="parentId" name="" value="${item.orders}" />
+                <#input id="orders" name="排序" value="${item.orders}" />
                     <#input id="name" name="栏目类型名" value="${item.name}" underline="true"/>
                 </div>
             </div>

@@ -128,10 +128,13 @@ public class ColumnTypeController extends BaseController {
         return columnTypeService.selectById(columnTypeId);
     }
 
-
+    /**
+     *
+     */
     @RequestMapping("/getColumnTypeList")
     @ResponseBody
     public Object getColumnTypeList(Integer id){
-        return dao.selectBySQL("select * from sys_column_type where parent_id=0"+(!Tool.isNull(id)?" and id<>"+id:""));
+//        return dao.selectBySQL("select * from sys_column_type where parent_id=0"+(!Tool.isNull(id)?" and id<>"+id:""));
+        return dao.selectBySQL("select * from sys_column_type"+(!Tool.isNull(id)?" where id<>"+id:""));
     }
 }

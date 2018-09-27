@@ -2,7 +2,8 @@
  * 初始化招聘管理详情对话框
  */
 var RecruitInfoDlg = {
-    recruitInfoData : {}
+    recruitInfoData : {},
+    editor: null
 };
 
 /**
@@ -44,6 +45,7 @@ RecruitInfoDlg.close = function() {
  * 收集数据
  */
 RecruitInfoDlg.collectData = function() {
+    this.recruitInfoData['content'] = RecruitInfoDlg.editor.txt.html();
     this
     .set('id')
     .set('columnId')
@@ -52,12 +54,11 @@ RecruitInfoDlg.collectData = function() {
     .set('description')
     .set('cityId')
     .set('address')
-    .set('sourceId')
-    .set('uid')
-    .set('publishIp')
-    .set('content')
-    .set('createTime')
-    .set('updatedTime');
+    .set('sourceId');
+    // .set('uid')
+    // .set('publishIp');
+    // .set('createTime')
+    // .set('updatedTime');
 }
 
 /**
@@ -78,6 +79,7 @@ RecruitInfoDlg.addSubmit = function() {
     });
     ajax.set(this.recruitInfoData);
     ajax.start();
+    console.log(this.recruitInfoData)
 }
 
 /**
@@ -98,8 +100,39 @@ RecruitInfoDlg.editSubmit = function() {
     });
     ajax.set(this.recruitInfoData);
     ajax.start();
+
 }
 
 $(function() {
+    $("#cityId").append('<option value="0">全国</option>');
+    $.post(Feng.ctxPath + "/city/list", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#cityId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+            $("#cityId").append(option);
+        }
+        $('#cityId').searchableSelect();
+    });
+    // $("#columnId").append('<option value="0">通用标签</option>');
+    $.post(Feng.ctxPath + "/columnType/getColumnTypeList", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#columnId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+            $("#columnId").append(option);
+        }
+        $('#columnId').searchableSelect();
+    });
 
+    Feng.initValidator("noticeInfoForm", RecruitInfoDlg.validateFields);
+    // 初始化编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
+    editor.txt.html($("#content").val());
+    RecruitInfoDlg.editor = editor;
+
+    // 初始化缩略图上传
+    var fileServerPathUp = new $WebUpload("thumb","/tool/uploadFile");
+    fileServerPathUp.setUploadBarId("progressBar");
+    fileServerPathUp.init("/tool/uploadFile");
 });

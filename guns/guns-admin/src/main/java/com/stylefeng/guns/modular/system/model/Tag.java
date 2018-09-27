@@ -30,7 +30,7 @@ public class Tag extends Model<Tag> {
      * 栏目类型ID（当为0时表示通用标签）
      */
     @TableField("column_id")
-    private Integer columnId;
+    private String columnId;
     /**
      * 标签名
      */
@@ -55,11 +55,11 @@ public class Tag extends Model<Tag> {
         this.id = id;
     }
 
-    public Integer getColumnId() {
+    public String getColumnId() {
         return columnId;
     }
 
-    public void setColumnId(Integer columnId) {
+    public void setColumnId(String columnId) {
         this.columnId = columnId;
     }
 

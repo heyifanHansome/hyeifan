@@ -14,8 +14,8 @@ var Tag = {
 Tag.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: 'id', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '栏目类型ID（当为0时表示通用标签）', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
+            // {title: 'id', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '栏目类型', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
             {title: '标签名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}

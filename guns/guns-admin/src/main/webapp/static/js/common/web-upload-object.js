@@ -9,11 +9,11 @@
  */
 (function() {
 	
-	var $WebUpload = function(pictureId) {
+	var $WebUpload = function(pictureId,lijun_url) {
 		this.pictureId = pictureId;
 		this.uploadBtnId = pictureId + "BtnId";
 		this.uploadPreId = pictureId + "PreId";
-		this.uploadUrl = Feng.ctxPath + '/mgr/upload';
+		this.uploadUrl = Feng.ctxPath + (lijun_url!=undefined&&lijun_url!=""?lijun_url:'/mgr/upload');
 		this.fileSizeLimit = 100 * 1024 * 1024;
 		this.picWidth = 800;
 		this.picHeight = 800;
@@ -24,9 +24,9 @@
 		/**
 		 * 初始化webUploader
 		 */
-		init : function() {
+		init : function(lijun_url) {
 			var uploader = this.create();
-			this.bindEvent(uploader);
+			this.bindEvent(uploader,lijun_url);
 			return uploader;
 		},
 		
@@ -59,7 +59,7 @@
 		/**
 		 * 绑定事件
 		 */
-		bindEvent : function(bindedObj) {
+		bindEvent : function(bindedObj,lijun_url) {
 			var me =  this;
 			bindedObj.on('fileQueued', function(file) {
 				var $li = $('<div><img width="100px" height="100px"></div>');
@@ -85,7 +85,8 @@
 			// 文件上传成功，给item添加成功class, 用样式标记上传成功。
 			bindedObj.on('uploadSuccess', function(file,response) {
 				Feng.success("上传成功");
-				$("#" + me.pictureId).val(response);
+                // $("#" + me.pictureId).val(response);
+                $("#" + me.pictureId).val(lijun_url!=undefined&&lijun_url!=""?response.data:response);
 			});
 
 			// 文件上传失败，显示上传出错。

@@ -1,11 +1,20 @@
 package com.stylefeng.guns.modular.lijun.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -34,27 +43,43 @@ public class Tool {
 	public static String getImgUrlPrefix(){
 		return (Tool.getHttpDomain()+FinalStaticString.FILEPATHIMG.split("/")[FinalStaticString.FILEPATHIMG.split("/").length-1]+"/");
 	}
-	/*
-	* 通过请求获取本地PC的IP地址
-	*/
-	public static String getRemoteAddr(HttpServletRequest request) {
-	String ip = request.getHeader("X-Forwarded-For");
-	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-	ip = request.getHeader("Proxy-Client-IP");
-	}
-	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-	ip = request.getHeader("WL-Proxy-Client-IP");
-	}
-	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-	ip = request.getHeader("HTTP_CLIENT_IP");
-	}
-	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-	ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-	}
-	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-	ip = request.getRemoteAddr();
-	}
-	return ip;
+	/**
+	 * 获取Ip地址
+	 * @return
+	 */
+	public static String getIpAdrress() {
+		HttpServletRequest request= (HttpServletRequest) getRequest_Response_Session()[0];
+		String Xip = request.getHeader("X-Real-IP");
+		String XFor = request.getHeader("X-Forwarded-For");
+		if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
+			//多次反向代理后会有多个ip值，第一个ip才是真实ip
+			int index = XFor.indexOf(",");
+			if(index != -1){
+				return XFor.substring(0,index);
+			}else{
+				return XFor;
+			}
+		}
+		XFor = Xip;
+		if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
+			return XFor;
+		}
+		if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+			XFor = request.getHeader("Proxy-Client-IP");
+		}
+		if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+			XFor = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+			XFor = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+			XFor = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+			XFor = request.getRemoteAddr();
+		}
+		return XFor;
 	}
 	/**
 	 * 辅助方法:判断字符串是否为空字符串或空
@@ -189,5 +214,49 @@ public class Tool {
 		}
 		resultTimes = sb.toString();
 		return resultTimes;
+	}
+
+	/**
+	 * XML格式字符串转换为Map
+	 *
+	 * @param strXML XML字符串
+	 * @return XML数据转换后的Map
+	 * @throws Exception
+	 */
+	public static Map<String, Object> xmlToMap(String strXML) throws Exception {
+		try {
+			Map<String, Object> data = new HashMap<String, Object>();
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));
+			org.w3c.dom.Document doc = documentBuilder.parse(stream);
+			doc.getDocumentElement().normalize();
+			NodeList nodeList = doc.getDocumentElement().getChildNodes();
+			for (int idx = 0; idx < nodeList.getLength(); ++idx) {
+				Node node = nodeList.item(idx);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					org.w3c.dom.Element element = (org.w3c.dom.Element) node;
+					data.put(element.getNodeName(),  element.getTextContent());
+				}
+			}
+			try {
+				stream.close();
+			} catch (Exception ex) {
+				// do nothing
+			}
+			return data;
+		} catch (Exception ex) {
+			getLogger().warn("Invalid XML, can not convert to map. Error message: {}. XML content: {}", ex.getMessage(), strXML);
+			throw ex;
+		}
+
+	}
+	/**
+	 * 日志
+	 * @return
+	 */
+	public static Logger getLogger() {
+		Logger logger = LoggerFactory.getLogger("wxpay java sdk");
+		return logger;
 	}
 }

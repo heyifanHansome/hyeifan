@@ -1,27 +1,40 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" value="${item.id}" underline="true"/>
-                            <#input id="columnId" name="栏目类型ID为招聘的ID" value="${item.columnId}" underline="true"/>
+                <div class="row">
+                            <#select id="columnId" name="栏目" underline="true"></#select>
                             <#input id="title" name="招聘名" value="${item.title}" underline="true"/>
-                            <#input id="thumb" name="缩略图" value="${item.thumb}" underline="true"/>
+                            <!--<#input id="thumb" name="缩略图" value="${item.thumb}" underline="true"/>-->
+                            <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
                             <#input id="description" name="描述" value="${item.description}" underline="true"/>
-                            <#input id="cityId" name="城市ID（0：表示全国）" value="${item.cityId}" underline="true"/>
-                            <#input id="address" name="工作详细地址" value="${item.address}" />
+                            <#select id="cityId" name="城市"></#select>
+                            <#input id="address" name="工作详细地址" value="${item.address}"  underline="true"/>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户</label>
+                <div class="col-sm-9">
+                    <p class="form-control">${item.uid}</p>
                 </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">IP</label>
+                <div class="col-sm-9">
+                    <p class="form-control">${item.publishIp}</p>
+                </div>
+            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">内容</label>
+                                <div class="col-sm-11">
+                                    <div id="editor" class="editorHeight">
+                                    </div>
+                                </div>
+                            </div>
+            </div>
 
-                <div class="col-sm-6">
-                            <#input id="sourceId" name="来源ID（0：官方，1：个人）" value="${item.sourceId}" underline="true"/>
-                            <#input id="uid" name="当是官方时为管理员的ID，是个人时，表示用户的ID" value="${item.uid}" underline="true"/>
-                            <#input id="publishIp" name="发布IP" value="${item.publishIp}" underline="true"/>
-                            <#input id="content" name="内容" value="${item.content}" underline="true"/>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="updatedTime" name="更新时间" value="${item.updatedTime}" />
-                </div>
             </div>
 
             <div class="row btn-group-m-t">
@@ -31,8 +44,15 @@
                 </div>
             </div>
         </div>
+        <#input id="columnId_" name="" value="${item.columnId}" underline="true" type="hidden"/>
+        <#input id="cityId_" name="" value="${item.cityId}" underline="true" type="hidden"/>
+        <#input id="id" name="" value="${item.id}" underline="true" type="hidden"/>
+        <#input id="sourceId" name="" value="0" underline="true" type="hidden"/>
+        <#input id="content" value="${item.content}" name="" type="hidden" />
+
 
     </div>
 </div>
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
 <script src="${ctxPath}/static/modular/recruit/recruit/recruit_info.js"></script>
 @}

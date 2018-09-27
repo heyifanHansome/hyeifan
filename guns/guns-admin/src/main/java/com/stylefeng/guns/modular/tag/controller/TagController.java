@@ -1,6 +1,10 @@
 package com.stylefeng.guns.modular.tag.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.model.ColumnType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +15,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.tag.service.ITagService;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 标签管理表控制器
@@ -26,7 +33,8 @@ public class TagController extends BaseController {
 
     @Autowired
     private ITagService tagService;
-
+    @Autowired
+    private IColumnTypeService columnTypeService;
     /**
      * 跳转到标签管理表首页
      */
@@ -60,7 +68,21 @@ public class TagController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return tagService.selectList(null);
+        EntityWrapper ew=new EntityWrapper(new Tag());
+        if(!Tool.isNull(condition))ew.like("name",condition);
+        ew.orderBy("create_time",false);
+        List<Tag> tags=tagService.selectList(ew);
+        for (Tag tag : tags) {
+            if(Tool.isNull(tag.getColumnId())||tag.getColumnId().equals("0")){
+                tag.setColumnId("<span style='color:red;'>通用标签</span>");
+            }else{
+                EntityWrapper ew_=new EntityWrapper(new ColumnType());
+                ew_.eq("id",tag.getColumnId());
+                List<ColumnType>columnTypeList=columnTypeService.selectList(ew_);
+                tag.setColumnId(!Tool.listIsNull(columnTypeList)?columnTypeList.get(0).getName():"<span style='color:red;'>*对应栏目已被删除*</span>");
+            }
+        }
+        return tags;
     }
 
     /**
@@ -69,6 +91,7 @@ public class TagController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Tag tag) {
+        tag.setCreateTime(new Date(System.currentTimeMillis()));
         tagService.insert(tag);
         return SUCCESS_TIP;
     }
@@ -89,6 +112,7 @@ public class TagController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Tag tag) {
+        tag.setUpdateTime(new Date(System.currentTimeMillis()));
         tagService.updateById(tag);
         return SUCCESS_TIP;
     }

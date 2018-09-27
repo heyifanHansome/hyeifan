@@ -33,6 +33,10 @@ import java.util.List;
  * @author dafei, Chill Zhuang
  */
 public class ShiroKit {
+    @Override
+    public String toString() {
+        return "ShiroKit{}";
+    }
 
     private static final String NAMES_DELIMETER = ",";
 

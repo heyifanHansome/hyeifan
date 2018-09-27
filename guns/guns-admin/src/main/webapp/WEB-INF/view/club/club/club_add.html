@@ -2,20 +2,27 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+                    <input id="id" type="hidden" value="">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" underline="true"/>
-                            <#input id="userId" name="用户ID" underline="true"/>
-                            <#input id="gradeId" name="等级ID" underline="true"/>
-                            <#input id="realName" name="实名"/>
+                            <#select id="userId" name="用户" underline="true">
+                            </#select>
+                            <#select id="gradeId" name="等级" underline="true">
+                            </#select>
+                            <#input id="realName" name="实名" underline="true"/>
+                           <#input id="updateTime" name="更新时间" readonly="readonly" underline="true"/>
                 </div>
 
                 <div class="col-sm-6">
                             <#input id="idCard" name="身份证号" underline="true"/>
-                            <#input id="status" name="加入状态（0：未审查，1：考察，2：通过，3：拒绝）" underline="true"/>
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
+                            <#select id ="status" name="加入状态" underline="true">
+                                 <option value="0">未审查</option>
+                                 <option value="1">考察</option>
+                                 <option value="2">通过</option>
+                                 <option value="3">拒绝</option>
+                            </#select>
+                            <#input id="createTime" name="创建时间" readonly="readonly" underline="true"/>
+
                 </div>
             </div>
 

@@ -103,6 +103,15 @@ public class GradeController extends BaseController {
         return SUCCESS_TIP;
     }
 
+
+    @RequestMapping(value = "getAllGrade")
+    @ResponseBody
+    public List<Grade> getAllGrade(){
+        List<Grade> grades = gradeService.selectList(null);
+        return grades;
+    }
+
+
     /**
      * 厨师等级表详情
      */

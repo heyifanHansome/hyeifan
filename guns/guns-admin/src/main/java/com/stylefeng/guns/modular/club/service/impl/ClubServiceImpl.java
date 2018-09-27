@@ -6,6 +6,9 @@ import com.stylefeng.guns.modular.club.service.IClubService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 星厨俱乐部 服务实现类
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IClubService {
 
+    @Override
+    public List<Map<String, Object>> list(String condition) {
+        return this.baseMapper.list(condition);
+    }
 }

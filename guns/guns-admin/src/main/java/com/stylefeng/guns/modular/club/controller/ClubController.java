@@ -1,6 +1,9 @@
 package com.stylefeng.guns.modular.club.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.ClubWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +14,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Club;
 import com.stylefeng.guns.modular.club.service.IClubService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 星厨俱乐部控制器
@@ -60,7 +66,9 @@ public class ClubController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return clubService.selectList(null);
+
+            List<Map<String,Object>> list = clubService.list(condition);
+        return  super.warpObject(new ClubWarpper(list)) ;
     }
 
     /**
@@ -69,6 +77,7 @@ public class ClubController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Club club) {
+        club.setCreateTime(new DateTime());
         clubService.insert(club);
         return SUCCESS_TIP;
     }
@@ -89,6 +98,7 @@ public class ClubController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Club club) {
+        club.setUpdateTime(new DateTime()) ;
         clubService.updateById(club);
         return SUCCESS_TIP;
     }

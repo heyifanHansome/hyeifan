@@ -15,13 +15,13 @@ Club.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
             {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '用户', field: 'userId', visible: true, align: 'center', valign: 'middle'},
-            {title: '等级ID', field: 'gradeId', visible: true, align: 'center', valign: 'middle'},
-            {title: '实名', field: 'realName', visible: true, align: 'center', valign: 'middle'},
-            {title: '身份证号', field: 'idCard', visible: true, align: 'center', valign: 'middle'},
-            {title: '加入状态（0：未审查，1：考察，2：通过，3：拒绝）', field: 'status', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '用户', field: 'userName', visible: true, align: 'center', valign: 'middle'},
+            {title: '等级', field: 'gradeName', visible: true, align: 'center', valign: 'middle'},
+            {title: '实名', field: 'real_name', visible: true, align: 'center', valign: 'middle'},
+            {title: '身份证号', field: 'id_card', visible: true, align: 'center', valign: 'middle'},
+            {title: '加入状态', field: 'status', visible: true, align: 'center', valign: 'middle'},
+            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

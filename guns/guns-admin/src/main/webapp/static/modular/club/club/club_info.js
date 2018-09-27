@@ -51,8 +51,6 @@ ClubInfoDlg.collectData = function() {
     .set('realName')
     .set('idCard')
     .set('status')
-    .set('createTime')
-    .set('updateTime');
 }
 
 /**
@@ -97,4 +95,33 @@ ClubInfoDlg.editSubmit = function() {
 
 $(function() {
 
+    /**
+     * 动态获取所有等级
+     */
+    var ajax = new $ax(Feng.ctxPath + "/grade/getAllGrade", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#gradeId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            var optionstring = "";
+            $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
 });

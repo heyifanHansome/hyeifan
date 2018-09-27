@@ -2,20 +2,27 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+                <input id="id" value="${item.id}" name="" type="hidden">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" value="${item.id}" underline="true"/>
-                            <#input id="userId" name="用户ID" value="${item.userId}" underline="true"/>
-                            <#input id="gradeId" name="等级ID" value="${item.gradeId}" underline="true"/>
-                            <#input id="realName" name="实名" value="${item.realName}" />
+                            <#select id="userId" name="用户" underline="true">
+                            </#select>
+                            <#select id="gradeId" name="等级" underline="true">
+                            </#select>
+                            <#input id="realName" name="实名" value="${item.realName}" underline="true"/>
+                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true" />
                 </div>
 
                 <div class="col-sm-6">
                             <#input id="idCard" name="身份证号" value="${item.idCard}" underline="true"/>
-                            <#input id="status" name="加入状态（0：未审查，1：考察，2：通过，3：拒绝）" value="${item.status}" underline="true"/>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" />
+                            <#select id ="status" name="加入状态" underline="true">
+                            <option value="0">未审查</option>
+                            <option value="1">考察</option>
+                            <option value="2">通过</option>
+                            <option value="3">拒绝</option>
+                            </#select>
+                            <#input id="createTime" name="创建时间" value="${item.createTime}" readonly="readonly" underline="true"/>
+
                 </div>
             </div>
 
@@ -30,4 +37,14 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/club/club/club_info.js"></script>
+<script>
+    $(document).ready(function () {
+            $("#userId").val(${item.userId});
+
+            $("#gradeId").val(${item.gradeId});
+
+            $("#status").val(${item.status});
+    })
+
+</script>
 @}

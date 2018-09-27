@@ -2,6 +2,10 @@ package com.stylefeng.guns.modular.club.service;
 
 import com.stylefeng.guns.modular.system.model.Club;
 import com.baomidou.mybatisplus.service.IService;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IClubService extends IService<Club> {
 
+    List<Map<String, Object>> list(@Param("condition") String condition);
 }

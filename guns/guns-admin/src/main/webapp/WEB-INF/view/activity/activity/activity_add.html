@@ -2,26 +2,34 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input id="id" type="hidden" value="">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" underline="true"/>
-                            <#input id="columnId" name="栏目类型ID为活动的ID" underline="true"/>
+                            <#select id="columnId" name="栏目类型" underline="true">
+                            </#select>
                             <#input id="title" name="活动名" underline="true"/>
-                            <#input id="thumb" name="缩略图" underline="true"/>
-                            <#input id="description" name="描述（本期看点）" underline="true"/>
-                            <#input id="startTime" name="开始时间(在活动开始之前都可报名，通过这个来判断即将开始、进行中、已结束等状态)" underline="true"/>
-                            <#input id="endTime" name="结束时间"/>
-                </div>
 
+                            <#avatar id="thumb" name="缩略图" avatarImg="" underline="true"/>
+
+                            <#input id="description" name="描述" underline="true"/>
+
+                            <#input id="startTime" name="开始时间" underline="true"/>
+
+
+                </div>
                 <div class="col-sm-6">
-                            <#input id="cityId" name="城市ID（0：表示全国）" underline="true"/>
-                            <#input id="sourceId" name="来源ID（0：官方，1：个人）" underline="true"/>
-                            <#input id="uid" name="当是官方时为管理员的ID，是个人时，表示用户的ID" underline="true"/>
+                            <#select name="城市" id="cityId" underline="true">
+                            </#select>
+                            <#select id="sourceId" name="来源" underline="true">
+                                <option value="0">官方</option>
+                                <option value="1">个人</option>
+                            </#select>
+                            <#select name="发布者" id="uid" underline="true" >
+                            </#select>
                             <#input id="publishIp" name="发布IP" underline="true"/>
-                            <#input id="content" name="内容（活动内容）" underline="true"/>
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
+                            <#input id="content" name="内容" underline="true"/>
+                            <#input id="endTime" name="结束时间" underline="true"/>
+
                 </div>
             </div>
 
@@ -36,4 +44,12 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/activity/activity/activity_info.js"></script>
+<script>
+    laydate.render({
+        elem: '#endTime'
+    });
+    laydate.render({
+        elem: '#startTime'
+    });
+</script>
 @}

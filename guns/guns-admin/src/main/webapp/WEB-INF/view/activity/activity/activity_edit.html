@@ -2,26 +2,31 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input id="id" type="hidden" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="自增主键" value="${item.id}" underline="true"/>
-                            <#input id="columnId" name="栏目类型ID为活动的ID" value="${item.columnId}" underline="true"/>
+                            <#select id="columnId" name="栏目类型" value="${item.columnId}"  underline="true">
+                            </#select>
                             <#input id="title" name="活动名" value="${item.title}" underline="true"/>
-                            <#input id="thumb" name="缩略图" value="${item.thumb}" underline="true"/>
-                            <#input id="description" name="描述（本期看点）" value="${item.description}" underline="true"/>
-                            <#input id="startTime" name="开始时间(在活动开始之前都可报名，通过这个来判断即将开始、进行中、已结束等状态)" value="${item.startTime}" underline="true"/>
-                            <#input id="endTime" name="结束时间" value="${item.endTime}" />
+                            <#avatar id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
+                            <#input id="description" name="描述" value="${item.description}" underline="true"/>
+                            <#input id="startTime" name="开始时间" value="${item.startTime}" underline="true"/>
+
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="cityId" name="城市ID（0：表示全国）" value="${item.cityId}" underline="true"/>
-                            <#input id="sourceId" name="来源ID（0：官方，1：个人）" value="${item.sourceId}" underline="true"/>
-                            <#input id="uid" name="当是官方时为管理员的ID，是个人时，表示用户的ID" value="${item.uid}" underline="true"/>
+                            <#select id="cityId" name="城市" value="${item.columnId}"  underline="true">
+                            </#select>
+                            <#select id="sourceId" name="来源" underline="true"  >
+                                <option value="0">官方</option>
+                                <option value="1">个人</option>
+                            </#select>
+                            <#select name="发布者" id="userId"    value="${item.uid}"   underline="true" >
+                            </#select>
                             <#input id="publishIp" name="发布IP" value="${item.publishIp}" underline="true"/>
-                            <#input id="content" name="内容（活动内容）" value="${item.content}" underline="true"/>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" />
+
+                            <#input id="content" name="内容" value="${item.content}" underline="true"/>
+                            <#input id="endTime" name="结束时间" value="${item.endTime}" />
                 </div>
             </div>
 
@@ -36,4 +41,15 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/activity/activity/activity_info.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#columnId").val(${item.columnId});
+
+        $("#cityId").val(${item.cityId});
+
+        $("#uid").val(${item.uid});
+
+        $("#sourceId").val(${item.sourceId});
+    })
+</script>
 @}

@@ -144,7 +144,7 @@ $(function() {
 
 
     /**
-     * 动态获取所有用户
+     * 动态获取所有栏目
      */
     var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
         for (var i = 0; i < data.length; i++) {

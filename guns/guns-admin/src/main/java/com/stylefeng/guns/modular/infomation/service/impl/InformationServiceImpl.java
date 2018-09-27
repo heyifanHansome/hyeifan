@@ -6,9 +6,12 @@ import com.stylefeng.guns.modular.infomation.service.IInformationService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
- * 
+ *
 资讯管理表 服务实现类
  * </p>
  *
@@ -18,4 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class InformationServiceImpl extends ServiceImpl<InformationMapper, Information> implements IInformationService {
 
+    @Override
+    public List<Map<String, Object>> list(String condition) {
+        return this.baseMapper.list(condition);
+    }
 }

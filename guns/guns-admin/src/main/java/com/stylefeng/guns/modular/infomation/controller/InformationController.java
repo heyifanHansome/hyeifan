@@ -1,6 +1,8 @@
 package com.stylefeng.guns.modular.infomation.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.InformationWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +13,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Information;
 import com.stylefeng.guns.modular.infomation.service.IInformationService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 资讯管理控制器
@@ -60,7 +65,9 @@ public class InformationController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return informationService.selectList(null);
+
+        List<Map<String,Object>> list = informationService.list(condition);
+        return  super.warpObject(new InformationWarpper(list));
     }
 
     /**
@@ -69,6 +76,7 @@ public class InformationController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Information information) {
+        information.setCreateTime(new DateTime());
         informationService.insert(information);
         return SUCCESS_TIP;
     }
@@ -89,6 +97,7 @@ public class InformationController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Information information) {
+        information.setUpdateTime(new DateTime());
         informationService.updateById(information);
         return SUCCESS_TIP;
     }

@@ -14,20 +14,20 @@ var Activity = {
 Activity.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '栏目类型ID为活动的ID', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
+            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '栏目类型', field: 'columnTypeName', visible: true, align: 'center', valign: 'middle'},
             {title: '活动名', field: 'title', visible: true, align: 'center', valign: 'middle'},
             {title: '缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
-            {title: '描述（本期看点）', field: 'description', visible: true, align: 'center', valign: 'middle'},
-            {title: '开始时间(在活动开始之前都可报名，通过这个来判断即将开始、进行中、已结束等状态)', field: 'startTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '结束时间', field: 'endTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '城市ID（0：表示全国）', field: 'cityId', visible: true, align: 'center', valign: 'middle'},
-            {title: '来源ID（0：官方，1：个人）', field: 'sourceId', visible: true, align: 'center', valign: 'middle'},
-            {title: '当是官方时为管理员的ID，是个人时，表示用户的ID', field: 'uid', visible: true, align: 'center', valign: 'middle'},
-            {title: '发布IP', field: 'publishIp', visible: true, align: 'center', valign: 'middle'},
-            {title: '内容（活动内容）', field: 'content', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
+            {title: '开始时间', field: 'start_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '结束时间', field: 'end_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '城市名称', field: 'cityName', visible: true, align: 'center', valign: 'middle'},
+            {title: '来源', field: 'sourceName', visible: true, align: 'center', valign: 'middle'},
+            {title: '发布名称', field: 'userName', visible: true, align: 'center', valign: 'middle'},
+            {title: '发布IP', field: 'publishIp', visible: false, align: 'center', valign: 'middle'},
+            {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
+            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

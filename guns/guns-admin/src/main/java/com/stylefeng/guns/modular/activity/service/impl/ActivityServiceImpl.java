@@ -6,6 +6,9 @@ import com.stylefeng.guns.modular.activity.service.IActivityService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 活动管理表 服务实现类
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> implements IActivityService {
 
+    @Override
+    public List<Map<String, Object>> list(String condition) {
+        return this.baseMapper.list(condition);
+    }
 }

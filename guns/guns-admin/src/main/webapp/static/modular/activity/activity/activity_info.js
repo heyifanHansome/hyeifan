@@ -103,4 +103,54 @@ ActivityInfoDlg.editSubmit = function() {
 
 $(function() {
 
+
+    /**
+     * 动态获取所有栏目
+     */
+    var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#cityId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+    /**
+     * 动态获取所有用户
+     */
+    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+    // 初始化缩略图上传
+    var avatarUp = new $WebUpload("thumb");
+    avatarUp.setUploadBarId("progressBar");
+    avatarUp.init();
+
+
 });

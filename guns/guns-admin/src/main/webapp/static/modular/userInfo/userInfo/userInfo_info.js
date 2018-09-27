@@ -123,7 +123,6 @@ $(function() {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             var optionstring = "";
-            console.log(jsonObj)
             $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
         }
 

@@ -110,4 +110,16 @@ public class UserResumeController extends BaseController {
     public Object detail(@PathVariable("userResumeId") Integer userResumeId) {
         return userResumeService.selectById(userResumeId);
     }
+
+
+    /**
+     * 获取所有用户
+     */
+    @RequestMapping(value = "/getAllResume")
+    @ResponseBody
+    public List<UserResume> getAllResume() {
+        List<UserResume> userResumes  = userResumeService.selectList(null);
+        return userResumes;
+    }
+
 }

@@ -14,15 +14,15 @@ var ResumeLive = {
 ResumeLive.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '主键ID', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '简历ID', field: 'resumeId', visible: true, align: 'center', valign: 'middle'},
+            {title: '主键ID', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '简历名称', field: 'userSumerName', visible: true, align: 'center', valign: 'middle'},
             {title: '公司部门', field: 'company', visible: true, align: 'center', valign: 'middle'},
-            {title: '职位', field: 'positionName', visible: true, align: 'center', valign: 'middle'},
-            {title: '在职起始时间', field: 'startTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '在职结束时间', field: 'endTime', visible: true, align: 'center', valign: 'middle'},
+            {title: '职位', field: 'position_name', visible: true, align: 'center', valign: 'middle'},
+            {title: '在职起始时间', field: 'start_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '在职结束时间', field: 'end_time', visible: true, align: 'center', valign: 'middle'},
             {title: '备注', field: 'remark', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

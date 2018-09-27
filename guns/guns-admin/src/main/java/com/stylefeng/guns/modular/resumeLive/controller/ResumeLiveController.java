@@ -1,6 +1,9 @@
 package com.stylefeng.guns.modular.resumeLive.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.warpper.ResumeLiveWarpper;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +14,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.ResumeLive;
 import com.stylefeng.guns.modular.resumeLive.service.IResumeLiveService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户资历控制器
@@ -59,8 +65,10 @@ public class ResumeLiveController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
+
     public Object list(String condition) {
-        return resumeLiveService.selectList(null);
+        List<Map<String,Object>> list = resumeLiveService.list(condition);
+        return super.warpObject(new ResumeLiveWarpper(list));
     }
 
     /**
@@ -69,6 +77,7 @@ public class ResumeLiveController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(ResumeLive resumeLive) {
+        resumeLive.setCreateTime(new DateTime());
         resumeLiveService.insert(resumeLive);
         return SUCCESS_TIP;
     }
@@ -89,6 +98,7 @@ public class ResumeLiveController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(ResumeLive resumeLive) {
+        resumeLive.setUpdateTime(new DateTime());
         resumeLiveService.updateById(resumeLive);
         return SUCCESS_TIP;
     }

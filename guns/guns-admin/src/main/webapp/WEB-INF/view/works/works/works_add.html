@@ -18,15 +18,15 @@
                             <!--<#input id="createTime" name="创建时间"  readonly="readonly" underline="true"/>-->
                     <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
-                        <div class='col-sm-12'> <input  class='form-control main_ingredient'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                        <div class='col-sm-12'>  <input  class='form-control main_ingredient'  placeholder="请添加主料 如肉"  type='text' underline='true'/></div> <div class='col-sm-12'> </div>
                     </div>
                     <#button btnCss="info" name="添加辅料"  icon="fa-check" clickFun="goAdd(2)"/>
                     <div id='twoleftbuttons'>
-                        <div class='col-sm-12'> <input  class='form-control supplementary_material'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                        <div class='col-sm-12'> <input  class='form-control supplementary_material'  placeholder="请添加辅料 如肉"   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
                     </div>
                     <#button btnCss="info" name="添加调料"  icon="fa-check" clickFun="goAdd(3)"/>
                     <div id='threeleftbuttons'>
-                        <div class='col-sm-12'> <input  class='form-control seasoning'   type='text' underline='true'/></div> <div class='col-sm-12' underline="true"> </div>
+                        <div class='col-sm-12'> <input  class='form-control seasoning'  placeholder="请添加配料 如肉"   type='text' underline='true'/></div> <div class='col-sm-12' underline="true"> </div>
                     </div>
                      </div>
 
@@ -41,15 +41,15 @@
                             <#input id="updateTime" name="更新时间" readonly="readonly" underline="true"/>
                     <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
                     <div id='onerightbuttons'>
-                        <div class='col-sm-12'> <input  class='form-control main_ingredient'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                        <div class='col-sm-12'> <input  class='form-control main_ingredient'    placeholder="请添加主料单位 如一斤" type='text' underline='true'/></div> <div class='col-sm-12'> </div>
                     </div>
                     <#button btnCss="danger" name="取消添加辅料" icon="fa-eraser" clickFun="goDel(2)"/>
                     <div id='tworightbuttons'>
-                        <div class='col-sm-12'> <input  class='form-control supplementary_material'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                        <div class='col-sm-12'> <input  class='form-control supplementary_material'   placeholder="请添加辅料单位 如一斤"   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
                     </div>
                     <#button btnCss="danger" name="取消添加调料" icon="fa-eraser" clickFun="goDel(3)"/>
                     <div id='threerightbuttons'>
-                        <div class='col-sm-12'> <input  class='form-control seasoning'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>
+                        <div class='col-sm-12'> <input  class='form-control seasoning'      placeholder="请添加配料单位 如一斤"  type='text' underline='true'/></div> <div class='col-sm-12'> </div>
                     </div>
 
                 </div>

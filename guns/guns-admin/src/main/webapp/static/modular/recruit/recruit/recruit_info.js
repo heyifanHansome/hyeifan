@@ -82,7 +82,7 @@ RecruitInfoDlg.addSubmit = function() {
     ajax.set(this.recruitInfoData);
     ajax.start();
     console.log(this.recruitInfoData)
-}
+};
 
 /**
  * 提交修改
@@ -103,7 +103,7 @@ RecruitInfoDlg.editSubmit = function() {
     ajax.set(this.recruitInfoData);
     ajax.start();
 
-}
+};
 
 $(function() {
     $("#cityId").append('<option value="0">全国</option>');

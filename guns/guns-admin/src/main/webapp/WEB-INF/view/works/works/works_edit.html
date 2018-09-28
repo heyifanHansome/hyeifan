@@ -7,6 +7,7 @@
                       <input id="baseId" name="图片id" value="${item.baseId}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
+                    <input type="file"  onchange="alert($(this).val())"/>
                             <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
                             <#select id="type" name="类型" underline="true">
                             <option value="0">图文</option>
@@ -20,7 +21,7 @@
                             <#select id="columnId" name="类型" underline="true">
                             </#select>
                             <!--<#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true"/>-->
-                    <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
+                    <#button btnCss="info" name="添加主料输入框"   icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
                     </div>
                     <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(2)"/>
@@ -61,8 +62,25 @@
                     </div>
                 </fieldset>
             </div>
+
+
+            <div>
+                <fieldset>
+                    <legend>视频回显</legend>
+                    <div class="sx"	>
+                        <!--<input   multiple type="file">-->
+                        <video src="http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao" controls="controls">
+                        </video>
+                        <input  id="1" type="text" value="通过">
+                        <input  id="w" type="text" value="btongguo ">
+                    </div>
+                </fieldset>
+            </div>
+
+
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
+
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="WorksInfoDlg.editSubmit()"/>
                     <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="WorksInfoDlg.close()"/>
                 </div>
@@ -164,6 +182,7 @@
                 browseClass: "btn btn-primary",                         //按钮样式
                 initialPreviewAsData: true,             //
                 initialPreview: imgArray,				//预览图片数组
+                // initialPreview: [ "https://cheshi654321.oss-cn-beijing.aliyuncs.com/sunshineFlowers","  https://cheshi654321.oss-cn-beijing.aliyuncs.com/sunshineFlowers"],
                 initialPreviewConfig: imgArrayConfig,//预览信息 配置   删除url以及参数配置
                 enctype: 'multipart/form-data',
                 previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
@@ -208,11 +227,13 @@
             for (var i = 0; i <= picId.length; i++) {
                 if (picId[i] != null && picId[i] != '') {//遍历图片id
                     imgArray.push("/img/getImage/" + picId[i] + "");//封装预览图片
+                    // imgArray.push("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");//封装预览图片
                     //封装config
                     var config = new Object();
                     config.caption = picId[i] + ".jpg";
                     config.url = '/img/imgDeleteMul';//删除图片接口
                     config.key = picId[i];//设置删除图片时参数
+                    // config.type='video';
                     imgArrayConfig.push(config);
                 }
             }

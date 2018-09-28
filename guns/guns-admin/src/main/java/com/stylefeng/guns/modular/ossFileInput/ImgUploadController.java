@@ -7,6 +7,7 @@ package com.stylefeng.guns.modular.ossFileInput;
 import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
+import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.PictureMapper;
 import com.stylefeng.guns.modular.system.model.Picture;
@@ -69,67 +70,68 @@ public class ImgUploadController {
         }
         return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
     }
-
-    /*文件上传的方法*/
-    @PostMapping(value = "/imgUploadMul")
-    @ResponseBody
-    public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
-
-        Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
-
-        MultipartFile multipartFile = null;
-        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
-            Object obj = i.next();
-            multipartFile = (MultipartFile) map.get(obj);
-
-        }
-
-        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
-        if (multipartFile.isEmpty()) {
-            return "error";
-        }
-        // 获取文件名
-        String fileName = multipartFile.getOriginalFilename();
-        // 获取文件的后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        // 这里我使用随机字符串来重新命名图片
-        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
-        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
-        File dest = new File(uploadPath + fileName);
-        // 检测是否存在目录
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
-        try {
-            multipartFile.transferTo(dest);
-            //创建图片对象
-            Picture picture = new Picture();
-
-            picture.setCreateTime(new DateTime());
-            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-            picture.setCreateBy(shiroUser.getName());
-            picture.setBaseId(goodsTypeId);
-            picture.setPicturename(fileName.replace(suffixName, ""));//图片名称
-            picture.setRelativepath(uploadPath);//相对路径
-            picture.setServerpath(uploadPath);//服务器路径
-            picture.setAbsolutepath(uploadPath);//绝对路径
-            picture.setType("");//图片类型
-            picture.setSuffixname(suffixName);//图片后缀名
-
-            pictureService.insert(picture);
-            //url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
-            String config = "{\"state\": \"SUCCESS\"," +
-                    "\"url\": \"" + "/img/getImage/" + picture.getId() + "\"," +
-                    "\"pictureId\": \"" + picture.getId() + "\"," +
-                    "\"original\": \"" + fileName + "\"}";
-            return config;
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//
+//    /*文件上传的方法*/
+//    @PostMapping(value = "/imgUploadMul")
+//    @ResponseBody
+//    public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
+//        OSSClientUtil ossClientUtil=new OSSClientUtil();
+//
+//        Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
+//
+//        MultipartFile multipartFile = null;
+//        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
+//            Object obj = i.next();
+//            multipartFile = (MultipartFile) map.get(obj);
+//        }
+//
+//        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
+//        if (multipartFile.isEmpty()) {
+//            return "error";
+//        }
+//        // 获取文件名
+//        String fileName = multipartFile.getOriginalFilename();
+//        // 获取文件的后缀名
+//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//        // 这里我使用随机字符串来重新命名图片
+//        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
+//        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
+//        File dest = new File(uploadPath + fileName);
+//        // 检测是否存在目录
+//        if (!dest.getParentFile().exists()) {
+//            dest.getParentFile().mkdirs();
+//        }
+//        try {
+//            multipartFile.transferTo(dest);
+//            //创建图片对象
+//
+//            Picture picture = new Picture();
+//
+//            picture.setCreateTime(new DateTime());
+//            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+//            picture.setCreateBy(shiroUser.getName());
+//            picture.setBaseId(goodsTypeId);
+//            picture.setPicturename(fileName.replace(suffixName, ""));//图片名称
+//            picture.setRelativepath(uploadPath);//相对路径
+//            picture.setServerpath(uploadPath);//服务器路径
+//            picture.setAbsolutepath(uploadPath);//绝对路径
+//            picture.setType("");//图片类型
+//            picture.setSuffixname(suffixName);//图片后缀名
+//
+//            pictureService.insert(picture);
+//            //url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
+//            String config = "{\"state\": \"SUCCESS\"," +
+//                    "\"url\": \"" + "/img/getImage/" + picture.getId() + "\"," +
+//                    "\"pictureId\": \"" + picture.getId() + "\"," +
+//                    "\"original\": \"" + fileName + "\"}";
+//            return config;
+//        } catch (IllegalStateException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     /**
      * 获取图片方法
@@ -172,6 +174,69 @@ public class ImgUploadController {
             resultMsg.setData(imgpath);
         }
         return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
+    }
+
+    /*文件上传的方法*/
+    @PostMapping(value = "/imgUploadMul")
+    @ResponseBody
+    public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
+        OSSClientUtil ossClientUtil=new OSSClientUtil();
+        Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
+
+        MultipartFile multipartFile = null;
+        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
+            Object obj = i.next();
+            multipartFile = (MultipartFile) map.get(obj);
+        }
+//
+//        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
+//        if (multipartFile.isEmpty()) {
+//            return "error";
+//        }
+//        // 获取文件名
+//        String fileName = multipartFile.getOriginalFilename();
+//        // 获取文件的后缀名
+//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//        // 这里我使用随机字符串来重新命名图片
+//        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
+//        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
+//        File dest = new File(uploadPath + fileName);
+//        // 检测是否存在目录
+//        if (!dest.getParentFile().exists()) {
+//            dest.getParentFile().mkdirs();
+//        }
+        ossClientUtil.uploadImg2Oss(multipartFile);
+        try {
+
+//            multipartFile.transferTo(dest);
+//            //创建图片对象
+//
+//            Picture picture = new Picture();
+//
+//            picture.setCreateTime(new DateTime());
+//            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+//            picture.setCreateBy(shiroUser.getName());
+//            picture.setBaseId(goodsTypeId);
+//            picture.setPicturename(fileName.replace(suffixName, ""));//图片名称
+//            picture.setRelativepath(uploadPath);//相对路径
+//            picture.setServerpath(uploadPath);//服务器路径
+//            picture.setAbsolutepath(uploadPath);//绝对路径
+//            picture.setType("");//图片类型
+//            picture.setSuffixname(suffixName);//图片后缀名
+//
+//            pictureService.insert(picture);
+//            //url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
+//            String config = "{\"state\": \"SUCCESS\"," +
+//                    "\"url\": \"" + "/img/getImage/" + picture.getId() + "\"," +
+//                    "\"pictureId\": \"" + picture.getId() + "\"," +
+//                    "\"original\": \"" + fileName + "\"}";
+            return "";
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+        }
+        return null;
     }
 
 }

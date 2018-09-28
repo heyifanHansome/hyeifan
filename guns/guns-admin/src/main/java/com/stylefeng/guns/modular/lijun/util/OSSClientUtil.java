@@ -78,9 +78,9 @@ public class OSSClientUtil {
 
 //    public String uploadImg2Oss(MultipartFile file) {
     public Map<String,Object> uploadImg2Oss(MultipartFile file) {
-        if (file.getSize() > 1024 * 1024) {
-            throw new RuntimeException("上传图片大小不能超过1M！");
-        }
+//        if (file.getSize() > 1024 * 1024) {
+//            throw new RuntimeException("上传图片大小不能超过1M！");
+//        }
         String originalFilename = file.getOriginalFilename();
         String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
         Random random = new Random();
@@ -132,6 +132,7 @@ public class OSSClientUtil {
             //上传文件
             //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
             PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
+
             ret = putResult.getETag();
             /*李俊添加,开始*/
             result.put("ret",ret);
@@ -189,6 +190,9 @@ public class OSSClientUtil {
         }
         if (FilenameExtension.equalsIgnoreCase(".xml")) {
             return "text/xml";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".mp4")) {
+            return "video/mp4";
         }
         return "image/jpeg";
     }

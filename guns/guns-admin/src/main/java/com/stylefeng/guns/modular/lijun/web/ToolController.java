@@ -10,6 +10,7 @@ import com.stylefeng.guns.modular.lijun.util.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,22 +22,24 @@ import java.util.*;
 @RequestMapping("/tool")
 public class ToolController {
 
-    @RequestMapping("uploadFile")
+    @RequestMapping("/uploadFile")
     @ResponseBody
-    public Object uploadFile(HttpServletRequest request,@RequestPart("file") MultipartFile file){
+    public Object uploadFile(@RequestParam("file") MultipartFile file){
         OSSClientUtil ossClientUtil=new OSSClientUtil();
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("success", true);
         value.put("errorCode", 0);
         value.put("errorMsg", "");
         try {
-            String head = ossClientUtil.updateHead(file);//此处是调用上传服务接口，4是需要更新的userId 测试数据。
+            Map<String,Object>result=ossClientUtil.updateHead(file);
+            String head = result.get("imgUrl").toString();
             value.put("data", head);
+            value.put("object_name",result.get("ALi_ObjectName").toString());
         } catch (IOException e) {
             e.printStackTrace();
             value.put("success", false);
             value.put("errorCode", 200);
-            value.put("errorMsg", "图片上传失败");
+            value.put("errorMsg", "上传失败");
         }
         return value;
     }

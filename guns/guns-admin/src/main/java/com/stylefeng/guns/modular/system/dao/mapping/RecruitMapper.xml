@@ -17,11 +17,12 @@
         <result column="content" property="content" />
         <result column="create_time" property="createTime" />
         <result column="updated_time" property="updatedTime" />
+        <result column="object_name" property="object_name" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, column_id, title, thumb, description, city_id, address, source_id, uid, publish_ip, content, create_time, updated_time
+        id, column_id, title, thumb, description, city_id, address, source_id, uid, publish_ip, content, create_time, updated_time, object_name
     </sql>
 
 </mapper>

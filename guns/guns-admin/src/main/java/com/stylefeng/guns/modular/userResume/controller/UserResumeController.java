@@ -1,7 +1,10 @@
 package com.stylefeng.guns.modular.userResume.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.resumeFJ.service.IResumeFjService;
+import com.stylefeng.guns.modular.system.model.ResumeFj;
 import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserResumeWarpper;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.UserResume;
 import com.stylefeng.guns.modular.userResume.service.IUserResumeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +36,10 @@ public class UserResumeController extends BaseController {
 
     @Autowired
     private IUserResumeService userResumeService;
+
+    /** 李俊-简历附件service **/
+    @Autowired
+    private IResumeFjService resumeFjService;
 
     /**
      * 跳转到用户简历管理首页
@@ -75,9 +83,14 @@ public class UserResumeController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(UserResume userResume) {
+    public Object add(UserResume userResume,String fj_ids) {
         userResume.setCreateTime(new DateTime());
         userResumeService.insert(userResume);
+        ResumeFj fj=new ResumeFj();
+        fj.setResumeId(userResume.getId());
+        EntityWrapper<ResumeFj>ew=new EntityWrapper<>();
+        ew.in("id",fj_ids.split(","));
+        resumeFjService.update(fj,ew);
         return SUCCESS_TIP;
     }
 
@@ -88,6 +101,14 @@ public class UserResumeController extends BaseController {
     @ResponseBody
     public Object delete(@RequestParam Integer userResumeId) {
         userResumeService.deleteById(userResumeId);
+        EntityWrapper<ResumeFj>ew=new EntityWrapper<>();
+        ew.eq("resume_id",userResumeId);
+        List<ResumeFj>fjs=resumeFjService.selectList(ew);
+        List<Integer>ids=new ArrayList<>();
+        for (ResumeFj fj : fjs) {
+            ids.add(fj.getId());
+        }
+        resumeFjService.deleteBatchIds(ids);
         return SUCCESS_TIP;
     }
 
@@ -96,9 +117,14 @@ public class UserResumeController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(UserResume userResume) {
+    public Object update(UserResume userResume,String fj_ids) {
         userResume.setUpdateTime(new DateTime());
         userResumeService.updateById(userResume);
+        ResumeFj fj=new ResumeFj();
+        fj.setResumeId(userResume.getId());
+        EntityWrapper<ResumeFj>ew=new EntityWrapper<>();
+        ew.in("id",fj_ids.split(","));
+        resumeFjService.update(fj,ew);
         return SUCCESS_TIP;
     }
 

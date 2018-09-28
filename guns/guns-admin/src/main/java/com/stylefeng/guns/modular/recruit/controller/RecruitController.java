@@ -1,10 +1,12 @@
 package com.stylefeng.guns.modular.recruit.controller;
 
+import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.dao.Dao;
 import com.stylefeng.guns.modular.system.model.City;
@@ -126,7 +128,12 @@ public class RecruitController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(Recruit recruit) {
+    public Object add(Recruit recruit,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            ossClient.shutdown();
+        }
         recruit.setUid(String.valueOf(ShiroKit.getUser().getId()));
         recruit.setPublishIp(Tool.getIpAdrress());
         recruit.setCreateTime(new Date(System.currentTimeMillis()));
@@ -140,6 +147,10 @@ public class RecruitController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer recruitId) {
+        Recruit recruit = recruitService.selectById(recruitId);
+        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, recruit.getObject_name());
+        ossClient.shutdown();
         recruitService.deleteById(recruitId);
         return SUCCESS_TIP;
     }
@@ -149,8 +160,12 @@ public class RecruitController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(Recruit recruit) {
-        System.err.println(recruit);
+    public Object update(Recruit recruit,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            ossClient.shutdown();
+        }
         recruit.setUid(String.valueOf(ShiroKit.getUser().getId()));
         recruit.setPublishIp(Tool.getIpAdrress());
         recruit.setUpdatedTime(new Date(System.currentTimeMillis()));

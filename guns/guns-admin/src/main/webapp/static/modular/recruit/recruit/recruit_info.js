@@ -54,7 +54,9 @@ RecruitInfoDlg.collectData = function() {
     .set('description')
     .set('cityId')
     .set('address')
-    .set('sourceId');
+    .set('sourceId')
+    .set('object_name')
+    .set('old_object_name');
     // .set('uid')
     // .set('publishIp');
     // .set('createTime')

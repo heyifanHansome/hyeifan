@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +21,9 @@ import java.io.Serializable;
  * @since 2018-09-20
  */
 @TableName("sys_resume_fj")
+@Getter
+@Setter
+@ToString
 public class ResumeFj extends Model<ResumeFj> {
 
     private static final long serialVersionUID = 1L;
@@ -49,70 +56,15 @@ public class ResumeFj extends Model<ResumeFj> {
      */
     @TableField("update_time")
     private Date updateTime;
+    /**
+     * 阿里云对象存储名称
+     */
+    private String object_name;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getResumeId() {
-        return resumeId;
-    }
-
-    public void setResumeId(Integer resumeId) {
-        this.resumeId = resumeId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "ResumeFj{" +
-        "id=" + id +
-        ", resume Id=" + resumeId +
-        ", name=" + name +
-        ", url=" + url +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

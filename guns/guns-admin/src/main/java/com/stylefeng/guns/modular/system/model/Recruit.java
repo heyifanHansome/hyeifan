@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -22,6 +23,7 @@ import java.io.Serializable;
 @TableName("sys_recruit")
 @Getter
 @Setter
+@ToString
 public class Recruit extends Model<Recruit> {
 
     private static final long serialVersionUID = 1L;
@@ -85,29 +87,14 @@ public class Recruit extends Model<Recruit> {
      */
     @TableField("updated_time")
     private Date updatedTime;
-
+    /**
+     * 阿里云存储对象名称
+     */
+    private String object_name;
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "Recruit{" +
-        "id=" + id +
-        ", columnId=" + columnId +
-        ", title=" + title +
-        ", thumb=" + thumb +
-        ", description=" + description +
-        ", cityId=" + cityId +
-        ", address=" + address +
-        ", sourceId=" + sourceId +
-        ", uid=" + uid +
-        ", publishIp=" + publishIp +
-        ", content=" + content +
-        ", createTime=" + createTime +
-        ", updatedTime=" + updatedTime +
-        "}";
-    }
 }

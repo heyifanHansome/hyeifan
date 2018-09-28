@@ -45,7 +45,18 @@
                             </div>
                         </div>
                     </fieldset>
-
+<fieldset style="margin-top: 3%">
+    <legend>
+        简历附件
+        <input type="button" value="+" onclick="addFj($(this));" />
+    </legend>
+    <div class="row" id="fjs">
+        <div class="col-sm-6 b-r">
+        </div>
+        <div class="col-sm-6">
+        </div>
+    </div>
+</fieldset>
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="UserResumeInfoDlg.editSubmit()"/>
@@ -58,6 +69,7 @@
 </div>
 
 <script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
+<script src="${ctxPath}/static/modular/userResume/userResume/ajaxfileupload.js"></script>
 <script src="${ctxPath}/static/modular/userResume/userResume/userResume_info.js"></script>
 <script>
     $(document).ready(function () {

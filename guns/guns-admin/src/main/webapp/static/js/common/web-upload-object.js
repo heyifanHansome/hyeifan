@@ -87,6 +87,11 @@
 				Feng.success("上传成功");
                 // $("#" + me.pictureId).val(response);
                 $("#" + me.pictureId).val(lijun_url!=undefined&&lijun_url!=""?response.data:response);
+                //李俊的逻辑,不影响原功能
+                if(lijun_url!=undefined&&lijun_url!=""){
+                	if($.trim($('#object_name').val())!="")$('#old_object_name').val($('#object_name').val());
+                	$('#object_name').val(response.object_name);
+                }
 			});
 
 			// 文件上传失败，显示上传出错。

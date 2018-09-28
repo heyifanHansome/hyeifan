@@ -10,18 +10,24 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 @Slf4j
 public class OSSClientUtil {
-    public String updateHead(MultipartFile file) throws IOException{
+//    public String updateHead(MultipartFile file) throws IOException{
+    public Map<String,Object> updateHead(MultipartFile file) throws IOException{
         if (file == null || file.getSize() <= 0) {
-            throw new RuntimeException("头像不能为空");
+            throw new RuntimeException("图片不能为空");
         }
-        String name = uploadImg2Oss(file);
+        Map<String,Object>result=uploadImg2Oss(file);
+        String name = result.get("name").toString();
         String imgUrl = getImgUrl(name);
-//        userDao.updateHead(userId, imgUrl);//只是本地上传使用的
-        return imgUrl;
+        result.put("imgUrl",imgUrl);
+//        return imgUrl;
+        return result;
     }
+
 
     private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
     // accessKey
@@ -70,7 +76,8 @@ public class OSSClientUtil {
     }
 
 
-    public String uploadImg2Oss(MultipartFile file) {
+//    public String uploadImg2Oss(MultipartFile file) {
+    public Map<String,Object> uploadImg2Oss(MultipartFile file) {
         if (file.getSize() > 1024 * 1024) {
             throw new RuntimeException("上传图片大小不能超过1M！");
         }
@@ -78,10 +85,13 @@ public class OSSClientUtil {
         String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
         Random random = new Random();
         String name = random.nextInt(10000) + System.currentTimeMillis() + substring;
+        Map<String,Object>result=new HashMap<>();
         try {
             InputStream inputStream = file.getInputStream();
-            this.uploadFile2OSS(inputStream, name);
-            return name;
+            result=this.uploadFile2OSS(inputStream, name);
+//            return name;
+            result.put("name",name);
+            return result;
         } catch (Exception e) {
             throw new RuntimeException("图片上传失败");
         }
@@ -108,8 +118,9 @@ public class OSSClientUtil {
      * @param fileName 文件名称 包括后缀名
      * @return 出错返回"" ,唯一MD5数字签名
      */
-    public String uploadFile2OSS(InputStream instream, String fileName) {
+    public Map<String,Object> uploadFile2OSS(InputStream instream, String fileName) {
         String ret = "";
+        Map<String,Object>result=new HashMap<>();
         try {
             //创建上传Object的Metadata
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -119,8 +130,13 @@ public class OSSClientUtil {
             objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             //上传文件
+            //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
             PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
             ret = putResult.getETag();
+            /*李俊添加,开始*/
+            result.put("ret",ret);
+            result.put("ALi_ObjectName",(filedir + fileName));
+            /*李俊添加,结束*/
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         } finally {
@@ -132,7 +148,8 @@ public class OSSClientUtil {
                 e.printStackTrace();
             }
         }
-        return ret;
+//        return ret;
+        return result;
     }
 
     /**

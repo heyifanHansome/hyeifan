@@ -1,4 +1,7 @@
 @layout("/common/_container.html"){
+<style type="text/css">
+    .next {margin-left: 20px}
+</style>
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
@@ -34,16 +37,28 @@
                             <!--<#input id="info" name="无序列表" underline="true"/>-->
                 </div>
             </div>
-                        <fieldset style="margin-top: 3%">
-                            <legend>简历详情</legend>
-                            <div class="form-group">
-                                <!--<label class="col-sm-1 control-label">内容</label>-->
-                                <div class="col-sm-12">
-                                    <div id="editor" class="editorHeight">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+<fieldset style="margin-top: 3%">
+    <legend>简历详情</legend>
+    <div class="form-group">
+        <!--<label class="col-sm-1 control-label">内容</label>-->
+        <div class="col-sm-12">
+            <div id="editor" class="editorHeight">
+            </div>
+        </div>
+    </div>
+</fieldset>
+<fieldset style="margin-top: 3%">
+    <legend>
+        简历附件
+        <input type="button" value="+" onclick="addFj($(this));" />
+    </legend>
+    <div class="row" id="fjs">
+        <div class="col-sm-6 b-r">
+        </div>
+        <div class="col-sm-6">
+        </div>
+    </div>
+</fieldset>
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="UserResumeInfoDlg.addSubmit()"/>
@@ -56,6 +71,7 @@
 </div>
 
 <script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
+<script src="${ctxPath}/static/modular/userResume/userResume/ajaxfileupload.js"></script>
 <script src="${ctxPath}/static/modular/userResume/userResume/userResume_info.js"></script>
 <script>
     laydate.render({

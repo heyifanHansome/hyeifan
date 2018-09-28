@@ -1,6 +1,11 @@
 package com.stylefeng.guns.modular.resumeFJ.controller;
 
+import com.aliyun.oss.OSSClient;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.util.ResultMsg;
+import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.Tool;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +16,9 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.ResumeFj;
 import com.stylefeng.guns.modular.resumeFJ.service.IResumeFjService;
+
+import javax.xml.crypto.Data;
+import java.util.Date;
 
 /**
  * 简历附件控制器
@@ -55,12 +63,17 @@ public class ResumeFjController extends BaseController {
     }
 
     /**
-     * 获取简历附件列表
+     * 获取简历附件列表,修改过后是根据简历ID,也就是resume_id来获取列表,不再根据搜索条件condition搜索
+     * 用于"关于用户"→"用户简历管理"→每个用户简历的简历附件展示
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
-        return resumeFjService.selectList(null);
+    public Object list(Integer resume_id,String condition) {
+        ResumeFj fj=new ResumeFj();
+        if(resume_id!=null)fj.setResumeId(resume_id);
+        EntityWrapper<ResumeFj>wrapper=new EntityWrapper<>(fj);
+        if(!Tool.isNull(condition))wrapper.like("name",condition);
+        return resumeFjService.selectList(wrapper);
     }
 
     /**
@@ -68,8 +81,15 @@ public class ResumeFjController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(ResumeFj resumeFj) {
+    public Object add(ResumeFj resumeFj,String source,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            ossClient.shutdown();
+        }
+        resumeFj.setCreateTime(new Date(System.currentTimeMillis()));
         resumeFjService.insert(resumeFj);
+        if(!Tool.isNull(source))return resumeFj;
         return SUCCESS_TIP;
     }
 
@@ -79,6 +99,10 @@ public class ResumeFjController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer resumeFjId) {
+        ResumeFj resumeFj = resumeFjService.selectById(resumeFjId);
+        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, resumeFj.getObject_name());
+        ossClient.shutdown();
         resumeFjService.deleteById(resumeFjId);
         return SUCCESS_TIP;
     }
@@ -88,8 +112,15 @@ public class ResumeFjController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(ResumeFj resumeFj) {
+    public Object update(ResumeFj resumeFj,String source,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            ossClient.shutdown();
+        }
+        resumeFj.setUpdateTime(new Date(System.currentTimeMillis()));
         resumeFjService.updateById(resumeFj);
+        if(!Tool.isNull(source))return resumeFj;
         return SUCCESS_TIP;
     }
 

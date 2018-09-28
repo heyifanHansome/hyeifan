@@ -126,7 +126,7 @@
             '11','22','35','48','58','67','79','88','98','31','15','52','0','1','2','3','4','5','6','7','8','9'
         );//数组
         seedlength = seed.length;//数组长度
-        var createPassword = ''
+        var createPassword = '';
         for (i=0;i<15;i++) {
             j = Math.floor(Math.random()*seedlength);
             createPassword += seed[j]
@@ -134,7 +134,7 @@
         return createPassword;
     }
     var uuid=randomPassword();
-    $('#baseId').val(uuid)
+    $('#baseId').val(uuid);
     var imageId = '';//上传成功的图片ID
     //参数1:控件id、参数2:上传地址
     var FileInput = function () {
@@ -157,7 +157,7 @@
                 browseClass: "btn btn-primary",                         //按钮样式
                 initialPreviewAsData: true,             //
                 initialPreview: imgArray,				//预览图片数组
-                initialPreviewConfig: imgArrayConfig,//预览信息 配置   删除url以及参数配置
+                initialPreviewConfig: imgArrayConfig,   //预览信息 配置   删除url以及参数配置
                 enctype: 'multipart/form-data',
                 previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
                 msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
@@ -207,7 +207,6 @@
                     config.caption = picId[i] + ".jpg";
                     config.url = '/img/imgDeleteMul';//删除图片接口
                     config.key = picId[i];//设置删除图片时参数
-                    config.type ="mp4";
                     imgArrayConfig.push(config);
                 }
             }

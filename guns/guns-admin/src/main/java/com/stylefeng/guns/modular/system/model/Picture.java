@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +20,9 @@ import java.io.Serializable;
  * @author stylefeng
  * @since 2018-09-26
  */
+@Getter
+@Setter
+@ToString
 @TableName("sys_picture")
 public class Picture extends Model<Picture> {
 
@@ -24,7 +31,9 @@ public class Picture extends Model<Picture> {
     /**
      * 主键
      */
+
     @TableId(value = "id", type = IdType.AUTO)
+
     private Integer id;
     /**
      *  创建时间
@@ -32,7 +41,7 @@ public class Picture extends Model<Picture> {
     @TableField("create_time")
     private Date createTime;
     /**
-     * 创建人 
+     * 创建人
      */
     @TableField("create_by")
     private String createBy;
@@ -67,104 +76,12 @@ public class Picture extends Model<Picture> {
     private String suffixname;
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    public String getBaseId() {
-        return baseId;
-    }
-
-    public void setBaseId(String baseId) {
-        this.baseId = baseId;
-    }
-
-    public String getPicturename() {
-        return picturename;
-    }
-
-    public void setPicturename(String picturename) {
-        this.picturename = picturename;
-    }
-
-    public String getRelativepath() {
-        return relativepath;
-    }
-
-    public void setRelativepath(String relativepath) {
-        this.relativepath = relativepath;
-    }
-
-    public String getServerpath() {
-        return serverpath;
-    }
-
-    public void setServerpath(String serverpath) {
-        this.serverpath = serverpath;
-    }
-
-    public String getAbsolutepath() {
-        return absolutepath;
-    }
-
-    public void setAbsolutepath(String absolutepath) {
-        this.absolutepath = absolutepath;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getSuffixname() {
-        return suffixname;
-    }
-
-    public void setSuffixname(String suffixname) {
-        this.suffixname = suffixname;
-    }
+    @TableField("oss_object_name")
+    private String ossObjectName;
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "Picture{" +
-        "id=" + id +
-        ", createTime=" + createTime +
-        ", createBy=" + createBy +
-        ", baseId=" + baseId +
-        ", picturename=" + picturename +
-        ", relativepath=" + relativepath +
-        ", serverpath=" + serverpath +
-        ", absolutepath=" + absolutepath +
-        ", type=" + type +
-        ", suffixname=" + suffixname +
-        "}";
-    }
 }

@@ -14,11 +14,12 @@
         <result column="absolutepath" property="absolutepath" />
         <result column="type" property="type" />
         <result column="suffixname" property="suffixname" />
+        <result column="oss_object_name" property="ossObjectName" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_time, create_by, base_id, picturename, relativepath, serverpath, absolutepath, type, suffixname
+        id, create_time, create_by, base_id, picturename, relativepath, serverpath, absolutepath, type, suffixname,ossObjectName
     </sql>
 
 </mapper>

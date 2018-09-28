@@ -128,13 +128,13 @@ public class WorksController extends BaseController {
             EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
             entityWrapper.like("base_id",baseId);
             List<Picture> picture = pictureService.selectList(entityWrapper);
-            StringBuffer sbBuffer = new StringBuffer();
+            StringBuffer listObject = new StringBuffer();
 
             for (int i = 0; i < picture.size(); i++) {
-                sbBuffer.append("," + picture.get(i).getId());
+                listObject.append("," + picture.get(i).getOssObjectName());
             }
 
-            resultMsg = ResultMsg.success("查询成功", "查询成功", sbBuffer);
+            resultMsg = ResultMsg.success("查询成功", "查询成功", listObject);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<ResultMsg>(ResultMsg.fail("系统错误", "系统错误", ""), HttpStatus.INTERNAL_SERVER_ERROR);

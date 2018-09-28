@@ -226,7 +226,7 @@
             var picId = picIds.split(',');
             for (var i = 0; i <= picId.length; i++) {
                 if (picId[i] != null && picId[i] != '') {//遍历图片id
-                    imgArray.push("/img/getImage/" + picId[i] + "");//封装预览图片
+                    imgArray.push(picId[i] );//封装预览图片
                     // imgArray.push("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");//封装预览图片
                     //封装config
                     var config = new Object();

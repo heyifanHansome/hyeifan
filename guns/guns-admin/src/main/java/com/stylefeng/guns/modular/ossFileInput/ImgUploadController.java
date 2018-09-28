@@ -4,14 +4,16 @@ package com.stylefeng.guns.modular.ossFileInput;
  * Created by Heyifan Cotter on 2018/9/26.
  */
 
-import com.stylefeng.guns.core.shiro.ShiroUser;
-import com.stylefeng.guns.core.support.DateTime;
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.ObjectMetadata;
+import com.aliyun.oss.model.PutObjectResult;
 import com.stylefeng.guns.core.util.ResultMsg;
+import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.PictureMapper;
 import com.stylefeng.guns.modular.system.model.Picture;
-import org.apache.shiro.SecurityUtils;
+import com.stylefeng.guns.modular.system.model.Works;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,19 @@ public class ImgUploadController {
     public PictureMapper pictureMapper;
     @Autowired
     public IPictureService pictureService;
+
+    private OSSClient ossClient;
+
+    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
+    // accessKey
+    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
+    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
+    //空间
+    private String bucketName = FinalStaticString.ALI_OSS_BUCKET;
+    //文件存储目录
+    private String filedir = "data/";
+
+private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
 
     /**
      * 文件上传删除方法
@@ -182,61 +197,126 @@ public class ImgUploadController {
     public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
         OSSClientUtil ossClientUtil=new OSSClientUtil();
         Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
-
         MultipartFile multipartFile = null;
         for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
             Object obj = i.next();
             multipartFile = (MultipartFile) map.get(obj);
         }
-//
-//        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
-//        if (multipartFile.isEmpty()) {
-//            return "error";
-//        }
-//        // 获取文件名
-//        String fileName = multipartFile.getOriginalFilename();
-//        // 获取文件的后缀名
-//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-//        // 这里我使用随机字符串来重新命名图片
-//        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
-//        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
-//        File dest = new File(uploadPath + fileName);
-//        // 检测是否存在目录
-//        if (!dest.getParentFile().exists()) {
-//            dest.getParentFile().mkdirs();
-//        }
-        ossClientUtil.uploadImg2Oss(multipartFile);
-        try {
 
-//            multipartFile.transferTo(dest);
-//            //创建图片对象
-//
-//            Picture picture = new Picture();
-//
-//            picture.setCreateTime(new DateTime());
-//            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-//            picture.setCreateBy(shiroUser.getName());
-//            picture.setBaseId(goodsTypeId);
-//            picture.setPicturename(fileName.replace(suffixName, ""));//图片名称
-//            picture.setRelativepath(uploadPath);//相对路径
-//            picture.setServerpath(uploadPath);//服务器路径
-//            picture.setAbsolutepath(uploadPath);//绝对路径
-//            picture.setType("");//图片类型
-//            picture.setSuffixname(suffixName);//图片后缀名
-//
-//            pictureService.insert(picture);
-//            //url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
-//            String config = "{\"state\": \"SUCCESS\"," +
-//                    "\"url\": \"" + "/img/getImage/" + picture.getId() + "\"," +
-//                    "\"pictureId\": \"" + picture.getId() + "\"," +
-//                    "\"original\": \"" + fileName + "\"}";
+//        ossClientUtil.uploadImg2Oss(multipartFile);
+        String originalFilename = multipartFile.getOriginalFilename();
+        String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+        Random random = new Random();
+        String name = random.nextInt(10000) + System.currentTimeMillis() + substring;
+        Map<String,Object>result=new HashMap<>();
+
+        try {
+            InputStream inputStream = multipartFile.getInputStream();
+            result=this.uploadFile2OSS(inputStream, name,goodsTypeId);
+        } catch (Exception e) {
+            throw new RuntimeException("图片上传失败");
+        }
+
+
+        try {
             return "";
         } catch (IllegalStateException e) {
             e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
         }
         return null;
     }
+
+
+
+
+    /**
+     * 上传到OSS服务器  如果同名文件会覆盖服务器上的
+     *
+     * @param instream 文件流
+     * @param fileName 文件名称 包括后缀名
+     * @return 出错返回"" ,唯一MD5数字签名
+     */
+    public Map<String,Object> uploadFile2OSS(InputStream instream, String fileName,String goodsTypeId) {
+        Map<String,Object>result=new HashMap<>();
+        try {
+            //创建上传Object的Metadata
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(instream.available());
+            objectMetadata.setCacheControl("no-cache");
+            objectMetadata.setHeader("Pragma", "no-cache");
+            objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
+            objectMetadata.setContentDisposition("inline;filename=" + fileName);
+            //上传文件
+            //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
+            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+            PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
+
+            Picture picture = new Picture();
+            picture.setBaseId(goodsTypeId);
+            picture.setOssObjectName(frist+filedir + fileName);
+            pictureService.insert(picture);
+
+        } catch (IOException e) {
+           e.printStackTrace();
+        } finally {
+            try {
+                if (instream != null) {
+                    instream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+//        return ret;
+        return result;
+    }
+
+
+
+
+    /**
+     * Description: 判断OSS服务文件上传时文件的contentType
+     *
+     * @param FilenameExtension 文件后缀
+     * @return String
+     */
+    public static String getcontentType(String FilenameExtension) {
+        if (FilenameExtension.equalsIgnoreCase(".bmp")) {
+            return "image/bmp";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".gif")) {
+            return "image/gif";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".jpeg") ||
+                FilenameExtension.equalsIgnoreCase(".jpg") ||
+                FilenameExtension.equalsIgnoreCase(".png")) {
+            return "image/jpeg";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".html")) {
+            return "text/html";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".txt")) {
+            return "text/plain";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".vsd")) {
+            return "application/vnd.visio";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".pptx") ||
+                FilenameExtension.equalsIgnoreCase(".ppt")) {
+            return "application/vnd.ms-powerpoint";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".docx") ||
+                FilenameExtension.equalsIgnoreCase(".doc")) {
+            return "application/msword";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".xml")) {
+            return "text/xml";
+        }
+        if (FilenameExtension.equalsIgnoreCase(".mp4")) {
+            return "video/mp4";
+        }
+        return "image/jpeg";
+    }
+
 
 }

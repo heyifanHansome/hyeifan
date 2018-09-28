@@ -7,6 +7,7 @@ package com.stylefeng.guns.modular.ossFileInput;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
@@ -67,18 +68,25 @@ private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
     public ResponseEntity<?> imgDeleteMul(HttpServletRequest request, HttpServletResponse response) {
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
-        Integer pid = Integer.parseInt(id);
-        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
-        Picture picture = pictureService.selectById(id);
+        EntityWrapper<Picture> entityWrapper = new EntityWrapper();
+        entityWrapper.like("oss_object_name", id );
+        List<Picture> pictures =pictureService.selectList(entityWrapper);
+
+
+//
+//        Integer pid = Integer.parseInt(id);
+//        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
+//        Picture picture = pictureService.selectById(id);
         try {
-            if (picture != null) {
-                if (picture.getPicturename() != null && !"".equals(picture.getPicturename())) {
-                    File file = new File(uploadPath + picture.getPicturename() + picture.getSuffixname());//删除文件
-                    file.delete();
-                    pictureService.deleteById(pid);
-                    resultMsg = ResultMsg.success("操作成功", "操作成功", "");
-                }
-            }
+////            if (picture != null) {
+////                if (picture.getPicturename() != null && !"".equals(picture.getPicturename())) {
+////                    File file = new File(uploadPath + picture.getPicturename() + picture.getSuffixname());//删除文件
+////                    file.delete();
+////                    pictureService.deleteById(pid);
+////                    resultMsg = ResultMsg.success("操作成功", "操作成功", "");
+////                }
+//            }
+            pictureService.deleteById(pictures.get(0).getId());
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<ResultMsg>(ResultMsg.fail("系统错误", e.getMessage(), ""), HttpStatus.INTERNAL_SERVER_ERROR);

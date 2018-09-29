@@ -74,7 +74,8 @@ WorksInfoDlg.collectData = function() {
     .set('remark')
     .set('status')
     .set('columnId')
-    .set('baseId');
+    .set('baseId')
+    .set('video');
 }
 
 /**

@@ -225,7 +225,6 @@ private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
             throw new RuntimeException("图片上传失败");
         }
 
-
         try {
             return "";
         } catch (IllegalStateException e) {
@@ -233,7 +232,6 @@ private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
         }
         return null;
     }
-
 
 
 

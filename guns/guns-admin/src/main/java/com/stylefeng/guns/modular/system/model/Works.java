@@ -45,6 +45,7 @@ public class Works extends Model<Works> {
     /**
      * 资源（无序列表）就是图片或视频地址组成的无序列表
      */
+
     private String images;
     /**
      * 主料（无序列表）
@@ -92,6 +93,7 @@ public class Works extends Model<Works> {
     @TableField("base_id")
     private String baseId;
 
+    private String video;
 
     @Override
     protected Serializable pkVal() {

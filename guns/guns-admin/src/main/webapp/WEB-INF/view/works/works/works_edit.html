@@ -4,10 +4,11 @@
         <div class="form-horizontal">
                       <input id="id" name="主键ID" value="${item.id}" type="hidden"/>
 
-                      <input id="baseId" name="图片id" value="${item.baseId}" type="hidden"/>
+                      <input id="images" name="图集Ids" value="${item.images}" type="hidden"/>
+
+                      <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
-                    <input type="file"  onchange="alert($(this).val())"/>
                             <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
                             <#select id="type" name="类型" underline="true">
                             <option value="0">图文</option>
@@ -158,9 +159,8 @@
             leftinput[leftinput.length-1].remove();
         }
     }
-
 /*反显文件*/
-    var baseId = $("#baseId").val();
+    var baseId = $("#images").val();
     var imageId = '';//上传成功的图片ID
     //参数1:控件id、参数2:上传地址
     var FileInput = function () {

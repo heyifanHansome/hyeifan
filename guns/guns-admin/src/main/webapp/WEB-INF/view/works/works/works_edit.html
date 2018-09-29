@@ -57,28 +57,42 @@
 
             <div>
                 <fieldset  style="margin-top: 3%">
-                    <legend>资料上传</legend>
+                    <legend>图集上传</legend>
                     <div class="putimg"	>
                         <input id="reportFile" name="reportFile" multiple type="file" data-show-caption="true">
                     </div>
                 </fieldset>
             </div>
 
+            <div id="hyfVideo">
+            </div>
 
             <div>
                 <fieldset>
                     <legend>视频回显</legend>
-                    <div class="sx"	>
+                    <div>
+                        <!--"http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao"-->
+
                         <!--<input   multiple type="file">-->
-                        <video src="http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao" controls="controls">
+                        <video src='http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao' controls="controls">
                         </video>
-                        <input  id="1" type="text" value="通过">
-                        <input  id="w" type="text" value="btongguo ">
                     </div>
                 </fieldset>
             </div>
 
 
+<!--<div>-->
+                <!--<fieldset>-->
+                    <!--<legend>视频回显</legend>-->
+                    <!--<div class="sx"	>-->
+                        <!--&lt;!&ndash;<input   multiple type="file">&ndash;&gt;-->
+                        <!--<video src="http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao" controls="controls">-->
+                        <!--</video>-->
+                        <!--<input  id="1" type="text" value="通过">-->
+                        <!--<input  id="w" type="text" value="btongguo ">-->
+                    <!--</div>-->
+                <!--</fieldset>-->
+            <!--</div>-->
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
 
@@ -96,13 +110,16 @@
          oneArr =${item.mainIngredient}
          twoArr = ${item.supplementaryMaterial}
          threeArr = ${item.seasoning}
+         // videoArray = ${videoArray}
+
     /*定义回显框*/
           onerightbuttons = $('#onerightbuttons');
           oneleftbuttons =$('#oneleftbuttons');
           tworightbuttons = $('#tworightbuttons');
           twoleftbuttons =$('#twoleftbuttons');
           threerightbuttons = $('#threerightbuttons');
-          threeleftbuttons =$('#threeleftbuttons');
+          threeleftbuttons  =$('#threeleftbuttons');
+          // hyfVideoFile =$('#hyfVideo');
     /*页面初始化方法*/
     $(document).ready(function () {
         oneArr.forEach(function (v) {
@@ -116,7 +133,13 @@
         threeArr.forEach(function (v) {
             threeleftbuttons.append("<div class='col-sm-12'> <input  class='form-control seasoning'  value='"+v.key+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
             threerightbuttons.append("<div class='col-sm-12'> <input   class='form-control seasoning' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
+        });
+
+        videoArray.forEach(function (video) {
         })
+
+
+
 
     });
 

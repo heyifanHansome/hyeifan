@@ -5,6 +5,8 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.modular.resumeFJ.service.IResumeFjService;
 import com.stylefeng.guns.modular.system.model.ResumeFj;
+import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.model.UserInfo;
 import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserResumeWarpper;
 import org.springframework.stereotype.Controller;
@@ -37,7 +39,9 @@ public class UserResumeController extends BaseController {
     @Autowired
     private IUserResumeService userResumeService;
 
-    /** 李俊-简历附件service **/
+    /**
+     * 李俊-简历附件service
+     **/
     @Autowired
     private IResumeFjService resumeFjService;
 
@@ -63,10 +67,30 @@ public class UserResumeController extends BaseController {
     @RequestMapping("/userResume_update/{userResumeId}")
     public String userResumeUpdate(@PathVariable Integer userResumeId, Model model) {
         UserResume userResume = userResumeService.selectById(userResumeId);
-        model.addAttribute("item",userResume);
+        model.addAttribute("item", userResume);
         LogObjectHolder.me().set(userResume);
         return PREFIX + "userResume_edit.html";
     }
+
+
+    /**
+     * 在用户详情页面跳转到修改用户简历管理
+     */
+    @RequestMapping("/userinfouserResume_update/{userResumeId}")
+    public String userinfouserResumeUpdate(@PathVariable Integer userResumeId, Model model) {
+        EntityWrapper<UserInfo>  userInfoEntityWrapper= new EntityWrapper<>();
+//        userInfoEntityWrapper.like("user_id");
+
+        EntityWrapper<UserResume> entityWrapper = new EntityWrapper<>();
+        entityWrapper.like("user_id", userResumeId.toString());
+//        UserResume userResume = userResumeService.selectById(userResumeId);
+        List<UserResume> userResumes = userResumeService.selectList(entityWrapper);
+        UserResume userResume = userResumes.get(0);
+        model.addAttribute("item", userResume);
+        LogObjectHolder.me().set(userResume);
+        return PREFIX + "userResume_edit.html";
+    }
+
 
     /**
      * 获取用户简历管理列表
@@ -74,7 +98,7 @@ public class UserResumeController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        List<Map<String, Object>> list  = userResumeService.list(condition);
+        List<Map<String, Object>> list = userResumeService.list(condition);
         return super.warpObject(new UserResumeWarpper(list));
     }
 
@@ -83,14 +107,14 @@ public class UserResumeController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(UserResume userResume,String fj_ids) {
+    public Object add(UserResume userResume, String fj_ids) {
         userResume.setCreateTime(new DateTime());
         userResumeService.insert(userResume);
-        ResumeFj fj=new ResumeFj();
+        ResumeFj fj = new ResumeFj();
         fj.setResumeId(userResume.getId());
-        EntityWrapper<ResumeFj>ew=new EntityWrapper<>();
-        ew.in("id",fj_ids.split(","));
-        resumeFjService.update(fj,ew);
+        EntityWrapper<ResumeFj> ew = new EntityWrapper<>();
+        ew.in("id", fj_ids.split(","));
+        resumeFjService.update(fj, ew);
         return SUCCESS_TIP;
     }
 
@@ -101,10 +125,10 @@ public class UserResumeController extends BaseController {
     @ResponseBody
     public Object delete(@RequestParam Integer userResumeId) {
         userResumeService.deleteById(userResumeId);
-        EntityWrapper<ResumeFj>ew=new EntityWrapper<>();
-        ew.eq("resume_id",userResumeId);
-        List<ResumeFj>fjs=resumeFjService.selectList(ew);
-        List<Integer>ids=new ArrayList<>();
+        EntityWrapper<ResumeFj> ew = new EntityWrapper<>();
+        ew.eq("resume_id", userResumeId);
+        List<ResumeFj> fjs = resumeFjService.selectList(ew);
+        List<Integer> ids = new ArrayList<>();
         for (ResumeFj fj : fjs) {
             ids.add(fj.getId());
         }
@@ -117,14 +141,14 @@ public class UserResumeController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(UserResume userResume,String fj_ids) {
+    public Object update(UserResume userResume, String fj_ids) {
         userResume.setUpdateTime(new DateTime());
         userResumeService.updateById(userResume);
-        ResumeFj fj=new ResumeFj();
+        ResumeFj fj = new ResumeFj();
         fj.setResumeId(userResume.getId());
-        EntityWrapper<ResumeFj>ew=new EntityWrapper<>();
-        ew.in("id",fj_ids.split(","));
-        resumeFjService.update(fj,ew);
+        EntityWrapper<ResumeFj> ew = new EntityWrapper<>();
+        ew.in("id", fj_ids.split(","));
+        resumeFjService.update(fj, ew);
         return SUCCESS_TIP;
     }
 
@@ -144,7 +168,7 @@ public class UserResumeController extends BaseController {
     @RequestMapping(value = "/getAllResume")
     @ResponseBody
     public List<UserResume> getAllResume() {
-        List<UserResume> userResumes  = userResumeService.selectList(null);
+        List<UserResume> userResumes = userResumeService.selectList(null);
         return userResumes;
     }
 

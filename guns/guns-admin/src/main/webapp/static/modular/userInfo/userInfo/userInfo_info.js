@@ -31,14 +31,14 @@ UserInfoInfoDlg.set = function(key, val) {
  */
 UserInfoInfoDlg.get = function(key) {
     return $("#" + key).val();
-}
+};
 
 /**
  * 关闭此对话框
  */
 UserInfoInfoDlg.close = function() {
     parent.layer.close(window.parent.UserInfo.layerIndex);
-}
+};
 
 /**
  * 收集数据
@@ -57,7 +57,7 @@ UserInfoInfoDlg.collectData = function() {
     .set('joinClub')
     .set('appointment')
     .set('enlightening');
-}
+};
 
 /**
  * 提交添加
@@ -77,7 +77,7 @@ UserInfoInfoDlg.addSubmit = function() {
     });
     ajax.set(this.userInfoInfoData);
     ajax.start();
-}
+};
 
 /**
  * 提交修改
@@ -97,7 +97,7 @@ UserInfoInfoDlg.editSubmit = function() {
     });
     ajax.set(this.userInfoInfoData);
     ajax.start();
-}
+};
 
 $(function() {
     /**
@@ -106,7 +106,6 @@ $(function() {
     var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            var optionstring = "";
             console.log(jsonObj)
             $("#cityId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
         }
@@ -122,7 +121,6 @@ $(function() {
     var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            var optionstring = "";
             $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
         }
 

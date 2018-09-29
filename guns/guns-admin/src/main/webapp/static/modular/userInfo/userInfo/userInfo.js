@@ -67,6 +67,22 @@ UserInfo.openAddUserInfo = function () {
     this.layerIndex = index;
 };
 
+/*打开用户简历弹框*/
+UserInfo.getUserResume = function(){
+    debugger;
+    if (this.check()) {
+        var index = layer.open({
+            type: 2,
+            title: '用户详情详情',
+            area: ['800px', '420px'], //宽高
+            fix: false, //不固定
+            maxmin: true,
+            content: Feng.ctxPath + '/userResume/userinfouserResume_update/' + UserInfo.seItem.id
+        });
+        this.layerIndex = index;
+    }
+}
+
 /**
  * 打开查看用户详情详情
  */

@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.works.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
@@ -22,6 +23,7 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.modular.system.model.Works;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,21 @@ public class WorksController extends BaseController {
     public String worksUpdate(@PathVariable Integer worksId, Model model) {
         Works works = worksService.selectById(worksId);
         model.addAttribute("item",works);
+        EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("base_id",works.getVideo()) ;
+        List<Picture> pictures = pictureService.selectList(entityWrapper);
+        List<String> videoArray = new ArrayList<>();
+        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
+        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
+        if(pictures.size()>0){
+            for (int i = 0; i <pictures.size() ; i++) {
+                videoArray.add(pictures.get(i).getOssObjectName());
+        }
+        }else{
+
+        }
+
+        model.addAttribute("videoArray", videoArray);
         LogObjectHolder.me().set(works);
         return PREFIX + "works_edit.html";
     }

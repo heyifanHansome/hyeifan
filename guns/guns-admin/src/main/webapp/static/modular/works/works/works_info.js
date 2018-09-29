@@ -128,6 +128,9 @@ $(function() {
     var twoleftbuttons ;
     var threerightbuttons ;
     var threeleftbuttons ;
+    var videoHttpsArrays;
+    var hyfVideoFile;
+
     /**
      * 动态获取所有用户
      */

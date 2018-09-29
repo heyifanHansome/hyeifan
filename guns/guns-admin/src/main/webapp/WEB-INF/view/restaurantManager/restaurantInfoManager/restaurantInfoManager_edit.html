@@ -1,29 +1,42 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
 
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="主键ID" value="${item.id}" underline="true"/>
-                            <#input id="userId" name="用户ID" value="${item.userId}" underline="true"/>
-                            <#input id="restaurant" name="餐厅名" value="${item.restaurant}" underline="true"/>
-                            <#input id="thumb" name="餐厅缩略图" value="${item.thumb}" underline="true"/>
-                            <#input id="images" name="餐厅图集(无序列表)" value="${item.images}" underline="true"/>
-                            <#input id="cityId" name="餐厅所在城市" value="${item.cityId}" underline="true"/>
-                            <#input id="address" name="餐厅详细地址" value="${item.address}" />
-                </div>
-
-                <div class="col-sm-6">
-                            <#input id="longitude" name="餐厅经度" value="${item.longitude}" underline="true"/>
-                            <#input id="latitude" name="餐厅纬度" value="${item.latitude}" underline="true"/>
-                            <#input id="businessHours" name="营业时间" value="${item.businessHours}" underline="true"/>
-                            <#input id="status" name="加入状态（0：未审查，1：考察，2：通过，3：拒绝）" value="${item.status}" underline="true"/>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" />
+                    <#input id="restaurant" value="${item.restaurant}" name="餐厅名" underline="true"/>
+                    <#avatar_lijun id="thumb" name="餐厅缩略图" avatarImg="${item.thumb}"/>
+                    <#select id="userId" name="用户"/>
+                    <#select id="cityId" name="城市"/>
+                    <#input id="address" value="${item.address}" name="餐厅详细地址"/>
+                    <#input id="businessHours" value="${item.businessHours}" name="营业时间" underline="true"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">审核</label>
+                        <div class="col-sm-9">
+                            <select id="status" name="status">
+                                <option value="0">未审查</option>
+                                <option value="1">考察</option>
+                                <option value="2">通过</option>
+                                <option value="3">拒绝</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
-
+            <div>
+                <fieldset  style="margin-top: 3%">
+                    <legend>
+                        餐厅图集
+                        <input type="button" value="+" onclick="$(this).next().click();" />
+                        <input type="file" style="display: none;" onchange="addImg($(this));" />
+                    </legend>
+                    <div class="putimg"	>
+                    </div>
+                </fieldset>
+            </div>
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RestaurantInfoManagerInfoDlg.editSubmit()"/>
@@ -34,5 +47,19 @@
 
     </div>
 </div>
+<#input id="id" name="" value="${item.id}" underline="true" type="hidden"/>
+<#input id="userId_" value="${item.userId}" name="" underline="true" type="hidden"/>
+<#input id="cityId_" value="${item.cityId}" name="" underline="true" type="hidden"/>
+<#input id="status_" value="${item.status}" name="" underline="true" type="hidden"/>
+<#input id="old_object_name" name="" type="hidden" />
+<#input id="object_name" value="${item.object_name}" name="" type="hidden" />
+<textarea id="images"  name="" style="display: none;">${item.images}</textarea>
+<script>
+    $(function () {
+        $('input[name="status_"]').bind('click',function () {
+            $('input[name="status"]').val($(this).val());
+        });
+    });
+</script>
 <script src="${ctxPath}/static/modular/restaurantManager/restaurantInfoManager/restaurantInfoManager_info.js"></script>
 @}

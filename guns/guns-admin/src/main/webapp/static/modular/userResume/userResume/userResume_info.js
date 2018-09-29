@@ -161,6 +161,20 @@ $(function() {
 });
 
 function removeFj(obj) {
+    var fj_id=$(obj).siblings("#fj_id").val();
+    if($.trim(fj_id)!=""){
+        $.ajax({
+            url:'/resumeFj/delete',
+            data:{resumeFjId:fj_id},
+            success:function (r) {
+                alert(r.message);
+            },
+            error:function (e) {
+                console.log(e)
+                alert('删除简历附件失败')
+            }
+        });
+    }
     var parentDIV=$(obj).parent().parent().parent(),
         index=$(obj).parent().parent().children('i').index($(obj).parent());
     $(parentDIV).children().eq(0).children().eq(index).remove();
@@ -187,7 +201,6 @@ function addFj(obj) {
         '            </i>');
 }
 function fileUp(obj) {
-    console.log("触发fileUp");
     var parentDIV=$(obj).parent().parent().parent(),
         index=$(obj).parent().parent().children('i').index($(obj).parent());
     var fj_name=$(parentDIV).children().eq(0).children().eq(index).find("#fj_name").val(),
@@ -202,7 +215,7 @@ function fileUp(obj) {
     var formData = new FormData();
     var uploadFile = $(obj).get(0).files[0];
     formData.append("file",uploadFile);
-    console.log(uploadFile);
+    // console.log(uploadFile);
     if("undefined" != typeof(uploadFile) && uploadFile != null && uploadFile != ""){
         $.ajax({
             url:'/tool/uploadFile',

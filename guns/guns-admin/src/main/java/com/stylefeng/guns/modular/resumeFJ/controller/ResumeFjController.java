@@ -6,6 +6,8 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.model.UserResume;
+import com.stylefeng.guns.modular.userResume.service.IUserResumeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +21,7 @@ import com.stylefeng.guns.modular.resumeFJ.service.IResumeFjService;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 简历附件控制器
@@ -35,6 +38,8 @@ public class ResumeFjController extends BaseController {
     @Autowired
     private IResumeFjService resumeFjService;
 
+    @Autowired
+    private IUserResumeService userResumeService;
     /**
      * 跳转到简历附件首页
      */
@@ -68,12 +73,19 @@ public class ResumeFjController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(Integer resume_id,String condition) {
+    public Object list(String resume_id,String condition) {
         ResumeFj fj=new ResumeFj();
-        if(resume_id!=null)fj.setResumeId(resume_id);
+        if(!Tool.isNull(resume_id))fj.setResumeId(resume_id);
         EntityWrapper<ResumeFj>wrapper=new EntityWrapper<>(fj);
         if(!Tool.isNull(condition))wrapper.like("name",condition);
-        return resumeFjService.selectList(wrapper);
+        List<ResumeFj>fjs=resumeFjService.selectList(wrapper);
+        for (ResumeFj resumeFj : fjs) {
+            EntityWrapper ew_=new EntityWrapper(new UserResume());
+            ew_.eq("id",resumeFj.getResumeId());
+            List<UserResume>userResumeList=userResumeService.selectList(ew_);
+            resumeFj.setResumeId(!Tool.listIsNull(userResumeList)?userResumeList.get(0).getName():"<span style='color:red;'>*对应简历已被删除*</span>");
+        }
+        return fjs;
     }
 
     /**

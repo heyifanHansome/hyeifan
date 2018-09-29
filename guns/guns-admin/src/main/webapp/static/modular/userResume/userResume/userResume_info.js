@@ -96,7 +96,7 @@ UserResumeInfoDlg.editSubmit = function() {
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/userResume/update", function(data){
         Feng.success("修改成功!");
-        window.parent.UserResume.table.refresh();
+        // window.parent.UserResume.table.refresh();
         UserResumeInfoDlg.close();
     },function(data){
         Feng.error("修改失败!" + data.responseJSON.message + "!");

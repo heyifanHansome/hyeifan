@@ -9,6 +9,7 @@ import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.model.UserInfo;
 import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserResumeWarpper;
+import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +39,9 @@ public class UserResumeController extends BaseController {
 
     @Autowired
     private IUserResumeService userResumeService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 李俊-简历附件service
@@ -78,11 +82,16 @@ public class UserResumeController extends BaseController {
      */
     @RequestMapping("/userinfouserResume_update/{userResumeId}")
     public String userinfouserResumeUpdate(@PathVariable Integer userResumeId, Model model) {
-        EntityWrapper<UserInfo>  userInfoEntityWrapper= new EntityWrapper<>();
+//        EntityWrapper<UserInfo>  userInfoEntityWrapper= new EntityWrapper<>();
+//        userInfoEntityWrapper.like("user_id",userResumeId.toString());
+//        List<UserInfo> userInfos = userInfoService.selectList(userInfoEntityWrapper);
+//        UserInfo userInfo = userInfos.get(0);
+            UserInfo userInfo = userInfoService.selectById(userResumeId);
+
 //        userInfoEntityWrapper.like("user_id");
 
         EntityWrapper<UserResume> entityWrapper = new EntityWrapper<>();
-        entityWrapper.like("user_id", userResumeId.toString());
+        entityWrapper.like("user_id",userInfo.getUserId().toString());
 //        UserResume userResume = userResumeService.selectById(userResumeId);
         List<UserResume> userResumes = userResumeService.selectList(entityWrapper);
         UserResume userResume = userResumes.get(0);

@@ -31,8 +31,25 @@
                 </style>
                 <script>
                     $(document).ready(function() {
+
+
+                        var dataSource = new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    url: "/tag/getAllTag",
+                                    dataType: "json"
+                                }
+                            }
+                        });
+
+                        $("#required").kendoMultiSelect({
+                            placeholder: "Select Cities...",
+                            dataTextField: "name",
+                            dataValueField: "id",
+                            autoBind: false,
+                            dataSource: dataSource
+                        });
                         // create MultiSelect from select HTML element
-                        var required = $("#required").kendoMultiSelect().data("kendoMultiSelect");
                         var optional = $("#optional").kendoMultiSelect({
                             autoClose: false
                         }).data("kendoMultiSelect");
@@ -254,8 +271,6 @@
     createFileInput();
 
 
-
-
     /**
      * 动态获取所有标签
      */
@@ -269,6 +284,10 @@
 
     });
     ajax.start();
+
+
+
+
 
 
 </script>

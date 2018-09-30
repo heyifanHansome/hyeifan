@@ -37,7 +37,7 @@ public class ResumeFj extends Model<ResumeFj> {
      * 简历ID
      */
     @TableField("resume_id")
-    private Integer resumeId;
+    private String resumeId;
     /**
      * 附件名
      */

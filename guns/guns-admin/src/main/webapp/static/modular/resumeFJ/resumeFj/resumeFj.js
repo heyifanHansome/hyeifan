@@ -14,8 +14,8 @@ var ResumeFj = {
 ResumeFj.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '简历ID', field: 'resumeId', visible: true, align: 'center', valign: 'middle'},
+            // {title: '主键', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '所属简历', field: 'resumeId', visible: true, align: 'center', valign: 'middle'},
             {title: '附件名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '附件地址', field: 'url', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
@@ -40,7 +40,7 @@ ResumeFj.check = function () {
 /**
  * 点击添加简历附件
  */
-ResumeFj.openAddResumeFj = function () {
+/*ResumeFj.openAddResumeFj = function () {
     var index = layer.open({
         type: 2,
         title: '添加简历附件',
@@ -50,24 +50,24 @@ ResumeFj.openAddResumeFj = function () {
         content: Feng.ctxPath + '/resumeFj/resumeFj_add'
     });
     this.layerIndex = index;
-};
+};*/
 
 /**
  * 打开查看简历附件详情
  */
-ResumeFj.openResumeFjDetail = function () {
-    if (this.check()) {
-        var index = layer.open({
-            type: 2,
-            title: '简历附件详情',
-            area: ['800px', '420px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/resumeFj/resumeFj_update/' + ResumeFj.seItem.id
-        });
-        this.layerIndex = index;
-    }
-};
+// ResumeFj.openResumeFjDetail = function () {
+//     if (this.check()) {
+//         var index = layer.open({
+//             type: 2,
+//             title: '简历附件详情',
+//             area: ['800px', '420px'], //宽高
+//             fix: false, //不固定
+//             maxmin: true,
+//             content: Feng.ctxPath + '/resumeFj/resumeFj_update/' + ResumeFj.seItem.id
+//         });
+//         this.layerIndex = index;
+//     }
+// };
 
 /**
  * 删除简历附件

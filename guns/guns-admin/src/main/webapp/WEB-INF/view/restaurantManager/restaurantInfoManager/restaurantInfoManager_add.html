@@ -1,27 +1,41 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="主键ID" underline="true"/>
-                            <#input id="userId" name="用户ID" underline="true"/>
-                            <#input id="restaurant" name="餐厅名" underline="true"/>
-                            <#input id="thumb" name="餐厅缩略图" underline="true"/>
-                            <#input id="images" name="餐厅图集(无序列表)" underline="true"/>
-                            <#input id="cityId" name="餐厅所在城市" underline="true"/>
-                            <#input id="address" name="餐厅详细地址"/>
-                </div>
-
                 <div class="col-sm-6">
-                            <#input id="longitude" name="餐厅经度" underline="true"/>
-                            <#input id="latitude" name="餐厅纬度" underline="true"/>
-                            <#input id="businessHours" name="营业时间" underline="true"/>
-                            <#input id="status" name="加入状态（0：未审查，1：考察，2：通过，3：拒绝）" underline="true"/>
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
+                    <#input id="restaurant" name="餐厅名" underline="true"/>
+                    <#avatar id="thumb" name="餐厅缩略图" avatarImg=""/>
+                    <#select id="userId" name="用户"/>
+                    <#select id="cityId" name="城市"/>
+                    <#input id="address" name="餐厅详细地址"/>
+                    <#input id="businessHours" name="营业时间" underline="true"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">审核</label>
+                        <div class="col-sm-9">
+                            <select id="status" name="status">
+                                <option value="0">未审查</option>
+                                <option value="1">考察</option>
+                                <option value="2">通过</option>
+                                <option value="3">拒绝</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div>
+                <fieldset  style="margin-top: 3%">
+                    <legend>
+                        餐厅图集
+                        <input type="button" value="+" onclick="$(this).next().click();" />
+                        <input type="file" style="display: none;" onchange="addImg($(this));" />
+                    </legend>
+                    <div class="putimg"	>
+                    </div>
+                </fieldset>
             </div>
 
             <div class="row btn-group-m-t">
@@ -34,5 +48,19 @@
 
     </div>
 </div>
+<#input id="id" name="" underline="true" type="hidden"/>
+<#input id="userId_" name="" underline="true" type="hidden"/>
+<#input id="cityId_" name="" underline="true" type="hidden"/>
+<#input id="status_" name="" underline="true" type="hidden"/>
+<#input id="old_object_name" name="" type="hidden" />
+<#input id="object_name" name="" type="hidden" />
+<textarea id="images"  name="" style="display: none;"></textarea>
+<script>
+    $(function () {
+        $('input[name="status_"]').bind('click',function () {
+            $('input[name="status"]').val($(this).val());
+        });
+    });
+</script>
 <script src="${ctxPath}/static/modular/restaurantManager/restaurantInfoManager/restaurantInfoManager_info.js"></script>
 @}

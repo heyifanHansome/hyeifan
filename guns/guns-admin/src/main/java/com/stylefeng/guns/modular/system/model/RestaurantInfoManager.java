@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +21,9 @@ import java.io.Serializable;
  * @since 2018-09-20
  */
 @TableName("sys_restaurant_info_manager")
+@Getter
+@Setter
+@ToString
 public class RestaurantInfoManager extends Model<RestaurantInfoManager> {
 
     private static final long serialVersionUID = 1L;
@@ -30,7 +37,7 @@ public class RestaurantInfoManager extends Model<RestaurantInfoManager> {
      * 用户ID
      */
     @TableField("user_id")
-    private Integer userId;
+    private String userId;
     /**
      * 餐厅名
      */
@@ -47,7 +54,7 @@ public class RestaurantInfoManager extends Model<RestaurantInfoManager> {
      * 餐厅所在城市
      */
     @TableField("city_id")
-    private Integer cityId;
+    private String cityId;
     /**
      * 餐厅详细地址
      */
@@ -80,132 +87,12 @@ public class RestaurantInfoManager extends Model<RestaurantInfoManager> {
     @TableField("update_time")
     private Date updateTime;
 
+    private String object_name;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(String restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    public String getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
-
-    public String getImages() {
-        return images;
-    }
-
-    public void setImages(String images) {
-        this.images = images;
-    }
-
-    public Integer getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getBusinessHours() {
-        return businessHours;
-    }
-
-    public void setBusinessHours(String businessHours) {
-        this.businessHours = businessHours;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "RestaurantInfoManager{" +
-        "id=" + id +
-        ", userId=" + userId +
-        ", restaurant=" + restaurant +
-        ", thumb=" + thumb +
-        ", images=" + images +
-        ", cityId=" + cityId +
-        ", address=" + address +
-        ", longitude=" + longitude +
-        ", latitude=" + latitude +
-        ", businessHours=" + businessHours +
-        ", status=" + status +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

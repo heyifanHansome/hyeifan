@@ -14,17 +14,18 @@ var RestaurantInfoManager = {
 RestaurantInfoManager.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '主键ID', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户ID', field: 'userId', visible: true, align: 'center', valign: 'middle'},
+            // {title: '主键ID', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '用户', field: 'userId', visible: true, align: 'center', valign: 'middle'},
             {title: '餐厅名', field: 'restaurant', visible: true, align: 'center', valign: 'middle'},
-            {title: '餐厅缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
-            {title: '餐厅图集(无序列表)', field: 'images', visible: true, align: 'center', valign: 'middle'},
+            // {title: '餐厅缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
+            // {title: '餐厅图集(无序列表)', field: 'images', visible: true, align: 'center', valign: 'middle'},
             {title: '餐厅所在城市', field: 'cityId', visible: true, align: 'center', valign: 'middle'},
-            {title: '餐厅详细地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
-            {title: '餐厅经度', field: 'longitude', visible: true, align: 'center', valign: 'middle'},
-            {title: '餐厅纬度', field: 'latitude', visible: true, align: 'center', valign: 'middle'},
-            {title: '营业时间', field: 'businessHours', visible: true, align: 'center', valign: 'middle'},
-            {title: '加入状态（0：未审查，1：考察，2：通过，3：拒绝）', field: 'status', visible: true, align: 'center', valign: 'middle'},
+            // {title: '餐厅详细地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
+            // {title: '餐厅经度', field: 'longitude', visible: true, align: 'center', valign: 'middle'},
+            // {title: '餐厅纬度', field: 'latitude', visible: true, align: 'center', valign: 'middle'},
+            // {title: '营业时间', field: 'businessHours', visible: true, align: 'center', valign: 'middle'},
+            // {title: '加入状态（0：未审查，1：考察，2：通过，3：拒绝）', field: 'status', visible: true, align: 'center', valign: 'middle'},
+            {title: '状态', field: 'status', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
     ];

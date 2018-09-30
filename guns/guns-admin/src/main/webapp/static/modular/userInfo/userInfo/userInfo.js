@@ -20,8 +20,6 @@ UserInfo.initColumn = function () {
             {title: '积分', field: 'credits', visible: false, align: 'center', valign: 'middle'},
             {title: '账户余额', field: 'money', visible: false, align: 'center', valign: 'middle'},
             {title: '登陆', field: 'login_ip', visible: false, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'},
             {title: '实名', field: 'real_name', visible: true, align: 'center', valign: 'middle'},
             {title: '身份证', field: 'id_card', visible: true, align: 'center', valign: 'middle'},
             {title: '城市', field: 'cityId', visible: false, align: 'center', valign: 'middle'},
@@ -35,6 +33,8 @@ UserInfo.initColumn = function () {
         {title: '余额', field: 'Pmoney', visible: true, align: 'center', valign: 'middle'},
         {title: '登录ip', field: 'PloginIp', visible: true, align: 'center', valign: 'middle'},
         {title: '密钥', field: 'PapiToken', visible: true, align: 'center', valign: 'middle'},
+        {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
+        {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

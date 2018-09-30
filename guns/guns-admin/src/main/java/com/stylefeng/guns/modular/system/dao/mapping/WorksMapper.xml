@@ -18,6 +18,9 @@
         <result column="update_time" property="updateTime" />
         <result column="column_id" property="columnId" />
         <result column="video" property="video" />
+        <result column="user_id" property="userId" />
+
+
     </resultMap>
 
     <!-- 通用查询结果列 -->

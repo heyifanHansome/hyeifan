@@ -9,10 +9,7 @@ import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Picture;
-import com.stylefeng.guns.modular.system.model.Role;
-import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +21,7 @@ import com.stylefeng.guns.modular.system.model.Works;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,16 +72,23 @@ public class WorksController extends BaseController {
         EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("base_id",works.getVideo()) ;
         List<Picture> pictures = pictureService.selectList(entityWrapper);
-        List<String> videoArray = new ArrayList<>();
-        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
-        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
+        List<Map<String,Object>> videoArray = new ArrayList<>();
+        JSONObject mapJson = null;
+//        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
+//        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
         if(pictures.size()>0){
             for (int i = 0; i <pictures.size() ; i++) {
-                videoArray.add(pictures.get(i).getOssObjectName());
-        }
+                Map<String,Object> map = new HashMap<>();
+                map.put("key"  ,(pictures.get(i).getOssObjectName()));
+//                videoArray.add(pictures.get(i).getOssObjectName());
+                 mapJson = new JSONObject( map);
+                videoArray.add(mapJson);
+            }
+
         }else{
 
         }
+        System.out.println(videoArray);
 
         model.addAttribute("videoArray", videoArray);
         LogObjectHolder.me().set(works);

@@ -137,7 +137,6 @@ $(function() {
     var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            var optionstring = "";
             $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
         }
 

@@ -67,32 +67,31 @@
             <div id="hyfVideo">
             </div>
 
-            <div>
-                <fieldset>
-                    <legend>视频回显</legend>
-                    <div>
-                        <!--"http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao"-->
+            <!--<div>-->
+                <!--<fieldset>-->
+                    <!--<legend>视频回显</legend>-->
+                    <!--<div>-->
+                        <!--&lt;!&ndash;"http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao"&ndash;&gt;-->
 
-                        <!--<input   multiple type="file">-->
-                        <video src='http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao' controls="controls">
-                        </video>
-                    </div>
-                </fieldset>
-            </div>
+                        <!--&lt;!&ndash;<input   multiple type="file">&ndash;&gt;-->
+                        <!--<video src='http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao' controls="controls">-->
+                    <!--</video>-->
+                    <!--</div>-->
+                <!--</fieldset>-->
+            <!--</div>-->
 
 
-<!--<div>-->
+        <!--<div>-->
                 <!--<fieldset>-->
                     <!--<legend>视频回显</legend>-->
                     <!--<div class="sx"	>-->
                         <!--&lt;!&ndash;<input   multiple type="file">&ndash;&gt;-->
                         <!--<video src="http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao" controls="controls">-->
                         <!--</video>-->
-                        <!--<input  id="1" type="text" value="通过">-->
-                        <!--<input  id="w" type="text" value="btongguo ">-->
                     <!--</div>-->
                 <!--</fieldset>-->
             <!--</div>-->
+
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
 
@@ -107,11 +106,11 @@
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
     /*定义回显数组*/
+
          oneArr =${item.mainIngredient}
          twoArr = ${item.supplementaryMaterial}
          threeArr = ${item.seasoning}
-         // videoArray = ${videoArray}
-
+         videoArray = ${videoArray}
     /*定义回显框*/
           onerightbuttons = $('#onerightbuttons');
           oneleftbuttons =$('#oneleftbuttons');
@@ -119,7 +118,7 @@
           twoleftbuttons =$('#twoleftbuttons');
           threerightbuttons = $('#threerightbuttons');
           threeleftbuttons  =$('#threeleftbuttons');
-          // hyfVideoFile =$('#hyfVideo');
+          hyfVideoFile =$('#hyfVideo');
     /*页面初始化方法*/
     $(document).ready(function () {
         oneArr.forEach(function (v) {
@@ -135,11 +134,10 @@
             threerightbuttons.append("<div class='col-sm-12'> <input   class='form-control seasoning' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
         });
 
+        /*视频回显*/
         videoArray.forEach(function (video) {
+            hyfVideoFile.append("<div><fieldset>   <legend>视频回显</legend>   <div> <video src='"+video.key+ "' controls='controls'> </video> </div> </fieldset> </div>")
         })
-
-
-
 
     });
 

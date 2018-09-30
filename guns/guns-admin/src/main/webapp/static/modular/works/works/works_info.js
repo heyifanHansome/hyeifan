@@ -147,24 +147,6 @@ $(function() {
 
 
     /**
-     * 动态获取所有标签
-     */
-    var ajax = new $ax(Feng.ctxPath + "/tag/getAllTag", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            var jsonObj = data[i];
-            $("#tagId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
-        }
-
-    }, function (data) {
-
-    });
-    ajax.start();
-
-
-
-
-
-    /**
      * 动态获取所有栏目
      */
     var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {

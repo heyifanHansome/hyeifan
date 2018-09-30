@@ -20,6 +20,8 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.modular.system.model.Works;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,8 +188,6 @@ public class WorksController extends BaseController {
         return ColumnType;
     }
 
-
-
     /**
      * 作品管理详情
      */
@@ -195,5 +195,16 @@ public class WorksController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("worksId") Integer worksId) {
         return worksService.selectById(worksId);
+    }
+
+
+
+    public String deleteObjectName(HttpServletRequest request, HttpServletResponse response){
+        ResultMsg resultMsg = new ResultMsg();
+        String id = (String) request.getParameter("key");//获取图片id
+        EntityWrapper<Picture> entityWrapper = new EntityWrapper();
+        entityWrapper.like("oss_object_name", id );
+        List<Picture> pictures =pictureService.selectList(entityWrapper);
+return  "";
     }
 }

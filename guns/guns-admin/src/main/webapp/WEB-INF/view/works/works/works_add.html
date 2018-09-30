@@ -7,6 +7,44 @@
             <input id="video" name=""  type="hidden" />
             <input id="practice" name="" type="hidden" underline="true"/>
 
+
+            <div id="example" role="application">
+                <div class="demo-section k-content">
+                    <h2>何一凡</h2>
+                    <label for="required">Required</label>
+                    <select id="required" multiple="multiple" data-placeholder="Select attendees...">
+                    </select>
+                    <label for="optional">Optional</label>
+                    <select id="optional" multiple="multiple" data-placeholder="Select attendees...">
+                    </select>
+                    <button class="k-button" id="get">Send Invitation</button>
+                </div>
+                <style>
+                    .demo-section label {
+                        display: block;
+                        margin: 15px 0 5px 0;
+                    }
+                    #get {
+                        float: right;
+                        margin: 25px auto 0;
+                    }
+                </style>
+                <script>
+                    $(document).ready(function() {
+                        // create MultiSelect from select HTML element
+                        var required = $("#required").kendoMultiSelect().data("kendoMultiSelect");
+                        var optional = $("#optional").kendoMultiSelect({
+                            autoClose: false
+                        }).data("kendoMultiSelect");
+
+                        $("#get").click(function() {
+                            alert("Attendees:\n\nRequired: " + required.value() + "\nOptional: " + optional.value());
+                        });
+                    });
+                </script>
+            </div>
+
+
             <div class="row">
                 <div class="col-sm-6 b-r" >
 
@@ -34,8 +72,7 @@
                     <!--<#select id="tagId" name="栏目类型" type="radio" readonly="readonly"  underline="true">-->
                     <!--</#select>-->
 
-                    <select class="selectpicker"  id="tagId"    multiple>
-                    </select>
+
 
         <!--<#dictSelector id="sex" name ="sex" code="sys_sex"  readonly="readonly" label="性别" type="checkbox" underline="true"  />-->
 
@@ -215,6 +252,23 @@
         oFileInput.Init("videoFile", "/img/imgUploadMul", videoId);
     };
     createFileInput();
+
+
+
+
+    /**
+     * 动态获取所有标签
+     */
+    var ajax = new $ax(Feng.ctxPath + "/tag/getAllTag", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#required").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
 
 
 </script>

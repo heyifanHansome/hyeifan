@@ -40,7 +40,8 @@ public class ColumnTypeController extends BaseController {
      * 跳转到栏目分类首页
      */
     @RequestMapping("")
-    public String index() {
+    public String index(Model mod) {
+        mod.addAttribute("items",columnTypeService.selectList(new EntityWrapper<>(new ColumnType())));
         return PREFIX + "columnType.html";
     }
 
@@ -83,6 +84,7 @@ public class ColumnTypeController extends BaseController {
                 type.setParentId(!Tool.listIsNull(columnTypeList)?columnTypeList.get(0).getName():"<span style='color:red;'>*上级分类已被删除*</span>");
             }
         }
+
         return columnTypes;
     }
 

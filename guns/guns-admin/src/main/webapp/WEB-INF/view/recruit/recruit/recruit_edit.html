@@ -7,36 +7,33 @@
 
             <div class="row">
                 <div class="row">
-                            <#select id="columnId" name="栏目" underline="true"></#select>
-                            <#input id="title" name="招聘名" value="${item.title}" underline="true"/>
-                            <!--<#input id="thumb" name="缩略图" value="${item.thumb}" underline="true"/>-->
-                            <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
-                            <#input id="description" name="描述" value="${item.description}" underline="true"/>
-                            <#select id="cityId" name="城市"></#select>
-                            <#input id="address" name="工作详细地址" value="${item.address}"  underline="true"/>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">用户</label>
-                <div class="col-sm-9">
-                    <p class="form-control">${item.uid}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">IP</label>
-                <div class="col-sm-9">
-                    <p class="form-control">${item.publishIp}</p>
-                </div>
-            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">内容</label>
-                                <div class="col-sm-11">
-                                    <div id="editor" class="editorHeight">
-                                    </div>
-                                </div>
+                    <#select id="columnId" name="栏目" underline="true"/>
+                    <#input id="title" name="招聘名" value="${item.title}" underline="true"/>
+                    <!--<#input id="thumb" name="缩略图" value="${item.thumb}" underline="true"/>-->
+                    <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
+                    <#input id="description" name="描述" value="${item.description}" underline="true"/>
+                    <#select id="cityId" name="城市"/>
+                    <#input id="address" name="工作详细地址" value="${item.address}"  underline="true"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户</label>
+                        <div class="col-sm-9">
+                            <p class="form-control">${item.uid}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">IP</label>
+                        <div class="col-sm-9">
+                            <p class="form-control">${item.publishIp}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">内容</label>
+                        <div class="col-sm-11">
+                            <div id="editor" class="editorHeight">
                             </div>
+                        </div>
+                    </div>
             </div>
-
-            </div>
-
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RecruitInfoDlg.editSubmit()"/>
@@ -48,11 +45,9 @@
         <#input id="cityId_" name="" value="${item.cityId}" underline="true" type="hidden"/>
         <#input id="id" name="" value="${item.id}" underline="true" type="hidden"/>
         <#input id="sourceId" name="" value="0" underline="true" type="hidden"/>
-        <#input id="content" value="${item.content}" name="" type="hidden" />
-<#input id="object_name" value="${item.object_name}" name="" type="hidden" />
-<#input id="old_object_name" name="" type="hidden" />
-
-
+        <#input id="content" value="${item.content}" name="" type="hidden"/>
+        <#input id="object_name" value="${item.object_name}" name="" type="hidden"/>
+        <#input id="old_object_name" name="" type="hidden"/>
     </div>
 </div>
 <script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>

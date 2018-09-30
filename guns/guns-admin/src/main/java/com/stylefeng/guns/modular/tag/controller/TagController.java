@@ -117,6 +117,19 @@ public class TagController extends BaseController {
         return SUCCESS_TIP;
     }
 
+
+
+    /**
+     * 获取全部标签管理表
+     */
+    @RequestMapping(value = "/getAllTag")
+    @ResponseBody
+    public List<Tag> getAllTag() {
+            List<Tag> tags =tagService.selectList(null);
+            return  tags;
+    }
+
+
     /**
      * 标签管理表详情
      */

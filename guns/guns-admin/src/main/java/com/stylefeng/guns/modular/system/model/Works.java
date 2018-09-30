@@ -1,7 +1,9 @@
 package com.stylefeng.guns.modular.system.model;
 
 import com.baomidou.mybatisplus.enums.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
@@ -35,7 +37,6 @@ public class Works extends Model<Works> {
     private Integer id;
     /**
      * 用户名称
-
      */
     private String name;
     /**
@@ -63,7 +64,6 @@ public class Works extends Model<Works> {
     private String seasoning;
     /**
      * 做法
-
      */
     private String practice;
     /**
@@ -94,6 +94,9 @@ public class Works extends Model<Works> {
     private String baseId;
 
     private String video;
+
+    @TableField("user_id")
+    private String userId;
 
     @Override
     protected Serializable pkVal() {

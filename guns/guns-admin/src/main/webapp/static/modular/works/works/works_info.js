@@ -48,20 +48,20 @@ WorksInfoDlg.set = function(key, val,val2, isClass ) {
  */
 WorksInfoDlg.get = function(key) {
     return $("#" + key).val();
-}
+};
 
 /**
  * 关闭此对话框
  */
 WorksInfoDlg.close = function() {
     parent.layer.close(window.parent.Works.layerIndex);
-}
+};
 
 /**
  * 收集数据
  */
 WorksInfoDlg.collectData = function() {
-    console.log(this)
+    this.worksInfoData['practice'] = WorksInfoDlg.editor.txt.html();
     this
     .set('id')
     .set('name')
@@ -70,13 +70,13 @@ WorksInfoDlg.collectData = function() {
     .set('mainIngredient','oneleftbuttons', 'onerightbuttons','main_ingredient')
     .set('supplementaryMaterial','twoleftbuttons','tworightbuttons','supplementary_material')
     .set('seasoning','threeleftbuttons','threerightbuttons','seasoning')
-    .set('practice')
     .set('remark')
     .set('status')
     .set('columnId')
     .set('baseId')
+        .set('userId')
     .set('video');
-}
+};
 
 /**
  * 提交添加
@@ -96,7 +96,7 @@ WorksInfoDlg.addSubmit = function() {
     });
     ajax.set(this.worksInfoData);
     ajax.start();
-}
+};
 
 /**
  * 提交修改
@@ -116,7 +116,7 @@ WorksInfoDlg.editSubmit = function() {
     });
     ajax.set(this.worksInfoData);
     ajax.start();
-}
+};
 
 $(function() {
     var threeArr;
@@ -147,12 +147,29 @@ $(function() {
 
 
     /**
+     * 动态获取所有标签
+     */
+    var ajax = new $ax(Feng.ctxPath + "/tag/getAllTag", function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var jsonObj = data[i];
+            $("#tagId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+        }
+
+    }, function (data) {
+
+    });
+    ajax.start();
+
+
+
+
+
+    /**
      * 动态获取所有栏目
      */
     var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            var optionstring = "";
             $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
         }
 
@@ -161,4 +178,11 @@ $(function() {
     });
     ajax.start();
 
+
+    //初始化编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
+    editor.txt.html($("#practice").val());
+    WorksInfoDlg.editor = editor;
 });

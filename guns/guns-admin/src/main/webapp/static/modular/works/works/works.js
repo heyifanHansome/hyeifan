@@ -21,7 +21,7 @@ Works.initColumn = function () {
             {title: '主料', field: 'mainIngredient', visible: false, align: 'center', valign: 'middle'},
             {title: '辅料', field: 'supplementaryMaterial', visible: false, align: 'center', valign: 'middle'},
             {title: '调料', field: 'seasoning', visible: false, align: 'center', valign: 'middle'},
-            {title: '做法', field: 'practice', visible: true, align: 'center', valign: 'middle'},
+            {title: '做法', field: 'practice', visible: false, align: 'center', valign: 'middle'},
             {title: '备注', field: 'remark', visible: true, align: 'center', valign: 'middle'},
             {title: '加入状态', field: 'status', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},

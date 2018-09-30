@@ -7,21 +7,17 @@
                       <input id="images" name="图集Ids" value="${item.images}" type="hidden"/>
 
                       <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
+
+                      <input id="practice" name="视频Ids" value="${item.practice}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
-                            <#select id="type" name="类型" underline="true">
-                            <option value="0">图文</option>
-                            <option value="1">视频</option>
-                            </#select>
-                            <#select id="status" name="预约" underline="true">
-                            <option value="0">未审查</option>
-                            <option value="1">通过</option>
-                            <option value="2">拒绝</option>
-                            </#select>
-                            <#select id="columnId" name="类型" underline="true">
-                            </#select>
-                            <!--<#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true"/>-->
+                    <#select id="status" name="预约" underline="true">
+                    <option value="0">未审查</option>
+                    <option value="1">通过</option>
+                    <option value="2">拒绝</option>
+                </#select>
+                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true"/>
                     <#button btnCss="info" name="添加主料输入框"   icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
                     </div>
@@ -34,14 +30,14 @@
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="practice" name="做法 " value="${item.practice}" underline="true"/>
+                    <#select id="userId" name="用户名称" underline="true">
+                </#select>
+
+            <#select id="columnId" name="栏目类型" readonly="readonly" underline="true">
+        </#select>
+                            <!--<#input id="practice" name="做法 " value="${item.practice}" underline="true"/>-->
                             <#input id="remark" name="备注" value="${item.remark}" underline="true"/>
-                            <#select id="userId" name="状态" underline="true">
-                            <option value="0">未审查</option>
-                            <option value="1">通过</option>
-                            <option value="2">拒绝</option>
-                            </#select>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}"   readonly="readonly"  underline="true"/>
+                            <!--<#input id="createTime" name="创建时间" value="${item.createTime}"   readonly="readonly"  underline="true"/>-->
                     <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
                     <div id='onerightbuttons'>
                     </div>
@@ -55,6 +51,18 @@
                 </div>
             </div>
 
+        <fieldset style="margin-top: 3%">
+            <legend>做法详情</legend>
+            <div class="form-group">
+                <!--<label class="col-sm-1 control-label">内容</label>-->
+                <div class="col-sm-12">
+                    <div id="editor" class="editorHeight">
+                    </div>
+                </div>
+            </div>
+            </fieldset>
+
+
             <div>
                 <fieldset  style="margin-top: 3%">
                     <legend>图集上传</legend>
@@ -64,33 +72,9 @@
                 </fieldset>
             </div>
 
+
             <div id="hyfVideo">
             </div>
-
-            <!--<div>-->
-                <!--<fieldset>-->
-                    <!--<legend>视频回显</legend>-->
-                    <!--<div>-->
-                        <!--&lt;!&ndash;"http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao"&ndash;&gt;-->
-
-                        <!--&lt;!&ndash;<input   multiple type="file">&ndash;&gt;-->
-                        <!--<video src='http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao' controls="controls">-->
-                    <!--</video>-->
-                    <!--</div>-->
-                <!--</fieldset>-->
-            <!--</div>-->
-
-
-        <!--<div>-->
-                <!--<fieldset>-->
-                    <!--<legend>视频回显</legend>-->
-                    <!--<div class="sx"	>-->
-                        <!--&lt;!&ndash;<input   multiple type="file">&ndash;&gt;-->
-                        <!--<video src="http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao" controls="controls">-->
-                        <!--</video>-->
-                    <!--</div>-->
-                <!--</fieldset>-->
-            <!--</div>-->
 
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
@@ -103,8 +87,18 @@
 
     </div>
 </div>
+
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
+
+
+    $(document).ready(function () {
+             $('#userId').val(${item.userId});
+             $('#status').val(${item.status});
+             $('#columnId').val(${item.columnId})
+
+    });
     /*定义回显数组*/
 
          oneArr =${item.mainIngredient}

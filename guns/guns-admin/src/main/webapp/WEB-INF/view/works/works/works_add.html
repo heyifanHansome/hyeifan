@@ -8,17 +8,16 @@
             <input id="practice" name="" type="hidden" underline="true"/>
 
 
-            <div id="example" role="application">
+            <div id="example" role="application" style="margin-bottom: 3%">
                 <div class="demo-section k-content">
-                    <h2>何一凡</h2>
-                    <label for="required">Required</label>
-                    <select id="required" multiple="multiple" data-placeholder="Select attendees...">
+                    <h2>请选择活动标签</h2>
+                    <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
                     </select>
-                    <label for="optional">Optional</label>
-                    <select id="optional" multiple="multiple" data-placeholder="Select attendees...">
-                    </select>
-                    <button class="k-button" id="get">Send Invitation</button>
+
+
+                    <!--<button class="k-button" id="get">Send Invitation</button>-->
                 </div>
+
                 <style>
                     .demo-section label {
                         display: block;
@@ -29,44 +28,33 @@
                         margin: 25px auto 0;
                     }
                 </style>
-                <script>
-                    $(document).ready(function() {
-
-
-                        var dataSource = new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: "/tag/getAllTag",
-                                    dataType: "json"
-                                }
-                            }
-                        });
-
-                        $("#required").kendoMultiSelect({
-                            placeholder: "Select Cities...",
-                            dataTextField: "name",
-                            dataValueField: "id",
-                            autoBind: false,
-                            dataSource: dataSource
-                        });
-                        // create MultiSelect from select HTML element
-                        var optional = $("#optional").kendoMultiSelect({
-                            autoClose: false
-                        }).data("kendoMultiSelect");
-
-                        $("#get").click(function() {
-                            alert("Attendees:\n\nrequired: " );
-                        });
-                    });
-                </script>
+                <!--<script>-->
+                    <!--// $(document).ready(function() {-->
+                    <!--//-->
+                    <!--//-->
+                    <!--//     var dataSource = new kendo.data.DataSource({-->
+                    <!--//         transport: {-->
+                    <!--//             read: {-->
+                    <!--//                 url: "/tag/getAllTag",-->
+                    <!--//                 dataType: "json"-->
+                    <!--//             }-->
+                    <!--//         }-->
+                    <!--//     });-->
+                    <!--//-->
+                    <!--//     $("#required").kendoMultiSelect({-->
+                    <!--//         placeholder: "请选择活动标签",-->
+                    <!--//         dataTextField: "name",-->
+                    <!--//         dataValueField: "id",-->
+                    <!--//         autoBind: false,-->
+                    <!--//         dataSource: dataSource-->
+                    <!--//     });-->
+                    <!--// });-->
+                <!--</script>-->
             </div>
 
 
             <div class="row">
                 <div class="col-sm-6 b-r" >
-
-
-
                             <#select id="userId" name="用户" underline="true">
                             </#select>
                             <#input id="name" name="作品名称 " value="" underline="true"/>
@@ -123,7 +111,7 @@
 
             </div>
                     <fieldset style="margin-top: 3%">
-                        <legend>做法详情</legend>
+                        <h2>做法详情</h2>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div id="editor" class="editorHeight">
@@ -163,6 +151,30 @@
 <script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"> </script>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
+
+
+
+    $(document).ready(function() {
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/tag/getAllTag",
+                    dataType: "json"
+                }
+            }
+        });
+
+        $("#tagId").kendoMultiSelect({
+            placeholder: "请选择活动标签",
+            dataTextField: "name",
+            dataValueField: "id",
+            autoBind: false,
+            dataSource: dataSource,
+        });
+    });
+
+
     /*定义动态添加方法*/
     function goAdd(v){
         if(v=='1'){

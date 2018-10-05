@@ -9,7 +9,9 @@ import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Picture;
+import com.stylefeng.guns.modular.system.model.TagRelation;
 import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
+import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -48,6 +50,11 @@ public class WorksController extends BaseController {
     @Autowired
     private IColumnTypeService columnTypeService;
 
+    @Autowired
+    private ITagRelationService tagRelationService;
+
+
+
     /**
      * 跳转到作品管理首页
      */
@@ -70,24 +77,33 @@ public class WorksController extends BaseController {
     @RequestMapping("/works_update/{worksId}")
     public String worksUpdate(@PathVariable Integer worksId, Model model) {
         Works works = worksService.selectById(worksId);
-        model.addAttribute("item",works);
+        model.addAttribute("item", works);
+        EntityWrapper<TagRelation> tagRelationEntityWrapper = new EntityWrapper<>();
+        tagRelationEntityWrapper.eq("relation_id",worksId);
+        List<TagRelation> tagRelations = tagRelationService.selectList(tagRelationEntityWrapper);
+           List<Integer> multArr = new ArrayList<>();
+         for (int i = 0; i < tagRelations.size(); i++) {
+             Integer temp = tagRelations.get(i).getColumnId();
+             multArr.add(temp);
+         }
+        model.addAttribute("multArr",multArr);
         EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
-        entityWrapper.eq("base_id",works.getVideo()) ;
+        entityWrapper.eq("base_id", works.getVideo());
         List<Picture> pictures = pictureService.selectList(entityWrapper);
-        List<Map<String,Object>> videoArray = new ArrayList<>();
+        List<Map<String, Object>> videoArray = new ArrayList<>();
         JSONObject mapJson = null;
 //        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
 //        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
-        if(pictures.size()>0){
-            for (int i = 0; i <pictures.size() ; i++) {
-                Map<String,Object> map = new HashMap<>();
-                map.put("key"  ,(pictures.get(i).getOssObjectName()));
+        if (pictures.size() > 0) {
+            for (int i = 0; i < pictures.size(); i++) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("key", (pictures.get(i).getOssObjectName()));
 //                videoArray.add(pictures.get(i).getOssObjectName());
-                 mapJson = new JSONObject( map);
+                mapJson = new JSONObject(map);
                 videoArray.add(mapJson);
             }
 
-        }else{
+        } else {
 
         }
         System.out.println(videoArray);
@@ -102,9 +118,8 @@ public class WorksController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition)
-    {
-        List<Map<String, Object>> list  = worksService.list(condition);
+    public Object list(String condition) {
+        List<Map<String, Object>> list = worksService.list(condition);
         return super.warpObject(new WorksWarpper(list));
     }
 
@@ -114,9 +129,31 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Works works) {
-
+        Integer columnId =null;
         works.setCreateTime(new DateTime());
         worksService.insert(works);
+        TagRelation tagRelation = new TagRelation();
+        tagRelation.setCreateTime(new DateTime());
+        tagRelation.setRelationId(works.getId());
+        String tagArrId = works.getTagId();
+
+        String[] heyifan =tagArrId.split(",");
+
+        EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("name", "活动");
+        List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
+        if (columnTypes.size() > 0) {
+          columnId =    columnTypes.get(0).getId();
+        }
+
+        for (int i = 0; i < heyifan.length; i++) {
+            tagRelation.setRelationId(works.getId());
+            tagRelation.setCreateTime(new DateTime());
+            tagRelation.setCommonTypeId(columnId);
+            tagRelation.setColumnId(Integer.parseInt(heyifan[i]));
+            tagRelationService.insert(tagRelation);
+        }
+
         return SUCCESS_TIP;
     }
 
@@ -136,6 +173,36 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Works works) {
+        Integer columnId =null;
+        TagRelation tagRelation = new TagRelation();
+            EntityWrapper<TagRelation>  relationEntityWrapper = new EntityWrapper<>();
+            relationEntityWrapper.eq("relation_id",works.getId());
+            List<TagRelation> tagRelations = tagRelationService.selectList(relationEntityWrapper);
+            for (int i = 0; i < tagRelations.size(); i++) {
+                tagRelationService.deleteById(tagRelations.get(i).getId());
+        }
+        if(works.getTagId()==""){
+        }else{
+            String tagArrId = works.getTagId();
+            String[] heyifan =tagArrId.split(",");
+            EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
+            entityWrapper.eq("name", "活动");
+            List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
+            if (columnTypes.size() > 0) {
+                columnId =    columnTypes.get(0).getId();
+            }
+
+            for (int i = 0; i < heyifan.length; i++) {
+                tagRelation.setRelationId(works.getId());
+                tagRelation.setCreateTime(new DateTime());
+                tagRelation.setCommonTypeId(columnId);
+                tagRelation.setColumnId(Integer.parseInt(heyifan[i]));
+                tagRelationService.insert(tagRelation);
+            }
+        }
+
+
+
         works.setUpdateTime(new DateTime());
         worksService.updateById(works);
         return SUCCESS_TIP;
@@ -148,7 +215,7 @@ public class WorksController extends BaseController {
         ResultMsg resultMsg = new ResultMsg();
         try {
             EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
-            entityWrapper.like("base_id",baseId);
+            entityWrapper.like("base_id", baseId);
             List<Picture> picture = pictureService.selectList(entityWrapper);
             StringBuffer listObject = new StringBuffer();
 
@@ -173,7 +240,7 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/getAllWorks")
     @ResponseBody
     public List<Works> getAllWorks() {
-        List<Works> Works  = worksService.selectList(null);
+        List<Works> Works = worksService.selectList(null);
         return Works;
     }
 
@@ -183,8 +250,8 @@ public class WorksController extends BaseController {
      */
     @RequestMapping(value = "/getAllColumnType")
     @ResponseBody
-    public List<ColumnType> getAllColumnType() {
-        List<ColumnType> ColumnType  = columnTypeService.selectList(null);
+    public List<ColumnType> getAllColumnwType() {
+        List<ColumnType> ColumnType = columnTypeService.selectList(null);
         return ColumnType;
     }
 
@@ -194,17 +261,19 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/detail/{worksId}")
     @ResponseBody
     public Object detail(@PathVariable("worksId") Integer worksId) {
+
+
+
         return worksService.selectById(worksId);
     }
 
 
-
-    public String deleteObjectName(HttpServletRequest request, HttpServletResponse response){
+    public String deleteObjectName(HttpServletRequest request, HttpServletResponse response) {
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
         EntityWrapper<Picture> entityWrapper = new EntityWrapper();
-        entityWrapper.like("oss_object_name", id );
-        List<Picture> pictures =pictureService.selectList(entityWrapper);
-return  "";
+        entityWrapper.like("oss_object_name", id);
+        List<Picture> pictures = pictureService.selectList(entityWrapper);
+        return "";
     }
 }

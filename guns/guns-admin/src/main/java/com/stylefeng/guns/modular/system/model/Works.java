@@ -11,8 +11,10 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.beetl.ext.fn.Json;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -97,6 +99,9 @@ public class Works extends Model<Works> {
 
     @TableField("user_id")
     private String userId;
+
+    @TableField("tag_id")
+    private String tagId;
 
     @Override
     protected Serializable pkVal() {

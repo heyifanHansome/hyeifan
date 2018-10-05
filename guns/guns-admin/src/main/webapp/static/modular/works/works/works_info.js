@@ -19,6 +19,24 @@ WorksInfoDlg.clearData = function() {
  * @param val 数据的具体值
  */
 WorksInfoDlg.set = function(key, val,val2, isClass ) {
+
+    if(key == 'tagId'){
+        debugger;
+            var heyifanArr = $('#tagId').val();
+            var newDemo ="" ;
+            if(heyifanArr!=null&&heyifanArr.length>0){
+                for (var z=0;z< heyifanArr.length;z++) {
+                    newDemo += heyifanArr[z] +",";
+                }
+                this.worksInfoData[key] = newDemo;
+                return this;
+            }else {
+                this.worksInfoData[key] = '';
+                return this;
+            }
+
+    }
+
     if(isClass !== undefined) {
         var rightinputs =$("#"+val2+" ."+isClass);
         var leftinput =$("#"+val+" ."+isClass);
@@ -74,8 +92,9 @@ WorksInfoDlg.collectData = function() {
     .set('status')
     .set('columnId')
     .set('baseId')
-        .set('userId')
-    .set('video');
+    .set('userId')
+    .set('video')
+    .set('tagId');
 };
 
 /**
@@ -119,6 +138,28 @@ WorksInfoDlg.editSubmit = function() {
 };
 
 $(function() {
+    //
+    // var dataSource = new kendo.data.DataSource({
+    //     transport: {
+    //         read: {
+    //             url: "/tag/getAllTag",
+    //             dataType: "json"
+    //         }
+    //     }
+    // });
+    //
+    // $("#tagId").kendoMultiSelect({
+    //     placeholder: "请选择活动标签",
+    //     dataTextField: "name",
+    //     dataValueField: "id",
+    //     autoBind: false,
+    //     dataSource: dataSource,
+    //     // });
+    // });
+
+
+
+
     var threeArr;
     var twoArr;
     var oneArr;
@@ -130,7 +171,7 @@ $(function() {
     var threeleftbuttons ;
     var videoHttpsArrays;
     var hyfVideoFile;
-
+    var multArrays=[];
     /**
      * 动态获取所有用户
      */
@@ -159,6 +200,11 @@ $(function() {
 
     });
     ajax.start();
+
+
+
+
+    // $(document).ready(function() {
 
 
     //初始化编辑器

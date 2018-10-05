@@ -21,7 +21,6 @@ WorksInfoDlg.clearData = function() {
 WorksInfoDlg.set = function(key, val,val2, isClass ) {
 
     if(key == 'tagId'){
-        debugger;
             var heyifanArr = $('#tagId').val();
             var newDemo ="" ;
             if(heyifanArr!=null&&heyifanArr.length>0){
@@ -156,7 +155,6 @@ $(function() {
     //     dataSource: dataSource,
     //     // });
     // });
-
 
 
 

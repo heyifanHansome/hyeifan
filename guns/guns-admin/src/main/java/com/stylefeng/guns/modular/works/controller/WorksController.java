@@ -132,27 +132,29 @@ public class WorksController extends BaseController {
         Integer columnId =null;
         works.setCreateTime(new DateTime());
         worksService.insert(works);
-        TagRelation tagRelation = new TagRelation();
-        tagRelation.setCreateTime(new DateTime());
-        tagRelation.setRelationId(works.getId());
-        String tagArrId = works.getTagId();
-
-        String[] heyifan =tagArrId.split(",");
-
-        EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
-        entityWrapper.eq("name", "活动");
-        List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
-        if (columnTypes.size() > 0) {
-          columnId =    columnTypes.get(0).getId();
-        }
-
-        for (int i = 0; i < heyifan.length; i++) {
-            tagRelation.setRelationId(works.getId());
+        if(works.getTagId()!=""){
+            TagRelation tagRelation = new TagRelation();
             tagRelation.setCreateTime(new DateTime());
-            tagRelation.setCommonTypeId(columnId);
-            tagRelation.setColumnId(Integer.parseInt(heyifan[i]));
-            tagRelationService.insert(tagRelation);
+            tagRelation.setRelationId(works.getId());
+            String tagArrId = works.getTagId();
+            String[] heyifan =tagArrId.split(",");
+            EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
+            entityWrapper.eq("name", "活动");
+            List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
+            if (columnTypes.size() > 0) {
+                columnId =    columnTypes.get(0).getId();
+            }
+
+            for (int i = 0; i < heyifan.length; i++) {
+                tagRelation.setRelationId(works.getId());
+                tagRelation.setCreateTime(new DateTime());
+                tagRelation.setCommonTypeId(columnId);
+                tagRelation.setColumnId(Integer.parseInt(heyifan[i]));
+                tagRelationService.insert(tagRelation);
+            }
+
         }
+
 
         return SUCCESS_TIP;
     }

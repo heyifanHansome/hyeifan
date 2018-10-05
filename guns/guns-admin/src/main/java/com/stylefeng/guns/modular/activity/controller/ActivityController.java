@@ -3,7 +3,6 @@ package com.stylefeng.guns.modular.activity.controller;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.modular.system.warpper.ActivityWarpper;
-import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

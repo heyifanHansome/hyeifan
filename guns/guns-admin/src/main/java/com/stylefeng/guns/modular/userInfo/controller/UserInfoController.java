@@ -1,7 +1,10 @@
 package com.stylefeng.guns.modular.userInfo.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.warpper.CityWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserWarpper;
@@ -32,6 +35,8 @@ public class UserInfoController extends BaseController {
     private String PREFIX = "/userInfo/userInfo/";
 
     @Autowired
+    private IUserService userService;
+    @Autowired
     private IUserInfoService userInfoService;
 
     /**
@@ -56,7 +61,12 @@ public class UserInfoController extends BaseController {
     @RequestMapping("/userInfo_update/{userInfoId}")
     public String userInfoUpdate(@PathVariable Integer userInfoId, Model model) {
         UserInfo userInfo = userInfoService.selectById(userInfoId);
+        EntityWrapper<User> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("id",userInfo.getUserId());
+        List<User> users = userService.selectList(entityWrapper);
+        User user = users.get(0);
         model.addAttribute("item",userInfo);
+        model.addAttribute("userName",user.getName());
         LogObjectHolder.me().set(userInfo);
         return PREFIX + "userInfo_edit.html";
     }

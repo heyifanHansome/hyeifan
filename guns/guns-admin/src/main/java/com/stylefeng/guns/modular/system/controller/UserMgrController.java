@@ -216,9 +216,9 @@ public class UserMgrController extends BaseController {
         userInfo.setLoginIp("192.168.0.0.1");
         userInfo.setCreateTime(new DateTime());
         userInfo.setRealName(user.getName());
-        userInfo.setJoinClub(0);
-        userInfo.setAppointment(0);
-        userInfo.setEnlightening(0);
+        userInfo.setJoinClub(2);
+        userInfo.setAppointment(2);
+        userInfo.setEnlightening(2);
         userInfoService.insert(userInfo);
         return SUCCESS_TIP;
     }
@@ -404,5 +404,22 @@ public class UserMgrController extends BaseController {
             throw new GunsException(BizExceptionEnum.NO_PERMITION);
         }
 
+    }
+    /**
+     * 跳转到用户详情页面页面
+     */
+    //@RequiresPermissions("/mgr/role_assign")  //利用shiro自带的权限检查
+    @RequestMapping("/user_info/{userId}")
+    public String userInfoDetail(@PathVariable Integer userId, Model model) {
+        if (ToolUtil.isEmpty(userId)) {
+            throw new GunsException(BizExceptionEnum.REQUEST_NULL);
+        }
+        User user = userService.selectById(userId);
+        EntityWrapper<UserInfo>  userInfoEntityWrapper = new EntityWrapper<>();
+        userInfoEntityWrapper.eq("user_id" ,userId);
+        List<UserInfo> userInfos = userInfoService.selectList(userInfoEntityWrapper);
+        model.addAttribute("item", userInfos.get(0));
+        model.addAttribute("userName",user.getName());
+        return PREFIX+ "/user_info_detail.html";
     }
 }

@@ -51,7 +51,7 @@ public class UserInfo extends Model<UserInfo> {
     /**
      * 钱
      */
-    private BigDecimal money;
+    private int money;
     /**
      * 登陆IP
      */

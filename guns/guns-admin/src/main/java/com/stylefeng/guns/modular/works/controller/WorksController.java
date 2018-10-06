@@ -1,11 +1,13 @@
 package com.stylefeng.guns.modular.works.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Picture;
@@ -53,8 +55,10 @@ public class WorksController extends BaseController {
     @Autowired
     private ITagRelationService tagRelationService;
 
-
-
+    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
+    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
+    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
+    private OSSClient ossClient;
     /**
      * 跳转到作品管理首页
      */
@@ -79,14 +83,14 @@ public class WorksController extends BaseController {
         Works works = worksService.selectById(worksId);
         model.addAttribute("item", works);
         EntityWrapper<TagRelation> tagRelationEntityWrapper = new EntityWrapper<>();
-        tagRelationEntityWrapper.eq("relation_id",worksId);
+        tagRelationEntityWrapper.eq("relation_id", worksId);
         List<TagRelation> tagRelations = tagRelationService.selectList(tagRelationEntityWrapper);
-           List<Integer> multArr = new ArrayList<>();
-         for (int i = 0; i < tagRelations.size(); i++) {
-             Integer temp = tagRelations.get(i).getColumnId();
-             multArr.add(temp);
-         }
-        model.addAttribute("multArr",multArr);
+        List<Integer> multArr = new ArrayList<>();
+        for (int i = 0; i < tagRelations.size(); i++) {
+            Integer temp = tagRelations.get(i).getColumnId();
+            multArr.add(temp);
+        }
+        model.addAttribute("multArr", multArr);
         EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("base_id", works.getVideo());
         List<Picture> pictures = pictureService.selectList(entityWrapper);
@@ -129,20 +133,21 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Works works) {
-        Integer columnId =null;
+        Integer columnId = null;
         works.setCreateTime(new DateTime());
+        EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
+        columnTypeEntityWrapper.eq("name", "活动");
+        List<ColumnType> columnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
+        works.setColumnId(columnTypes.get(0).getId());
         worksService.insert(works);
-        if(works.getTagId()!=""){
+        if (works.getTagId() != "") {
             TagRelation tagRelation = new TagRelation();
             tagRelation.setCreateTime(new DateTime());
             tagRelation.setRelationId(works.getId());
             String tagArrId = works.getTagId();
-            String[] heyifan =tagArrId.split(",");
-            EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
-            entityWrapper.eq("name", "活动");
-            List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
+            String[] heyifan = tagArrId.split(",");
             if (columnTypes.size() > 0) {
-                columnId =    columnTypes.get(0).getId();
+                columnId = columnTypes.get(0).getId();
             }
 
             for (int i = 0; i < heyifan.length; i++) {
@@ -175,23 +180,23 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Works works) {
-        Integer columnId =null;
+        Integer columnId = null;
         TagRelation tagRelation = new TagRelation();
-            EntityWrapper<TagRelation>  relationEntityWrapper = new EntityWrapper<>();
-            relationEntityWrapper.eq("relation_id",works.getId());
-            List<TagRelation> tagRelations = tagRelationService.selectList(relationEntityWrapper);
-            for (int i = 0; i < tagRelations.size(); i++) {
-                tagRelationService.deleteById(tagRelations.get(i).getId());
+        EntityWrapper<TagRelation> relationEntityWrapper = new EntityWrapper<>();
+        relationEntityWrapper.eq("relation_id", works.getId());
+        List<TagRelation> tagRelations = tagRelationService.selectList(relationEntityWrapper);
+        for (int i = 0; i < tagRelations.size(); i++) {
+            tagRelationService.deleteById(tagRelations.get(i).getId());
         }
-        if(works.getTagId()==""){
-        }else{
+        if (works.getTagId() == "") {
+        } else {
             String tagArrId = works.getTagId();
-            String[] heyifan =tagArrId.split(",");
+            String[] heyifan = tagArrId.split(",");
             EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
             entityWrapper.eq("name", "活动");
             List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
             if (columnTypes.size() > 0) {
-                columnId =    columnTypes.get(0).getId();
+                columnId = columnTypes.get(0).getId();
             }
 
             for (int i = 0; i < heyifan.length; i++) {
@@ -202,7 +207,6 @@ public class WorksController extends BaseController {
                 tagRelationService.insert(tagRelation);
             }
         }
-
 
 
         works.setUpdateTime(new DateTime());
@@ -265,7 +269,6 @@ public class WorksController extends BaseController {
     public Object detail(@PathVariable("worksId") Integer worksId) {
 
 
-
         return worksService.selectById(worksId);
     }
 
@@ -278,4 +281,54 @@ public class WorksController extends BaseController {
         List<Picture> pictures = pictureService.selectList(entityWrapper);
         return "";
     }
+
+
+
+
+
+
+    /*
+     * 删除上传的视频
+     * @param objectName 传入上传路径
+     */
+    @RequestMapping(value = "/deleteVideoByObjectName")
+    public void deleteVideoByObjectName (String objectName){
+        /*先删除oss的objectname*/
+        ossClient = new OSSClient(endpoint,accessKeyId,accessKeySecret);
+        ossClient.deleteObject("data/",objectName);
+        ossClient.shutdown();
+
+
+        /*再删除对应baseid的视频*/
+        EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
+        pictureEntityWrapper.eq("oss_object_name",objectName);
+        List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+        for (int i = 0; i < pictures.size(); i++) {
+                pictureService.deleteById(pictures.get(i).getId());
+        }
+    }
+
+
+    /**
+     * 审核操作
+     * @param objctName
+     * @return
+     */
+
+    @RequestMapping(value = "/checkVideo")
+    public boolean checkVideo(String objctName){
+        try {
+            EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
+            pictureEntityWrapper.eq("oss_object_name",objctName);
+            List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+            Picture picture =    pictures.get(0);
+            picture.setCheck(1);
+            pictureService.updateById(picture);
+        }catch (Exception e ){
+            e.printStackTrace();
+            return  false;
+        }
+     return true;
+    }
+
 }

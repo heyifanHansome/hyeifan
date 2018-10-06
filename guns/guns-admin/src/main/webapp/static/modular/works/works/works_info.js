@@ -89,7 +89,7 @@ WorksInfoDlg.collectData = function() {
     .set('seasoning','threeleftbuttons','threerightbuttons','seasoning')
     .set('remark')
     .set('status')
-    .set('columnId')
+    // .set('columnId')
     .set('baseId')
     .set('userId')
     .set('video')

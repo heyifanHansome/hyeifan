@@ -55,6 +55,8 @@ public class ImgUploadController {
 
     private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
 
+
+
     /**
      * 文件上传删除方法
      *

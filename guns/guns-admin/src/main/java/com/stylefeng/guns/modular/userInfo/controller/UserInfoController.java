@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.model.UserResume;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.warpper.CityWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserWarpper;
+import com.stylefeng.guns.modular.userInfo.service.impl.UserInfoServiceImpl;
+import com.stylefeng.guns.modular.userResume.service.IUserResumeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +41,8 @@ public class UserInfoController extends BaseController {
     private IUserService userService;
     @Autowired
     private IUserInfoService userInfoService;
+    @Autowired
+    private IUserResumeService userResumeService;
 
     /**
      * 跳转到用户详情首页
@@ -122,4 +127,36 @@ public class UserInfoController extends BaseController {
     public Object detail(@PathVariable("userInfoId") Integer userInfoId) {
         return userInfoService.selectById(userInfoId);
     }
+
+
+
+    /**
+     * 跳转到简历详情
+     */
+    @RequestMapping("/user_resume_info/{userInfoId}")
+    public String user_resume(@PathVariable Integer userInfoId, Model model) {
+        UserInfo userInfo = userInfoService.selectById(userInfoId);
+
+        EntityWrapper<User> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("id",userInfo.getUserId());
+        List<User> users = userService.selectList(entityWrapper);
+
+
+        EntityWrapper<UserResume> userResumeEntityWrapper = new EntityWrapper<>();
+        userResumeEntityWrapper.like("user_id",userInfo.getUserId().toString());
+        List<UserResume> userResumes =userResumeService.selectList(userResumeEntityWrapper);
+        if(userResumes.size()==0){
+            return  "/userResume/userResume/userResume_add.html";
+        }else
+        {
+            UserResume userResume = userResumeService.selectById(userResumes.get(0));
+            model.addAttribute("item",userResume);
+            model.addAttribute("userName", users.get(0).getName());
+            return  "/userResume/userResume/userResume_edit.html";
+        }
+
+
+    }
+
+
 }

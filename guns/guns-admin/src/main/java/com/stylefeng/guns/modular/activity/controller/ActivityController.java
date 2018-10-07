@@ -1,8 +1,15 @@
 package com.stylefeng.guns.modular.activity.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.system.model.ColumnType;
+import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.warpper.ActivityWarpper;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,6 +38,11 @@ public class ActivityController extends BaseController {
 
     @Autowired
     private IActivityService activityService;
+    @Autowired
+    private IColumnTypeService columnTypeService;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 跳转到活动管理首页
@@ -54,7 +66,17 @@ public class ActivityController extends BaseController {
     @RequestMapping("/activity_update/{activityId}")
     public String activityUpdate(@PathVariable Integer activityId, Model model) {
         Activity activity = activityService.selectById(activityId);
+        User user = userService.selectById(activity.getUid());
         model.addAttribute("item", activity);
+        model.addAttribute("userName",user.getName());
+        if(activity.getSourceId()==0){
+
+            model.addAttribute("source","官方");
+        }else {
+
+            model.addAttribute("source","个人");
+        }
+
         LogObjectHolder.me().set(activity);
         return PREFIX + "activity_edit.html";
     }
@@ -75,7 +97,22 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Activity activity) {
+        EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
+        columnTypeEntityWrapper.eq("name", "活动");
+        List<ColumnType> columnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
+        activity.setColumnId(columnTypes.get(0).getId());
+        ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+        Boolean checkRole = SecurityUtils.getSubject().hasRole("administrator");
+        if (checkRole) {
+            activity.setSourceId(0);
+        } else {
+            activity.setSourceId(1);
+        }
+        activity.setPublishIp("192.0.0.1");
+        activity.setUid(shiroUser.getId());
         activity.setCreateTime(new DateTime());
+
+
         activityService.insert(activity);
         return SUCCESS_TIP;
     }

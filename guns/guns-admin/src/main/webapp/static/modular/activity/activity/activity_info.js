@@ -44,6 +44,7 @@ ActivityInfoDlg.close = function() {
  * 收集数据
  */
 ActivityInfoDlg.collectData = function() {
+    this.activityInfoData['content'] = ActivityInfoDlg.editor.txt.html();
     this
     .set('id')
     .set('columnId')
@@ -56,7 +57,6 @@ ActivityInfoDlg.collectData = function() {
     .set('sourceId')
     .set('uid')
     .set('publishIp')
-    .set('content')
     .set('createTime')
     .set('updateTime');
 }
@@ -153,4 +153,10 @@ $(function() {
     avatarUp.init();
 
 
+    //初始化编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
+    editor.txt.html($("#content").val());
+    ActivityInfoDlg.editor = editor;
 });

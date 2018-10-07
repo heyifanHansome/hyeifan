@@ -282,44 +282,41 @@ public class WorksController extends BaseController {
         return "";
     }
 
-
-
-
-
-
     /*
      * 删除上传的视频
      * @param objectName 传入上传路径
      */
-    @RequestMapping(value = "/deleteVideoByObjectName")
-    public void deleteVideoByObjectName (String objectName){
-        /*先删除oss的objectname*/
-        ossClient = new OSSClient(endpoint,accessKeyId,accessKeySecret);
-        ossClient.deleteObject("data/",objectName);
-        ossClient.shutdown();
+@RequestMapping(value = "/deleteVideoByObjectName")
+@ResponseBody
+public  Object deleteVideoByObjectName (String objectName){
+    /*先删除oss的objectname*/
+//    ossClient = new OSSClient(endpoint,accessKeyId,accessKeySecret);
+//    ossClient.deleteObject("data/",objectName);
+//    ossClient.shutdown();
 
 
-        /*再删除对应baseid的视频*/
-        EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
-        pictureEntityWrapper.eq("oss_object_name",objectName);
-        List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
-        for (int i = 0; i < pictures.size(); i++) {
-                pictureService.deleteById(pictures.get(i).getId());
-        }
+    /*再删除对应baseid的视频*/
+    EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
+    pictureEntityWrapper.eq("oss_object_name",objectName);
+    List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+    for (int i = 0; i < pictures.size(); i++) {
+            pictureService.deleteById(pictures.get(i).getId());
     }
-
+    return "返回成功!";
+}
 
     /**
-     * 审核操作
-     * @param objctName
+     *
+     * @param objectName
      * @return
      */
 
     @RequestMapping(value = "/checkVideo")
-    public boolean checkVideo(String objctName){
+    @ResponseBody
+    public boolean checkVideo(String objectName){
         try {
             EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
-            pictureEntityWrapper.eq("oss_object_name",objctName);
+            pictureEntityWrapper.eq("oss_object_name",objectName);
             List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
             Picture picture =    pictures.get(0);
             picture.setCheck(1);

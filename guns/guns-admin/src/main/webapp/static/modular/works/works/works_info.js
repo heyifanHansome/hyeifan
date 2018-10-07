@@ -68,6 +68,43 @@ WorksInfoDlg.get = function(key) {
 };
 
 /**
+ * 定义删除视频方法
+ */
+
+WorksInfoDlg.deleteVideo=function(v){
+    debugger;
+    var ajax = new $ax(Feng.ctxPath + "/works/deleteVideoByObjectName?objectName=" + v, function(data){
+        Feng.success("删除成功! 请重新打开该页面查看效果!");
+
+    },function(data){
+        Feng.success("删除成功! 请重新打开该页面查看效果!");
+    });
+    ajax.set(this.worksInfoData);
+    ajax.start();
+
+
+};
+
+
+
+/**
+ * 定义审核方法
+ */
+
+WorksInfoDlg.checkVideo=function(v){
+    debugger;
+    var ajax = new $ax(Feng.ctxPath + "/works/checkVideo?objectName=" + v, function(data){
+        Feng.success("审核通过! 请重新打开该页面查看效果!");
+
+    },function(data){
+        Feng.success("审核通过! 请重新打开该页面查看效果!");
+    });
+    ajax.set(this.worksInfoData);
+    ajax.start();
+
+
+};
+/**
  * 关闭此对话框
  */
 WorksInfoDlg.close = function() {
@@ -137,27 +174,8 @@ WorksInfoDlg.editSubmit = function() {
 };
 
 $(function() {
-    //
-    // var dataSource = new kendo.data.DataSource({
-    //     transport: {
-    //         read: {
-    //             url: "/tag/getAllTag",
-    //             dataType: "json"
-    //         }
-    //     }
-    // });
-    //
-    // $("#tagId").kendoMultiSelect({
-    //     placeholder: "请选择活动标签",
-    //     dataTextField: "name",
-    //     dataValueField: "id",
-    //     autoBind: false,
-    //     dataSource: dataSource,
-    //     // });
-    // });
 
-
-
+    var currentVideoName ;
     var threeArr;
     var twoArr;
     var oneArr;

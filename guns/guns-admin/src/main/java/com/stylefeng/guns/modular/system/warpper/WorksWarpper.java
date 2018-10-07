@@ -55,7 +55,7 @@ public class WorksWarpper extends BaseControllerWarpper {
                 map.put("type","视频");
             }
         }else{
-            map.put("type","请输入类型");
+            map.put("type","活动");
         }
 
 

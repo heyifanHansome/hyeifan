@@ -16,7 +16,6 @@ Works.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: '主键ID', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '作品名称', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '类型', field: 'type', visible: true, align: 'center', valign: 'middle'},
             {title: '资源', field: 'images', visible: false, align: 'center', valign: 'middle'},
             {title: '主料', field: 'mainIngredient', visible: false, align: 'center', valign: 'middle'},
             {title: '辅料', field: 'supplementaryMaterial', visible: false, align: 'center', valign: 'middle'},

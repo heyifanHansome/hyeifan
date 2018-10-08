@@ -50,15 +50,16 @@ ActivityInfoDlg.collectData = function() {
     .set('columnId')
     .set('title')
     .set('thumb')
+    .set('object_name')
     .set('description')
     .set('startTime')
     .set('endTime')
     .set('cityId')
     .set('sourceId')
-    .set('uid')
-    .set('publishIp')
-    .set('createTime')
-    .set('updateTime');
+    // .set('uid')
+    // .set('publishIp')
+    // .set('createTime')
+    // .set('updateTime');
 }
 
 /**
@@ -102,61 +103,33 @@ ActivityInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-
-
-    /**
-     * 动态获取所有栏目
-     */
-    var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
+    $.post(Feng.ctxPath + "/city/list", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#cityId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+            $("#cityId").append(option);
         }
-
-    }, function (data) {
-
+        $('#cityId').searchableSelect();
     });
-    ajax.start();
-
-
-    /**
-     * 动态获取所有用户
-     */
-    var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
+    $.post(Feng.ctxPath + "/columnType/getColumnTypeList", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            $("#cityId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#columnId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+            $("#columnId").append(option);
         }
-
-    }, function (data) {
-
+        $('#columnId').searchableSelect();
     });
-    ajax.start();
-
-    /**
-     * 动态获取所有用户
-     */
-    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            var jsonObj = data[i];
-            $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
-        }
-
-    }, function (data) {
-
-    });
-    ajax.start();
-
-    // 初始化缩略图上传
-    var avatarUp = new $WebUpload("thumb");
-    avatarUp.setUploadBarId("progressBar");
-    avatarUp.init();
-
-
-    //初始化编辑器
+    Feng.initValidator("noticeInfoForm", ActivityInfoDlg.validateFields);
+    // 初始化编辑器
     var E = window.wangEditor;
     var editor = new E('#editor');
     editor.create();
     editor.txt.html($("#content").val());
     ActivityInfoDlg.editor = editor;
+    // 初始化缩略图上传
+    var avatarUp = new $WebUpload("thumb","/tool/uploadFile");
+    avatarUp.setUploadBarId("progressBar");
+    avatarUp.init("/tool/uploadFile");
+
+
 });

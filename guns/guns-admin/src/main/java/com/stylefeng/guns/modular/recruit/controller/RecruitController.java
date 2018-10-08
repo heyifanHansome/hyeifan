@@ -87,7 +87,7 @@ public class RecruitController extends BaseController {
                 recruit.setUid((user.getName()+"<span style='color:red;'>(管理员)</span>"));
                 break;
             case "1":
-                recruit.setUid((user.getName()+"<span style='color:red;'>(管理员)</span>"));
+                recruit.setUid((user.getName()+"<span style='color:red;'>(用户)</span>"));
                 break;
             default:
                 recruit.setUid((user.getName()+"<span style='color:red;'>(未知角色)</span>"));

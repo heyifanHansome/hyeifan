@@ -1,15 +1,18 @@
 package com.stylefeng.guns.modular.activity.controller;
 
+import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
-import com.stylefeng.guns.core.shiro.ShiroUser;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.support.DateTime;
-import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
-import com.stylefeng.guns.modular.system.model.ColumnType;
+import com.stylefeng.guns.modular.city.service.ICityService;
+import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.model.City;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.warpper.ActivityWarpper;
-import org.apache.shiro.SecurityUtils;
+import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Activity;
 import com.stylefeng.guns.modular.activity.service.IActivityService;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +42,12 @@ public class ActivityController extends BaseController {
 
     @Autowired
     private IActivityService activityService;
+
     @Autowired
-    private IColumnTypeService columnTypeService;
+    private ICityService cityService;
 
     @Autowired
     private IUserService userService;
-
     /**
      * 跳转到活动管理首页
      */
@@ -66,17 +70,23 @@ public class ActivityController extends BaseController {
     @RequestMapping("/activity_update/{activityId}")
     public String activityUpdate(@PathVariable Integer activityId, Model model) {
         Activity activity = activityService.selectById(activityId);
-        User user = userService.selectById(activity.getUid());
-        model.addAttribute("item", activity);
-        model.addAttribute("userName",user.getName());
-        if(activity.getSourceId()==0){
-
-            model.addAttribute("source","官方");
-        }else {
-
-            model.addAttribute("source","个人");
+        User user=new User();
+        user.setId(Integer.valueOf(activity.getUid()));
+        EntityWrapper<User>userEntityWrapper=new EntityWrapper<>();
+        userEntityWrapper.setEntity(user);
+        user=userService.selectOne(userEntityWrapper);
+        switch (activity.getUid()){
+            case "0":
+                activity.setUid((user.getName()+"<span style='color:red;'>(管理员)</span>"));
+                break;
+            case "1":
+                activity.setUid((user.getName()+"<span style='color:red;'>(用户)</span>"));
+                break;
+            default:
+                activity.setUid((user.getName()+"<span style='color:red;'>(未知角色)</span>"));
+                break;
         }
-
+        model.addAttribute("item", activity);
         LogObjectHolder.me().set(activity);
         return PREFIX + "activity_edit.html";
     }
@@ -88,7 +98,23 @@ public class ActivityController extends BaseController {
     @ResponseBody
     public Object list(String condition) {
         List<Map<String, Object>> list = activityService.list(condition);
-        return super.warpObject(new ActivityWarpper(list));
+        for (Map<String, Object> activity : list) {
+            City city=cityService.selectOne(new EntityWrapper<>(new City()).eq("id",activity.get("city_id")));
+            activity.put("city_id",city!=null&&!Tool.isNull(city.getName())?city.getName():"<span style='color:red'>*所选城市不存在*</span>");
+            if(!Tool.isNull(activity.get("source_id"))){
+                switch (activity.get("source_id").toString()){
+                    case "0":activity.put("source_id","官方");
+                        break;
+                    case "1":activity.put("source_id","个人");
+                        break;
+                    default:activity.put("source_id","其他");
+                        break;
+                }
+            }else{
+                activity.put("source_id","<span style='color:red'>*空*</span>");
+            }
+        }
+        return list;
     }
 
     /**
@@ -96,23 +122,15 @@ public class ActivityController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(Activity activity) {
-        EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
-        columnTypeEntityWrapper.eq("name", "活动");
-        List<ColumnType> columnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
-        activity.setColumnId(columnTypes.get(0).getId());
-        ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-        Boolean checkRole = SecurityUtils.getSubject().hasRole("administrator");
-        if (checkRole) {
-            activity.setSourceId(0);
-        } else {
-            activity.setSourceId(1);
+    public Object add(Activity activity,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            ossClient.shutdown();
         }
-        activity.setPublishIp("192.0.0.1");
-        activity.setUid(shiroUser.getId());
-        activity.setCreateTime(new DateTime());
-
-
+        activity.setUid(String.valueOf(ShiroKit.getUser().getId()));
+        activity.setPublishIp(Tool.getIpAdrress());
+        activity.setCreateTime(new Date(System.currentTimeMillis()));
         activityService.insert(activity);
         return SUCCESS_TIP;
     }
@@ -123,6 +141,10 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer activityId) {
+        Activity activity = activityService.selectById(activityId);
+        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, activity.getObject_name());
+        ossClient.shutdown();
         activityService.deleteById(activityId);
         return SUCCESS_TIP;
     }
@@ -132,8 +154,15 @@ public class ActivityController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(Activity activity) {
-        activity.setUpdateTime(new DateTime());
+    public Object update(Activity activity,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            ossClient.shutdown();
+        }
+        activity.setUid(String.valueOf(ShiroKit.getUser().getId()));
+        activity.setPublishIp(Tool.getIpAdrress());
+        activity.setUpdateTime(new Date(System.currentTimeMillis()));
         activityService.updateById(activity);
         return SUCCESS_TIP;
     }

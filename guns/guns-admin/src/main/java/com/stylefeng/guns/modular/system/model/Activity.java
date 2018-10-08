@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +21,9 @@ import java.io.Serializable;
  * @since 2018-09-21
  */
 @TableName("sys_activity")
+@Getter
+@Setter
+@ToString
 public class Activity extends Model<Activity> {
 
     private static final long serialVersionUID = 1L;
@@ -57,7 +64,7 @@ public class Activity extends Model<Activity> {
      * 城市ID（0：表示全国）
      */
     @TableField("city_id")
-    private Integer cityId;
+    private String cityId;
     /**
      * 来源ID（0：官方，1：个人）
      */
@@ -66,7 +73,7 @@ public class Activity extends Model<Activity> {
     /**
      * 当是官方时为管理员的ID，是个人时，表示用户的ID
      */
-    private Integer uid;
+    private String uid;
     /**
      * 发布IP
      */
@@ -87,141 +94,10 @@ public class Activity extends Model<Activity> {
     @TableField("update_time")
     private Date updateTime;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getColumnId() {
-        return columnId;
-    }
-
-    public void setColumnId(Integer columnId) {
-        this.columnId = columnId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Integer getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
-    }
-
-    public Integer getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(Integer sourceId) {
-        this.sourceId = sourceId;
-    }
-
-    public Integer getUid() {
-        return uid;
-    }
-
-    public void setUid(Integer uid) {
-        this.uid = uid;
-    }
-
-    public String getPublishIp() {
-        return publishIp;
-    }
-
-    public void setPublishIp(String publishIp) {
-        this.publishIp = publishIp;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
+    private String object_name;
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "Activity{" +
-        "id=" + id +
-        ", columnId=" + columnId +
-        ", title=" + title +
-        ", thumb=" + thumb +
-        ", description=" + description +
-        ", startTime=" + startTime +
-        ", endTime=" + endTime +
-        ", cityId=" + cityId +
-        ", sourceId=" + sourceId +
-        ", uid=" + uid +
-        ", publishIp=" + publishIp +
-        ", content=" + content +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

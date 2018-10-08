@@ -97,6 +97,7 @@ ColumnType.search = function () {
 $(function () {
     var defaultColunms = ColumnType.initColumn();
     var table = new BSTable(ColumnType.id, "/columnType/list", defaultColunms);
+    console.log(table)
     table.setPaginationType("client");
     ColumnType.table = table.init();
 });

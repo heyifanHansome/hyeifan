@@ -14,18 +14,18 @@ var Activity = {
 Activity.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '栏目类型', field: 'columnTypeName', visible: true, align: 'center', valign: 'middle'},
+            // {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            // {title: '栏目类型', field: 'columnTypeName', visible: true, align: 'center', valign: 'middle'},
             {title: '活动名', field: 'title', visible: true, align: 'center', valign: 'middle'},
-            {title: '缩略图', field: 'thumb', visible: false, align: 'center', valign: 'middle'},
-            {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
+            // {title: '缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
+            // {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
             {title: '开始时间', field: 'start_time', visible: true, align: 'center', valign: 'middle'},
             {title: '结束时间', field: 'end_time', visible: true, align: 'center', valign: 'middle'},
-            {title: '城市名称', field: 'cityName', visible: true, align: 'center', valign: 'middle'},
-            {title: '来源', field: 'sourceName', visible: true, align: 'center', valign: 'middle'},
-            {title: '发布名称', field: 'userName', visible: true, align: 'center', valign: 'middle'},
-            {title: '发布IP', field: 'publishIp', visible: false, align: 'center', valign: 'middle'},
-            {title: '内容', field: 'content', visible: false, align: 'center', valign: 'middle'},
+            {title: '城市名称', field: 'city_id', visible: true, align: 'center', valign: 'middle'},
+            {title: '来源', field: 'source_id', visible: true, align: 'center', valign: 'middle'},
+            // {title: '发布者', field: 'userName', visible: true, align: 'center', valign: 'middle'},
+            // {title: '发布IP', field: 'publishIp', visible: false, align: 'center', valign: 'middle'},
+            // {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
@@ -105,6 +105,7 @@ Activity.search = function () {
 $(function () {
     var defaultColunms = Activity.initColumn();
     var table = new BSTable(Activity.id, "/activity/list", defaultColunms);
+    console.log(table)
     table.setPaginationType("client");
     Activity.table = table.init();
 });

@@ -18,7 +18,7 @@ public class UserInfoWarpper extends BaseControllerWarpper {
 
     @Override
     protected void warpTheMap(Map<String, Object> map) {
-         UserMapper userMapper = SpringContextHolder.getBean(UserMapper.class);
+        UserMapper userMapper = SpringContextHolder.getBean(UserMapper.class);
         /*定义需要封装的字段*/
         Integer userId = (Integer) map.get("user_id");
         Integer credits = (Integer) map.get("credits");
@@ -26,20 +26,20 @@ public class UserInfoWarpper extends BaseControllerWarpper {
         Integer joinClub = (Integer) map.get("joinClub");
         Integer appointment = (Integer) map.get("appointment");
         Integer enlightening = (Integer) map.get("enlightening");
-        String loginIp =(String) map.get("api_token");
+        String loginIp = (String) map.get("api_token");
         String apiToken = (String) map.get("api_token");
 
-        if(loginIp !=null){
-                map.put("PloginIp",loginIp);
-        }else {
-            map.put("PloginIp","未获取");
+        if (loginIp != null) {
+            map.put("PloginIp", loginIp);
+        } else {
+            map.put("PloginIp", "未获取");
         }
 
-        if(apiToken !=null){
-        map.put("PapiToken",apiToken);
-        }else {
-        map.put("PapiToken","未获取");
-         }
+        if (apiToken != null) {
+            map.put("PapiToken", apiToken);
+        } else {
+            map.put("PapiToken", "未获取");
+        }
 
         if (credits != null) {
             String creditName = credits + "RMB";
@@ -74,7 +74,12 @@ public class UserInfoWarpper extends BaseControllerWarpper {
             map.put("Penlightening", "未开启");
         }
         User user = userMapper.selectById(userId);
-        map.put("Pname",user.getName());
+        if (user != null) {
+            map.put("Pname", user.getName());
+        } else {
+            map.put("Pname", "没有相关信息");
+
+        }
 
     }
 }

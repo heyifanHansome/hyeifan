@@ -46,7 +46,6 @@ UserInfoInfoDlg.close = function() {
 UserInfoInfoDlg.collectData = function() {
     this
     .set('id')
-    .set('userId')
     .set('apiToken')
     .set('credits')
     .set('loginIp')

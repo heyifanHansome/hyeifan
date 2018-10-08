@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +21,9 @@ import java.io.Serializable;
  * @since 2018-09-20
  */
 @TableName("sys_tag_relation")
+@ToString
+@Getter
+@Setter
 public class TagRelation extends Model<TagRelation> {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +42,7 @@ public class TagRelation extends Model<TagRelation> {
      * 公共标签ID（单选）
      */
     @TableField("common_type_id")
-    private String commonTypeId;
+    private Integer commonTypeId;
     /**
      * 创建时间
      */
@@ -53,68 +60,9 @@ public class TagRelation extends Model<TagRelation> {
     private Integer relationId;
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getColumnId() {
-        return columnId;
-    }
-
-    public void setColumnId(Integer columnId) {
-        this.columnId = columnId;
-    }
-
-    public String getCommonTypeId() {
-        return commonTypeId;
-    }
-
-    public void setCommonTypeId(String commonTypeId) {
-        this.commonTypeId = commonTypeId;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getRelationId() {
-        return relationId;
-    }
-
-    public void setRelationId(Integer relationId) {
-        this.relationId = relationId;
-    }
-
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "TagRelation{" +
-        "id=" + id +
-        ", columnId=" + columnId +
-        ", commonTypeId=" + commonTypeId +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        ", relation Id=" + relationId +
-        "}";
-    }
 }

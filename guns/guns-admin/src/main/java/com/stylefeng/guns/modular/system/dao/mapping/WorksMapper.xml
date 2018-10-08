@@ -19,8 +19,7 @@
         <result column="column_id" property="columnId" />
         <result column="video" property="video" />
         <result column="user_id" property="userId" />
-
-
+        <result column="tag_id" property="tagId" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

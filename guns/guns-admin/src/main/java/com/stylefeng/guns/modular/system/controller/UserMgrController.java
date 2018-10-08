@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.system.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.base.tips.Tip;
@@ -16,14 +17,17 @@ import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.shiro.ShiroUser;
+import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
 import com.stylefeng.guns.modular.system.factory.UserFactory;
 import com.stylefeng.guns.modular.system.model.City;
 import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.model.UserInfo;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.transfer.UserDto;
 import com.stylefeng.guns.modular.system.warpper.UserWarpper;
+import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,10 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.naming.NoPermissionException;
 import javax.validation.Valid;
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 系统管理员控制器
@@ -56,6 +57,9 @@ public class UserMgrController extends BaseController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 跳转到查看管理员列表的页面
@@ -196,6 +200,26 @@ public class UserMgrController extends BaseController {
         user.setCreatetime(new Date());
 
         this.userService.insert(UserFactory.createUser(user));
+//        this.userService.insert(user);
+        //添加用户详情默认值
+
+
+        EntityWrapper<User> entityWrapper = new EntityWrapper<>();
+        entityWrapper.orderDesc(Collections.singleton("id"));
+        List<User> users = userService.selectList(entityWrapper);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(users.get(0).getId());
+        userInfo.setApiToken(ShiroKit.getRandomSalt(5));
+        userInfo.setCredits(0);
+        userInfo.setMoney(0);
+        userInfo.setLoginIp("192.168.0.0.1");
+        userInfo.setCreateTime(new DateTime());
+        userInfo.setRealName(user.getName());
+        userInfo.setJoinClub(2);
+        userInfo.setAppointment(2);
+        userInfo.setEnlightening(2);
+        userInfoService.insert(userInfo);
         return SUCCESS_TIP;
     }
 
@@ -360,7 +384,7 @@ public class UserMgrController extends BaseController {
     @RequestMapping(value = "/getAllUser")
     @ResponseBody
     public List<User> getAllUser(City city) {
-        List<User> users  = userService.selectList(null);
+        List<User> users = userService.selectList(null);
         return users;
     }
 
@@ -380,5 +404,22 @@ public class UserMgrController extends BaseController {
             throw new GunsException(BizExceptionEnum.NO_PERMITION);
         }
 
+    }
+    /**
+     * 跳转到用户详情页面页面
+     */
+    //@RequiresPermissions("/mgr/role_assign")  //利用shiro自带的权限检查
+    @RequestMapping("/user_info/{userId}")
+    public String userInfoDetail(@PathVariable Integer userId, Model model) {
+        if (ToolUtil.isEmpty(userId)) {
+            throw new GunsException(BizExceptionEnum.REQUEST_NULL);
+        }
+        User user = userService.selectById(userId);
+        EntityWrapper<UserInfo>  userInfoEntityWrapper = new EntityWrapper<>();
+        userInfoEntityWrapper.eq("user_id" ,userId);
+        List<UserInfo> userInfos = userInfoService.selectList(userInfoEntityWrapper);
+        model.addAttribute("item", userInfos.get(0));
+        model.addAttribute("userName",user.getName());
+        return PREFIX+ "/user_info_detail.html";
     }
 }

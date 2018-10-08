@@ -75,6 +75,8 @@ public class Picture extends Model<Picture> {
      */
     private String suffixname;
 
+    private int check;
+
 
     @TableField("oss_object_name")
     private String ossObjectName;

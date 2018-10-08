@@ -15,6 +15,7 @@
         <result column="type" property="type" />
         <result column="suffixname" property="suffixname" />
         <result column="oss_object_name" property="ossObjectName" />
+        <result column="check" property="check" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

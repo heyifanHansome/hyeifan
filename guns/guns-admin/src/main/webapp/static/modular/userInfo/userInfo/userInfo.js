@@ -77,7 +77,7 @@ UserInfo.getUserResume = function(){
             area: ['800px', '420px'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/userResume/userinfouserResume_update/' + UserInfo.seItem.id
+            content: Feng.ctxPath + '/userInfo/user_resume_info/' + UserInfo.seItem.id
         });
         this.layerIndex = index;
     }

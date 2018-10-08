@@ -14,8 +14,6 @@ import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.PictureMapper;
 import com.stylefeng.guns.modular.system.model.Picture;
-import com.stylefeng.guns.modular.system.model.Works;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +53,9 @@ public class ImgUploadController {
     //文件存储目录
     private String filedir = "data/";
 
-private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
+    private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
+
+
 
     /**
      * 文件上传删除方法
@@ -66,6 +66,8 @@ private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
      */
     @RequestMapping(value = "/imgDeleteMul")
     public ResponseEntity<?> imgDeleteMul(HttpServletRequest request, HttpServletResponse response) {
+        ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        ossClient.shutdown();
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
         EntityWrapper<Picture> entityWrapper = new EntityWrapper();
@@ -93,111 +95,7 @@ private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
         }
         return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
     }
-//
-//    /*文件上传的方法*/
-//    @PostMapping(value = "/imgUploadMul")
-//    @ResponseBody
-//    public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
-//        OSSClientUtil ossClientUtil=new OSSClientUtil();
-//
-//        Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
-//
-//        MultipartFile multipartFile = null;
-//        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
-//            Object obj = i.next();
-//            multipartFile = (MultipartFile) map.get(obj);
-//        }
-//
-//        String uploadPath = PropertiesUtil.getValueByKey("imgUploadPath");
-//        if (multipartFile.isEmpty()) {
-//            return "error";
-//        }
-//        // 获取文件名
-//        String fileName = multipartFile.getOriginalFilename();
-//        // 获取文件的后缀名
-//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-//        // 这里我使用随机字符串来重新命名图片
-//        fileName = Calendar.getInstance().getTimeInMillis() + UUID.randomUUID().toString() + suffixName;
-//        // 这里的路径为Nginx的代理路径，这里是/data/images/xxx.png
-//        File dest = new File(uploadPath + fileName);
-//        // 检测是否存在目录
-//        if (!dest.getParentFile().exists()) {
-//            dest.getParentFile().mkdirs();
-//        }
-//        try {
-//            multipartFile.transferTo(dest);
-//            //创建图片对象
-//
-//            Picture picture = new Picture();
-//
-//            picture.setCreateTime(new DateTime());
-//            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-//            picture.setCreateBy(shiroUser.getName());
-//            picture.setBaseId(goodsTypeId);
-//            picture.setPicturename(fileName.replace(suffixName, ""));//图片名称
-//            picture.setRelativepath(uploadPath);//相对路径
-//            picture.setServerpath(uploadPath);//服务器路径
-//            picture.setAbsolutepath(uploadPath);//绝对路径
-//            picture.setType("");//图片类型
-//            picture.setSuffixname(suffixName);//图片后缀名
-//
-//            pictureService.insert(picture);
-//            //url的值为图片的实际访问地址 这里我用了Nginx代理，访问的路径是http://localhost/xxx.png
-//            String config = "{\"state\": \"SUCCESS\"," +
-//                    "\"url\": \"" + "/img/getImage/" + picture.getId() + "\"," +
-//                    "\"pictureId\": \"" + picture.getId() + "\"," +
-//                    "\"original\": \"" + fileName + "\"}";
-//            return config;
-//        } catch (IllegalStateException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
-    /**
-     * 获取图片方法
-     * @param id
-     * @param response
-     */
-    @RequestMapping(value = "getImage/{id}")
-    @ResponseBody
-    public void getImageById(@PathVariable("id") String id, HttpServletResponse response) {
-        String imgpath = "";
-        if (id != null && !"".equals(id)) {
-            Picture p = pictureService.selectById(id);// 获取图片对象
-            imgpath = p.getAbsolutepath() + p.getPicturename() + p.getSuffixname();//
-            File file = new File(imgpath);
-//            response.setContentType("video/mpeg4");
-            InputStream in = null;
-            try {
-                in = new FileInputStream(file);
-                try {
-                    IOUtils.copy(in, response.getOutputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    @RequestMapping(value = "getCarImage/{id}")
-    @ResponseBody
-    public ResponseEntity<?> getCarImageById(@PathVariable("id") String id, HttpServletResponse response) {
-        ResultMsg resultMsg = new ResultMsg();
-        String imgpath = "";
-        if (id != null && !"".equals(id)) {
-            Picture p = pictureService.selectById(id);// 获取图片对象
-            imgpath = p.getAbsolutepath() + p.getPicturename() + p.getSuffixname();//
-            response.setContentType("image/jpg");
-            resultMsg.setData(imgpath);
-        }
-        return new ResponseEntity<ResultMsg>(resultMsg, HttpStatus.OK);
-    }
 
     /*文件上传的方法*/
     @PostMapping(value = "/imgUploadMul")

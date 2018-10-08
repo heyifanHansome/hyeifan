@@ -5,10 +5,10 @@
             <input type="hidden" id="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <!--<#input id="userId" name="用户" value="${item.userId}" underline="true"/>-->
+                            <#input id="userId" name="用户名称" value="${userName}" underline="true"/>
 
-                            <#select id="userId" name="用户"  value="${item.userId}"  underline="true">
-                            </#select>
+                            <!--<#select id="userId" name="用户"  value="${item.userId}"  underline="true">-->
+                            <!--</#select>-->
                             <!--<#input id="credits" name="积分" value="${item.credits}" underline="true"/>-->
                             <!--<#input id="money" name="钱" value="${item.money}" underline="true"/>-->
                             <!--<#input id="loginIp" name="登陆IP" value="${item.loginIp}" underline="true"/>-->
@@ -62,7 +62,7 @@
 
         $("#appointment").val(${item.appointment});
 
-        $("#userId").val(${item.userId});
+        // $("#userId").val(${item.userId});
     })
 </script>
 @}

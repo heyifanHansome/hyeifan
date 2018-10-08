@@ -19,6 +19,23 @@ WorksInfoDlg.clearData = function() {
  * @param val 数据的具体值
  */
 WorksInfoDlg.set = function(key, val,val2, isClass ) {
+
+    if(key == 'tagId'){
+            var heyifanArr = $('#tagId').val();
+            var newDemo ="" ;
+            if(heyifanArr!=null&&heyifanArr.length>0){
+                for (var z=0;z< heyifanArr.length;z++) {
+                    newDemo += heyifanArr[z] +",";
+                }
+                this.worksInfoData[key] = newDemo;
+                return this;
+            }else {
+                this.worksInfoData[key] = '';
+                return this;
+            }
+
+    }
+
     if(isClass !== undefined) {
         var rightinputs =$("#"+val2+" ."+isClass);
         var leftinput =$("#"+val+" ."+isClass);
@@ -51,6 +68,43 @@ WorksInfoDlg.get = function(key) {
 };
 
 /**
+ * 定义删除视频方法
+ */
+
+WorksInfoDlg.deleteVideo=function(v){
+    debugger;
+    var ajax = new $ax(Feng.ctxPath + "/works/deleteVideoByObjectName?objectName=" + v, function(data){
+        Feng.success("删除成功! 请重新打开该页面查看效果!");
+
+    },function(data){
+        Feng.success("删除成功! 请重新打开该页面查看效果!");
+    });
+    ajax.set(this.worksInfoData);
+    ajax.start();
+
+
+};
+
+
+
+/**
+ * 定义审核方法
+ */
+
+WorksInfoDlg.checkVideo=function(v){
+    debugger;
+    var ajax = new $ax(Feng.ctxPath + "/works/checkVideo?objectName=" + v, function(data){
+        Feng.success("审核通过! 请重新打开该页面查看效果!");
+
+    },function(data){
+        Feng.success("审核通过! 请重新打开该页面查看效果!");
+    });
+    ajax.set(this.worksInfoData);
+    ajax.start();
+
+
+};
+/**
  * 关闭此对话框
  */
 WorksInfoDlg.close = function() {
@@ -72,10 +126,11 @@ WorksInfoDlg.collectData = function() {
     .set('seasoning','threeleftbuttons','threerightbuttons','seasoning')
     .set('remark')
     .set('status')
-    .set('columnId')
+    // .set('columnId')
     .set('baseId')
-        .set('userId')
-    .set('video');
+    .set('userId')
+    .set('video')
+    .set('tagId');
 };
 
 /**
@@ -119,6 +174,8 @@ WorksInfoDlg.editSubmit = function() {
 };
 
 $(function() {
+
+    var currentVideoName ;
     var threeArr;
     var twoArr;
     var oneArr;
@@ -130,7 +187,7 @@ $(function() {
     var threeleftbuttons ;
     var videoHttpsArrays;
     var hyfVideoFile;
-
+    var multArrays=[];
     /**
      * 动态获取所有用户
      */
@@ -147,24 +204,6 @@ $(function() {
 
 
     /**
-     * 动态获取所有标签
-     */
-    var ajax = new $ax(Feng.ctxPath + "/tag/getAllTag", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            var jsonObj = data[i];
-            $("#tagId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
-        }
-
-    }, function (data) {
-
-    });
-    ajax.start();
-
-
-
-
-
-    /**
      * 动态获取所有栏目
      */
     var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
@@ -177,6 +216,11 @@ $(function() {
 
     });
     ajax.start();
+
+
+
+
+    // $(document).ready(function() {
 
 
     //初始化编辑器

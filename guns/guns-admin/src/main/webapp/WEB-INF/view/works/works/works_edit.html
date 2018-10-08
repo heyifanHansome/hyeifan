@@ -8,7 +8,34 @@
 
                       <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
 
-                      <input id="practice" name="视频Ids" value="${item.practice}" type="hidden"/>
+                      <input id="practice" name="做法" value="${item.practice}" type="hidden"/>
+
+
+
+
+
+
+            <div id="example" role="application" style="margin-bottom: 3%">
+                <div class="demo-section k-content">
+                    <h2>请选择活动标签</h2>
+                    <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
+                    </select>
+
+                    <!--<button class="k-button" id="get">Send Invitation</button>-->
+                </div>
+
+                <style>
+                    .demo-section label {
+                        display: block;
+                        margin: 15px 0 5px 0;
+                    }
+                    #get {
+                        float: right;
+                        margin: 25px auto 0;
+                    }
+                </style>
+            </div>
+
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
@@ -16,9 +43,9 @@
                     <option value="0">未审查</option>
                     <option value="1">通过</option>
                     <option value="2">拒绝</option>
-                </#select>
+                    </#select>
                             <#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true"/>
-                    <#button btnCss="info" name="添加主料输入框"   icon="fa-check" clickFun="goAdd(1)"/>
+                              <#button btnCss="info" name="添加主料输入框"   icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
                     </div>
                     <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(2)"/>
@@ -31,10 +58,10 @@
 
                 <div class="col-sm-6">
                     <#select id="userId" name="用户名称" underline="true">
-                </#select>
-
-            <#select id="columnId" name="栏目类型" readonly="readonly" underline="true">
-        </#select>
+                   </#select>
+                            <#input id="x" name="栏目类型 " value="活动" readonly="readonly" underline="true"/>
+                            <!--<#select id="columnId" name="栏目类型" readonly="readonly" underline="true">-->
+                            <!--</#select>-->
                             <!--<#input id="practice" name="做法 " value="${item.practice}" underline="true"/>-->
                             <#input id="remark" name="备注" value="${item.remark}" underline="true"/>
                             <!--<#input id="createTime" name="创建时间" value="${item.createTime}"   readonly="readonly"  underline="true"/>-->
@@ -73,8 +100,25 @@
             </div>
 
 
-            <div id="hyfVideo">
+            <div>
+                <fieldset  style="margin-top: 3%">
+                    <legend>视频上传</legend>
+                    <div class="putimg"	>
+                        <input id="videoFile" name="videoFile" multiple type="file" data-show-caption="true">
+                    </div>
+                </fieldset>
             </div>
+
+            <div id="hyfVideo">
+                <!--<div class="row btn-group-m-t">-->
+                    <!--<div class="col-sm-10">-->
+                        <!--<#button btnCss="info" name="审核成功" id="checkVideo" icon="fa-check" clickFun="WorksInfoDlg.checkVideo()"/>-->
+                        <!--<#button btnCss="danger" name="删除当前视频" id="deleteVideo" icon="fa-eraser" clickFun="WorksInfoDlg.deleteVideo()"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+
+
 
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
@@ -91,9 +135,29 @@
 <script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
-
+var heyifan;
 
     $(document).ready(function () {
+        multArrays =${multArr} ;
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/tag/getAllTag",
+                    dataType: "json"
+                }
+            }
+        });
+
+        $("#tagId").kendoMultiSelect({
+            placeholder: "请选择活动标签",
+            dataTextField: "name",
+            dataValueField: "id",
+            autoBind: true,
+            dataSource: dataSource,
+            value: multArrays
+        });
+
+
              $('#userId').val(${item.userId});
              $('#status').val(${item.status});
              $('#columnId').val(${item.columnId})
@@ -127,11 +191,17 @@
             threeleftbuttons.append("<div class='col-sm-12'> <input  class='form-control seasoning'  value='"+v.key+ "' type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
             threerightbuttons.append("<div class='col-sm-12'> <input   class='form-control seasoning' value='"+v.value+ "'   type='text' underline='true'/></div> <div class='col-sm-12'> </div>");
         });
-
-        /*视频回显*/
-        videoArray.forEach(function (video) {
-            hyfVideoFile.append("<div><fieldset>   <legend>视频回显</legend>   <div> <video src='"+video.key+ "' controls='controls'> </video> </div> </fieldset> </div>")
-        })
+        // videoArray.forEach(function (heyifan1) {
+        //     // // <div class='row btn-group-m-t'>  <div class='col-sm-10'> <button type='button'  class='btn btn-info ' id='deleteVideo'  onclick='WorksInfoDlg.deleteVideo(currentVideoName)'  name=''></button></div></div>
+        //     // hyfVideoFile.append ("<div><fieldset><legend>视频回显</legend>   <div> <video src='"+video.key+ "' controls='controls'> </video>  </div> </fieldset> </div> <div class='col-sm-12'></div></div>")
+        //     //
+        //     /*视频回显*/
+        //         hyfVideoFile.append("<div><fieldset><legend>视频回显</legend>   <div> <video src='"+heyifan1.key+ "' controls='controls'> </video>  </div> </fieldset> </div> <button type='button'  class='btn btn-info ' id='deleteVideo'  onclick='WorksInfoDlg.deleteVideo(videoArray.key)'  name=''></button> ")
+        //     })
+        for (var i=0;i<videoArray.length;i++)
+        {
+             hyfVideoFile.append("<div><fieldset><legend>视频回显</legend>   <div> <video src='"+videoArray[i].key+ "'   controls='controls'> </video>  </div> </fieldset> </div> <button type='button'  class='btn btn-info '  id='"+videoArray[i].key+ "'  onclick='WorksInfoDlg.deleteVideo(this.id)'  name=''>删除视频</button>  <button type='button'  class='btn btn-info ' id='"+videoArray[i].key+"'  onclick='WorksInfoDlg.checkVideo(this.id)'>审核</button> ")
+        }
 
     });
 
@@ -264,5 +334,57 @@
     };
 
     destoryFileInput();
+
+    /*初始化视频上传*/
+
+
+    //参数1:控件id、参数2:上传地址
+    var heyifanFileInput = function () {
+
+        var oFile = new Object();
+        //初始化fileinput控件（第一次初始化）
+        oFile.heyifanInit = function (ctrlName, uploadUrl, uploadId) {
+            var control = $('#' + ctrlName);
+            control.fileinput({
+                language: 'zh',                                         //设置语言
+                uploadUrl: uploadUrl,                                   //上传的地址
+                overwriteInitial: false, 								//让预览图片和新选择的图片在同一页面进行操作
+                minFileCount: 1,										//最小上传数
+                maxFileCount: 10,										//最大上传数
+                allowedFileExtensions: ['jpg', 'gif', 'jpeg', 'png', 'pdf','mp4'],    //接收的文件后缀
+                showUpload: false,                                      //是否显示上传按钮
+                showRemove: false,										//是否显示移除按钮
+                showCaption: true,                                     //是否显示标题
+                browseClass: "btn btn-primary",                         //按钮样式
+                initialPreviewAsData: true,             //
+                enctype: 'multipart/form-data',
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+                uploadExtraData: function (previewId, index) {
+                    return {'goodsTypeId': uploadId};
+                }
+            });
+            //导入文件上传完成之后的事件
+            $("#ctrlName").on("fileuploaded", function (event, data, previewId, index) {
+                toastr.success('上传成功!');
+            });
+            //删除预览图片事件
+            $('#ctrlName').on('filepredelete', function (event, key) {
+                toastr.success('删除成功!');
+            });
+        };
+        return oFile;
+    };
+
+    //初始化fileinput
+    var heyifanCreateFileInput = function () {
+        var FileInput = new heyifanFileInput();
+        //参数1:控件id、参数2:上传地址  3.初始化展示图片数组  4.图片预览参数、删除url配置
+        var videoId = $('#video').val();
+        FileInput.heyifanInit("videoFile", "/img/imgUploadMul", videoId);
+    };
+    heyifanCreateFileInput();
+
+
 </script>
 @}

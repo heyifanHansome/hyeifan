@@ -72,7 +72,7 @@ WorksInfoDlg.get = function(key) {
  */
 
 WorksInfoDlg.deleteVideo=function(v){
-    debugger;
+
     var ajax = new $ax(Feng.ctxPath + "/works/deleteVideoByObjectName?objectName=" + v, function(data){
         Feng.success("删除成功! 请重新打开该页面查看效果!");
 

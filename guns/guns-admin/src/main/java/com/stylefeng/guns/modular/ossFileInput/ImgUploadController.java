@@ -66,12 +66,22 @@ public class ImgUploadController {
      */
     @RequestMapping(value = "/imgDeleteMul")
     public ResponseEntity<?> imgDeleteMul(HttpServletRequest request, HttpServletResponse response) {
-        ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
-        ossClient.shutdown();
+
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
+        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        int index   = id.indexOf("/data");
+       String newString =  id.substring(index+1);
+        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, newString);
+
+        ossClient.shutdown();
+
         EntityWrapper<Picture> entityWrapper = new EntityWrapper();
         entityWrapper.like("oss_object_name", id );
+
+
+
+
         List<Picture> pictures =pictureService.selectList(entityWrapper);
 
 

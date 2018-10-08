@@ -293,7 +293,12 @@ public  Object deleteVideoByObjectName (String objectName){
 //    ossClient = new OSSClient(endpoint,accessKeyId,accessKeySecret);
 //    ossClient.deleteObject("data/",objectName);
 //    ossClient.shutdown();
+    OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+    int index   = objectName.indexOf("/data");
+    String newString =  objectName.substring(index+1);
+    ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, newString);
 
+    ossClient.shutdown();
 
     /*再删除对应baseid的视频*/
     EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();

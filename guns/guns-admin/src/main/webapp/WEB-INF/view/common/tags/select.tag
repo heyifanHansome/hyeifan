@@ -5,7 +5,7 @@
     underline : 是否带分割线
 @*/
 <div class="form-group">
-    <label class="col-sm-3 control-label">${name}</label>
+    <label class="col-sm-3 control-label">${name} <span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
     <div class="col-sm-9">
         <select class="form-control" id="${id}" name="${id}">
             ${tagBody!}

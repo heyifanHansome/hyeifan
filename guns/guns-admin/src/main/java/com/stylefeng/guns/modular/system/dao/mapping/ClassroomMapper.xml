@@ -18,6 +18,8 @@
         <result column="content" property="content" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
+        <result column="images" property="images" />
+        <result column="video" property="video" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

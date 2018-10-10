@@ -4,7 +4,7 @@
     id : 头像的id
 @*/
 <div class="form-group">
-    <label class="col-sm-3 control-label head-scu-label">${name}</label>
+    <label class="col-sm-3 control-label head-scu-label">${name} <span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
     <div class="col-sm-4">
         <div id="${id}PreId">
             <div><img width="100px" height="100px"

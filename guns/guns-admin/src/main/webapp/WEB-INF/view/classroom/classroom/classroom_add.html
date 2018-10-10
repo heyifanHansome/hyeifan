@@ -3,12 +3,17 @@
     <div class="ibox-content">
         <div class="form-horizontal">
             <input id="id" type="hidden" value="">
+
             <input id="content" name="" type="hidden" underline="true"/>
+
+            <input id="images" name="" type="hidden" underline="true"/>
+
+            <input id="video" name="" type="hidden" underline="true"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">栏目类型</label>
+                        <label class="col-sm-3 control-label">栏目类型<span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
                         <div class="col-sm-9">
                             <select onchange="gradeChange($(this).val())" class="form-control" id="columnId"
                                     name="columnId"  underline="true">
@@ -25,8 +30,8 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <#select id ="cityId" name="城市" underline="true">
-                </#select>
+                    <#select id ="cityId" name="城市"  underline="true">
+                    </#select>
                 <!--<#select id ="sourceId" name="来源" underline="true">-->
                 <!--<option value="0">官方</option>-->
                 <!--<option value="0">个人</option>-->
@@ -40,26 +45,26 @@
     </div>
 </div>
 
-<div id="contentValue">
-    <fieldset style="margin-top: 3%">
-        <h2>做法详情</h2>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div id="editor" class="editorHeight">
-                </div>
+            <div >
+                <fieldset style="margin-top: 3%">
+                    <h2>内容</h2>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div id="editor" class="editorHeight">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
-        </div>
-    </fieldset>
-</div>
 
-<div id="imagesContent" style="display:none">
-    <fieldset style="margin-top: 3%">
-        <legend>图集上传</legend>
-        <div class="putimg">
-            <input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">
-        </div>
-    </fieldset>
-</div>
+    <div id="imagesContent" style="display:none">
+        <fieldset style="margin-top: 3%">
+            <legend>图集上传</legend>
+            <div class="putimg">
+                <input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">
+            </div>
+        </fieldset>
+    </div>
 
 <div id="videoContent" style=" display: none">
     <fieldset style="margin-top: 1%">
@@ -136,7 +141,7 @@
                 overwriteInitial: false, 								//让预览图片和新选择的图片在同一页面进行操作
                 minFileCount: 1,										//最小上传数
                 maxFileCount: 10,										//最大上传数
-                allowedFileExtensions: ['jpg', 'gif', 'jpeg', 'png', 'pdf', 'mp4'],    //接收的文件后缀
+                allowedFileExtensions: ['jpg', 'gif', 'jpeg', 'png', 'pdf', 'mp4','.wmv'],    //接收的文件后缀
                 showUpload: false,                                      //是否显示上传按钮
                 showRemove: false,										//是否显示移除按钮
                 showCaption: true,                                     //是否显示标题

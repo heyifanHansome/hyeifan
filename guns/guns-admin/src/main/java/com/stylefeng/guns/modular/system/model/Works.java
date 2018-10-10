@@ -11,10 +11,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.beetl.ext.fn.Json;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <p>

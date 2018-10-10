@@ -118,7 +118,6 @@ public class WorksController extends BaseController {
         } else {
 
         }
-        System.out.println(videoArray);
 
         model.addAttribute("videoArray", videoArray);
         LogObjectHolder.me().set(works);

@@ -9,7 +9,7 @@
     style : 附加的css属性
 @*/
 <div class="form-group">
-    <label class="col-sm-3 control-label">${name}</label>
+    <label class="col-sm-3 control-label">${name} <span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
     <div class="col-sm-9">
         <input class="form-control" id="${id}" name="${id}"
                @if(isNotEmpty(value)){

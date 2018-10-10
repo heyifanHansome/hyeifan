@@ -57,7 +57,8 @@ ClassroomInfoDlg.collectData = function() {
     .set('sourceId')
     .set('uid')
     .set('publishIp')
-    .set('content')
+    .set('video')
+    .set('images')
 };
 
 /**
@@ -102,6 +103,8 @@ ClassroomInfoDlg.editSubmit = function() {
 
 $(function() {
 
+var modelType;
+var classRoomArray;
 
     /**
      * 动态获取所有栏目

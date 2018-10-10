@@ -1,7 +1,11 @@
 package com.stylefeng.guns.modular.classroom.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.picture.service.IPictureService;
+import com.stylefeng.guns.modular.system.model.Picture;
 import com.stylefeng.guns.modular.system.warpper.ClassroomWarpper;
 import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Classroom;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +39,8 @@ public class ClassroomController extends BaseController {
     @Autowired
     private IClassroomService classroomService;
 
+    @Autowired
+    private IPictureService pictureService;
     /**
      * 跳转到星厨课堂首页
      */
@@ -55,6 +63,40 @@ public class ClassroomController extends BaseController {
     @RequestMapping("/classroom_update/{classroomId}")
     public String classroomUpdate(@PathVariable Integer classroomId, Model model) {
         Classroom classroom = classroomService.selectById(classroomId);
+
+        /**
+         * 获取前台需要展示的样式 1为视频集合,2为图片集
+         */
+
+        if(classroom.getColumnId() !=27){
+            model.addAttribute("modelType","2");
+        }else {
+            model.addAttribute("modelType","1");
+        }
+
+        /**
+         *获取当前的视频集合
+         */
+        EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("base_id", classroom.getVideo());
+        List<Picture> pictures = pictureService.selectList(entityWrapper);
+        List<Map<String, Object>> videoArray = new ArrayList<>();
+        JSONObject mapJson = null;
+        if (pictures.size() > 0) {
+            for (int i = 0; i < pictures.size(); i++) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("key", (pictures.get(i).getOssObjectName()));
+                mapJson = new JSONObject(map);
+                videoArray.add(mapJson);
+            }
+
+        } else {
+
+        }
+
+        model.addAttribute("videoArray", videoArray);
+
+
         model.addAttribute("item",classroom);
         LogObjectHolder.me().set(classroom);
         return PREFIX + "classroom_edit.html";

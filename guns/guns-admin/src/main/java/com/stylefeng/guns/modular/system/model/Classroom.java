@@ -92,7 +92,15 @@ public class Classroom extends Model<Classroom> {
      */
     @TableField("update_time")
     private Date updateTime;
+    /**
+     *视频集合
+     */
+    private String video;
 
+    /**
+     *图片集合
+     */
+    private String images;
 
     @Override
     protected Serializable pkVal() {

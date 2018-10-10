@@ -5,14 +5,14 @@
             <input id="id" value="${item.id}"type="hidden">
 
             <input id="content" name="做法" value="${item.content}" type="hidden"/>
-            
+
             <input id="images" name="图集Ids" value="${item.images}" type="hidden"/>
 
             <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">栏目类型</label>
+                                <label class="col-sm-3 control-label">栏目类型<span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
                                 <div class="col-sm-9">
                                     <select onchange="gradeChange($(this).val())" class="form-control" id="columnId"
                                             name="columnId"  underline="true">
@@ -22,8 +22,8 @@
                             <div class="hr-line-dashed"></div>
                             <#input id="title" name="标题" value="${item.title}" underline="true"/>
                             <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
-                            <#input id="url" name="视频链接地址" value="${item.url}" underline="true"/>
-                            <!--<#input id="description" name="描述" value="${item.description}" underline="true"/>-->
+                            <!--<#input id="url" name="视频链接地址" value="${item.url}" underline="true"/>-->
+
                 </div>
 
                 <div class="col-sm-6">
@@ -37,14 +37,14 @@
                             </#select>
                             <!--&lt;!&ndash;<#input id="publishIp" name="发布IP" value="${item.publishIp}" underline="true"/>&ndash;&gt;-->
                             <!--<#input id="content" name="内容" value="${item.content}" underline="true"/>-->
-                            <!--<#input id="startTime" name="开播时间" value="${item.startTime}" underline="true" />-->
+                            <#input id="description" name="描述" value="${item.description}" underline="true"/>
+                            <#input id="startTime" name="开播时间" value="${item.startTime}" underline="true" />
                 </div>
             </div>
 
 
 
-
-                        <div id="contentValue">
+                        <div  >
                             <fieldset style="margin-top: 3%">
                                 <h2>内容</h2>
                                 <div class="form-group">
@@ -56,7 +56,7 @@
                             </fieldset>
                         </div>
 
-                        <div id="imagesContent" style="display:none">
+                        <div id="imagesContent"   style="display: none">
                             <fieldset style="margin-top: 3%">
                                 <legend>图集上传</legend>
                                 <div class="putimg">
@@ -65,7 +65,7 @@
                             </fieldset>
                         </div>
 
-                        <div id="videoContent" style=" display: none">
+                        <div id="videoContent"  style="display: none;">
                             <fieldset style="margin-top: 1%">
                                 <legend>视频上传</legend>
                                 <div class="putimg">
@@ -73,6 +73,11 @@
                                 </div>
                             </fieldset>
                         </div>
+
+
+                <div id="classRommVideo">
+                </div>
+
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ClassroomInfoDlg.editSubmit()"/>
@@ -83,13 +88,32 @@
 
     </div>
 </div>
+
+<script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
 <script src="${ctxPath}/static/modular/classroom/classroom/classroom_info.js"></script>
 <script>
+    var classRoom = $("#classRommVideo");
+    classRoomArray =${videoArray}
+
     $(document).ready(function () {
+        modelType = ${modelType};
+
+        if(modelType =='2'){
+            $("#imagesContent").show()
+        }else {
+            $("#videoContent") .show()
+        }
                 $("#cityId").val(${item.cityId});
                 $("#uid").val(${item.uid});
                 $("#sourceId").val(${item.sourceId});
                 $("#columnId").val(${item.columnId});
+
+
+        for (var i=0;i<classRoomArray.length;i++)
+        {
+            classRoom.append("<div><fieldset><legend>视频回显</legend>   <div> <video src='"+classRoomArray[i].key+ "'   controls='controls'> </video>  </div> </fieldset> </div> <button type='button'  class='btn btn-info '  id='"+classRoomArray[i].key+ "'  onclick='WorksInfoDlg.deleteVideo(this.id)'  name=''>删除视频</button>  <button type='button'  class='btn btn-info ' id='"+classRoomArray[i].key+"'  onclick='WorksInfoDlg.checkVideo(this.id)'>审核</button> ")
+        }
+
 
     });
 
@@ -99,6 +123,149 @@
     laydate.render({
         elem: '#startTime'
     });
+
+
+    /*回显文件*/
+    var baseId = $("#images").val();
+    var imageId = '';//上传成功的图片ID
+    //参数1:控件id、参数2:上传地址
+    var FileInput = function () {
+        var oFile = new Object();
+        //初始化fileinput控件（第一次初始化）
+        oFile.Init = function (ctrlName, uploadUrl, imgArray, imgArrayConfig) {
+            var control = $('#' + ctrlName);
+            //初始化上传控件的样式
+            control.fileinput({
+                language: 'zh',                                         //设置语言
+                uploadUrl: uploadUrl,                                   //上传的地址
+                overwriteInitial: false, 								//让预览图片和新选择的图片在同一页面进行操作
+                minFileCount: 1,										//最小上传数
+                maxFileCount: 10,										//最大上传数
+                allowedFileExtensions: ['jpg', 'gif', 'jpeg', 'png', 'pdf' ,'.wmv'],    //接收的文件后缀
+                showUpload: false,                                      //是否显示上传按钮
+                showRemove: false,										//是否显示移除按钮
+                showCaption: true,                                     //是否显示标题
+                browseClass: "btn btn-primary",                         //按钮样式
+                initialPreviewAsData: true,             //
+                initialPreview: imgArray,				//预览图片数组
+                // initialPreview: [ "https://cheshi654321.oss-cn-beijing.aliyuncs.com/sunshineFlowers","  https://cheshi654321.oss-cn-beijing.aliyuncs.com/sunshineFlowers"],
+                initialPreviewConfig: imgArrayConfig,//预览信息 配置   删除url以及参数配置
+                enctype: 'multipart/form-data',
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+                uploadExtraData: function (previewId, index) {
+                    return {'goodsTypeId': baseId};
+                }
+            });
+            //导入文件上传完成之后的事件
+            $("#reportFile").on("fileuploaded", function (event, data, previewId, index) {
+                //	toastr.success('上传成功！');
+            });
+            //删除预览图片事件
+            $('#reportFile').on('filepredelete', function (event, key) {
+                //$("#icon").val(imageId.replace(key,""));//去掉被删除图片
+            });
+        };
+        return oFile;
+    };
+    var picIds;
+    //初始化fileinput
+    var createFileInput = function (baseId) {
+        $.ajax({
+            type: "get",
+            url: "/works/img?baseId=" + baseId,
+            dataType: 'json',
+            async: false,//设置为同步操作就可以给全局变量赋值成功
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer "
+                    + window.localStorage.getItem("token"));
+            },
+            success: function (data) {
+                picIds = data.data;
+            }
+        });
+        var imgArray = [];//预览图片
+        var imgArrayConfig = [];//图片对应config数据
+        if (picIds != null && picIds != undefined && picIds != '') {
+            imgArray = new Array();
+            imgArrayConfig = new Array();
+            var picId = picIds.split(',');
+            for (var i = 0; i <= picId.length; i++) {
+                if (picId[i] != null && picId[i] != '') {//遍历图片id
+                    imgArray.push(picId[i] );//封装预览图片
+                    // imgArray.push("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");//封装预览图片
+                    //封装config
+                    var config = new Object();
+                    config.caption = picId[i] + ".jpg";
+                    config.url = '/img/imgDeleteMul';//删除图片接口
+                    config.key = picId[i];//设置删除图片时参数
+                    // config.type='video';
+                    imgArrayConfig.push(config);
+                }
+            }
+        }
+        var oFileInput = new FileInput();
+        //参数1:控件id、参数2:上传地址  3.初始化展示图片数组  4.图片预览参数、删除url配置
+        oFileInput.Init("imageFile", "/img/imgUploadMul", imgArray, imgArrayConfig);
+    }
+    //销毁fileinput
+    var destoryFileInput = function () {
+        $("#imageFile").fileinput('destroy');
+        createFileInput(baseId)
+    };
+
+    destoryFileInput();
+
+    /*初始化视频上传*/
+
+
+    //参数1:控件id、参数2:上传地址
+    var heyifanFileInput = function () {
+
+        var oFile = new Object();
+        //初始化fileinput控件（第一次初始化）
+        oFile.heyifanInit = function (ctrlName, uploadUrl, uploadId) {
+            var control = $('#' + ctrlName);
+            control.fileinput({
+                language: 'zh',                                         //设置语言
+                uploadUrl: uploadUrl,                                   //上传的地址
+                overwriteInitial: false, 								//让预览图片和新选择的图片在同一页面进行操作
+                minFileCount: 1,										//最小上传数
+                maxFileCount: 10,										//最大上传数
+                allowedFileExtensions: ['jpg', 'gif', 'jpeg', 'png', 'pdf','mp4','.wmv'],    //接收的文件后缀
+                showUpload: false,                                      //是否显示上传按钮
+                showRemove: false,										//是否显示移除按钮
+                showCaption: true,                                     //是否显示标题
+                browseClass: "btn btn-primary",                         //按钮样式
+                initialPreviewAsData: true,             //
+                enctype: 'multipart/form-data',
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+                uploadExtraData: function (previewId, index) {
+                    return {'goodsTypeId': uploadId};
+                }
+            });
+            //导入文件上传完成之后的事件
+            $("#ctrlName").on("fileuploaded", function (event, data, previewId, index) {
+                toastr.success('上传成功!');
+            });
+            //删除预览图片事件
+            $('#ctrlName').on('filepredelete', function (event, key) {
+                toastr.success('删除成功!');
+            });
+        };
+        return oFile;
+    };
+
+    //初始化fileinput
+    var heyifanCreateFileInput = function () {
+        var FileInput = new heyifanFileInput();
+        //参数1:控件id、参数2:上传地址  3.初始化展示图片数组  4.图片预览参数、删除url配置
+        var videoId = $('#video').val();
+        FileInput.heyifanInit("videoFile", "/img/imgUploadMul", videoId);
+    };
+    heyifanCreateFileInput();
+
 
 </script>
 @}

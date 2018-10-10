@@ -52,7 +52,7 @@ Classroom.openAddClassroom = function () {
     var index = layer.open({
         type: 2,
         title: '添加星厨课堂',
-        area: ['800px', '420px'], //宽高
+        area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/classroom/classroom_add'

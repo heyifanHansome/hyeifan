@@ -55,7 +55,7 @@ WorksInfoDlg.set = function(key, val,val2, isClass ) {
         return this;
     }
 
-}
+};
 
 /**
  * 设置对话框中的数据
@@ -84,7 +84,6 @@ WorksInfoDlg.deleteVideo=function(v){
 
 
 };
-
 
 
 /**
@@ -216,9 +215,6 @@ $(function() {
 
     });
     ajax.start();
-
-
-
 
     // $(document).ready(function() {
 

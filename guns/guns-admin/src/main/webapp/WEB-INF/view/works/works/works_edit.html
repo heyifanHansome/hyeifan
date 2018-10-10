@@ -8,7 +8,7 @@
 
                       <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
 
-                      <input id="practice" name="做法" value="${item.practice}" type="hidden"/>
+                <input id="practice" name="做法" value="${item.practice}" type="hidden"/>
 
 
 
@@ -39,11 +39,11 @@
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
-                    <#select id="status" name="预约" underline="true">
-                    <option value="0">未审查</option>
-                    <option value="1">通过</option>
-                    <option value="2">拒绝</option>
-                    </#select>
+                            <#select id="status" name="预约" underline="true">
+                            <option value="0">未审查</option>
+                            <option value="1">通过</option>
+                            <option value="2">拒绝</option>
+                            </#select>
                             <#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true"/>
                               <#button btnCss="info" name="添加主料输入框"   icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>

@@ -3,32 +3,76 @@
     <div class="ibox-content">
         <div class="form-horizontal">
             <input id="id" value="${item.id}"type="hidden">
+
+            <input id="content" name="做法" value="${item.content}" type="hidden"/>
+            
+            <input id="images" name="图集Ids" value="${item.images}" type="hidden"/>
+
+            <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#select id ="columnId" name="栏目类型"  underline="true">
-                             </#select>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">栏目类型</label>
+                                <div class="col-sm-9">
+                                    <select onchange="gradeChange($(this).val())" class="form-control" id="columnId"
+                                            name="columnId"  underline="true">
+                                    </select >
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
                             <#input id="title" name="标题" value="${item.title}" underline="true"/>
-                            <#avatar id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
+                            <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
                             <#input id="url" name="视频链接地址" value="${item.url}" underline="true"/>
                             <!--<#input id="description" name="描述" value="${item.description}" underline="true"/>-->
-
                 </div>
 
                 <div class="col-sm-6">
                             <#select id ="cityId" name="城市" underline="true">
                             </#select>
-                            <#select id ="sourceId" name="来源" underline="true">
-                            <option value="0">官方</option>
-                            <option value="0">个人</option>
-                            </#select>
+                            <!--<#select id ="sourceId" name="来源" underline="true">-->
+                            <!--<option value="0">官方</option>-->
+                            <!--<option value="0">个人</option>-->
+                            <!--</#select>-->
                             <#select id ="uid" name="发布者" underline="true">
                             </#select>
-                            <#input id="publishIp" name="发布IP" value="${item.publishIp}" underline="true"/>
-                            <#input id="content" name="内容" value="${item.content}" underline="true"/>
+                            <!--&lt;!&ndash;<#input id="publishIp" name="发布IP" value="${item.publishIp}" underline="true"/>&ndash;&gt;-->
+                            <!--<#input id="content" name="内容" value="${item.content}" underline="true"/>-->
                             <!--<#input id="startTime" name="开播时间" value="${item.startTime}" underline="true" />-->
                 </div>
             </div>
 
+
+
+
+                        <div id="contentValue">
+                            <fieldset style="margin-top: 3%">
+                                <h2>内容</h2>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div id="editor" class="editorHeight">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div id="imagesContent" style="display:none">
+                            <fieldset style="margin-top: 3%">
+                                <legend>图集上传</legend>
+                                <div class="putimg">
+                                    <input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div id="videoContent" style=" display: none">
+                            <fieldset style="margin-top: 1%">
+                                <legend>视频上传</legend>
+                                <div class="putimg">
+                                    <input id="videoFile" name="videoFile" multiple type="file" data-show-caption="true">
+                                </div>
+                            </fieldset>
+                        </div>
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
                     <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ClassroomInfoDlg.editSubmit()"/>

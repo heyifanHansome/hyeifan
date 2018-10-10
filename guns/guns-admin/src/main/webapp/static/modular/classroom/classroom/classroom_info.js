@@ -44,6 +44,7 @@ ClassroomInfoDlg.close = function() {
  * 收集数据
  */
 ClassroomInfoDlg.collectData = function() {
+    this.classroomInfoData['content'] = ClassroomInfoDlg.editor.txt.html();
     this
     .set('id')
     .set('columnId')
@@ -134,7 +135,7 @@ $(function() {
     /**
      * 动态获取所有用户
      */
-    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/userApi/getAllUserApi", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
@@ -146,8 +147,14 @@ $(function() {
     ajax.start();
 
     // 初始化缩略图上传
-    var avatarUp = new $WebUpload("thumb");
+    var avatarUp = new $WebUpload("thumb","/tool/uploadFile");
     avatarUp.setUploadBarId("progressBar");
-    avatarUp.init();
+    avatarUp.init("/tool/uploadFile");
 
+    //初始化编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
+    editor.txt.html($("#content").val());
+    ClassroomInfoDlg.editor = editor;
 });

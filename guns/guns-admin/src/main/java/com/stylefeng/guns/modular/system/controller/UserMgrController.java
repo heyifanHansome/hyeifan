@@ -384,6 +384,7 @@ public class UserMgrController extends BaseController {
     @RequestMapping(value = "/getAllUser")
     @ResponseBody
     public List<User> getAllUser(City city) {
+
         List<User> users = userService.selectList(null);
         return users;
     }

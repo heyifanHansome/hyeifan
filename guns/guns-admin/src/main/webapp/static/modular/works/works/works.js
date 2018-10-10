@@ -43,6 +43,20 @@ Works.check = function () {
     }
 };
 
+Works.heyifan = function () {
+    if (this.check()) {
+        var index = layer.open({
+            type: 2,
+            title: '作品管理详情',
+            area: ['800px', '420px'], //宽高
+            fix: false, //不固定
+            maxmin: true,
+            content: Feng.ctxPath + '/works/works_update/' + Works.seItem.id
+        });
+        this.layerIndex = index;
+    }
+};
+
 /**
  * 点击添加作品管理
  */

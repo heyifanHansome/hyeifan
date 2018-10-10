@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.common.annotion.Permission;
+import com.stylefeng.guns.core.common.constant.Const;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
@@ -14,6 +16,7 @@ import com.stylefeng.guns.modular.system.model.Picture;
 import com.stylefeng.guns.modular.system.model.TagRelation;
 import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
 import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -81,6 +84,9 @@ public class WorksController extends BaseController {
     @RequestMapping("/works_update/{worksId}")
     public String worksUpdate(@PathVariable Integer worksId, Model model) {
         Works works = worksService.selectById(worksId);
+        /**
+         *
+         */
         model.addAttribute("item", works);
         EntityWrapper<TagRelation> tagRelationEntityWrapper = new EntityWrapper<>();
         tagRelationEntityWrapper.eq("relation_id", worksId);
@@ -91,18 +97,20 @@ public class WorksController extends BaseController {
             multArr.add(temp);
         }
         model.addAttribute("multArr", multArr);
+
+
+        /**
+         *
+         */
         EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("base_id", works.getVideo());
         List<Picture> pictures = pictureService.selectList(entityWrapper);
         List<Map<String, Object>> videoArray = new ArrayList<>();
         JSONObject mapJson = null;
-//        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
-//        videoArray.add("http://cheshi654321.oss-cn-beijing.aliyuncs.com/wocao");
         if (pictures.size() > 0) {
             for (int i = 0; i < pictures.size(); i++) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("key", (pictures.get(i).getOssObjectName()));
-//                videoArray.add(pictures.get(i).getOssObjectName());
                 mapJson = new JSONObject(map);
                 videoArray.add(mapJson);
             }
@@ -177,9 +185,11 @@ public class WorksController extends BaseController {
     /**
      * 修改作品管理
      */
+    @Permission(Const.ADMIN_NAME)
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(Works works) {
+    public Object update(Works works)  {
+
         Integer columnId = null;
         TagRelation tagRelation = new TagRelation();
         EntityWrapper<TagRelation> relationEntityWrapper = new EntityWrapper<>();
@@ -257,8 +267,15 @@ public class WorksController extends BaseController {
     @RequestMapping(value = "/getAllColumnType")
     @ResponseBody
     public List<ColumnType> getAllColumnwType() {
-        List<ColumnType> ColumnType = columnTypeService.selectList(null);
-        return ColumnType;
+        EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("name","课堂");
+        List<ColumnType> ColumnTypes = columnTypeService.selectList(entityWrapper);
+        EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
+        columnTypeEntityWrapper.eq("parent_id",    ColumnTypes.get(0).getId());
+        List<ColumnType> parentColumnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
+
+
+        return parentColumnTypes;
     }
 
     /**

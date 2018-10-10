@@ -98,6 +98,7 @@ MgrUser.roleAssign = function () {
  * @param
  */
 MgrUser.userInfoDetail = function () {
+
     if (this.check()) {
         var index = layer.open({
             type: 2,

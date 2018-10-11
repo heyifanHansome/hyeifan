@@ -7,7 +7,6 @@ import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.Picture;
 import com.stylefeng.guns.modular.system.warpper.ClassroomWarpper;
-import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -95,7 +94,6 @@ public class ClassroomController extends BaseController {
         }
 
         model.addAttribute("videoArray", videoArray);
-
 
         model.addAttribute("item",classroom);
         LogObjectHolder.me().set(classroom);

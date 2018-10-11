@@ -3,6 +3,10 @@ package com.stylefeng.guns.modular.system.model;
 import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -14,6 +18,9 @@ import java.io.Serializable;
  * @since 2018-10-10
  */
 @TableName("sys_user_api")
+@Getter
+@Setter
+@ToString
 public class UserApi extends Model<UserApi> {
 
     private static final long serialVersionUID = 1L;
@@ -62,115 +69,14 @@ public class UserApi extends Model<UserApi> {
      * 创建时间
      */
     private Date createtime;
+    /**
+     * 更新时间
+     */
+    private Date updatetime;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.id;
-    }
-
-    @Override
-    public String toString() {
-        return "UserApi{" +
-        "id=" + id +
-        ", avatar=" + avatar +
-        ", account=" + account +
-        ", password=" + password +
-        ", salt=" + salt +
-        ", name=" + name +
-        ", birthday=" + birthday +
-        ", sex=" + sex +
-        ", email=" + email +
-        ", phone=" + phone +
-        ", createtime=" + createtime +
-        "}";
     }
 }

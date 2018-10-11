@@ -23,7 +23,7 @@ Classroom.initColumn = function () {
             {title: '开播时间', field: 'start_time', visible: true, align: 'center', valign: 'middle'},
             {title: '城市', field: 'cityName', visible: true, align: 'center', valign: 'middle'},
             {title: '来源', field: 'sourceName', visible: true, align: 'center', valign: 'middle'},
-            {title: '发布者', field: 'userName', visible: true, align: 'center', valign: 'middle'},
+            {title: '发布者', field: 'userName', visible: false, align: 'center', valign: 'middle'},
             {title: '发布IP', field: 'publish_ip', visible: true, align: 'center', valign: 'middle'},
             {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},

@@ -47,13 +47,9 @@ UserApiInfoDlg.collectData = function() {
     this
     .set('id')
     .set('avatar')
-    .set('account')
-    .set('password')
-    .set('salt')
     .set('name')
     .set('birthday')
     .set('sex')
-    .set('email')
     .set('phone')
     .set('createtime');
 }
@@ -99,5 +95,9 @@ UserApiInfoDlg.editSubmit = function() {
 }
 
 $(function() {
+    // 初始化缩略图上传
+    var avatarUp = new $WebUpload("avatar","/tool/uploadFile");
+    avatarUp.setUploadBarId("progressBar");
+    avatarUp.init("/tool/uploadFile");
 
 });

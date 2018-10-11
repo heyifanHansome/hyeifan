@@ -2,23 +2,20 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+            <input id="id" value="${item.id}"type="hidden">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="用户自增主键id" value="${item.id}" underline="true"/>
-                            <#input id="avatar" name="头像" value="${item.avatar}" underline="true"/>
-                            <#input id="account" name="账号" value="${item.account}" underline="true"/>
-                            <#input id="password" name="密码" value="${item.password}" underline="true"/>
-                            <#input id="salt" name="md5密码盐" value="${item.salt}" underline="true"/>
+                            <#avatar_lijun id="avatar" name="头像" underline="true" avatarImg="${item.avatar}" value="${item.avatar}"/>
                             <#input id="name" name="名字" value="${item.name}" />
                 </div>
 
                 <div class="col-sm-6">
                             <#input id="birthday" name="生日" value="${item.birthday}" underline="true"/>
-                            <#input id="sex" name="性别（1：男 2：女）" value="${item.sex}" underline="true"/>
-                            <#input id="email" name="电子邮件" value="${item.email}" underline="true"/>
+                                <#select id="sex" name="性别" underline="true">
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                               </#select>
                             <#input id="phone" name="电话" value="${item.phone}" underline="true"/>
-                            <#input id="createtime" name="创建时间" value="${item.createtime}" />
                 </div>
             </div>
 
@@ -33,4 +30,13 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/system/userApi/userApi_info.js"></script>
+<script>
+    laydate.render({
+        elem: '#birthday'
+    });
+
+    $(document).ready(function () {
+        $("#sex").val(${item.sex});
+    });
+</script>
 @}

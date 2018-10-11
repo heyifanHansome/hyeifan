@@ -15,11 +15,24 @@
         <result column="email" property="email" />
         <result column="phone" property="phone" />
         <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, avatar, account, password, salt, name, birthday, sex, email, phone, createtime
     </sql>
+
+
+
+    <!--前台用户条件查询-->
+    <select id="list" resultType="map">
+        select a.* from sys_user_api  a
+        <if test="condition != null and condition != ''">
+            where a.name like CONCAT('%',#{condition},'%')
+        </if>
+        order by createtime ASC
+    </select>
+
 
 </mapper>

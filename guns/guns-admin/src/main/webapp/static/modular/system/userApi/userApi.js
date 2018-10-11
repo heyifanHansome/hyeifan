@@ -14,19 +14,41 @@ var UserApi = {
 UserApi.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '用户自增主键id', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '头像', field: 'avatar', visible: true, align: 'center', valign: 'middle'},
-            {title: '账号', field: 'account', visible: true, align: 'center', valign: 'middle'},
-            {title: '密码', field: 'password', visible: true, align: 'center', valign: 'middle'},
-            {title: 'md5密码盐', field: 'salt', visible: true, align: 'center', valign: 'middle'},
+            {title: '用户自增主键id', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '头像', field: 'avatar', visible: false, align: 'center', valign: 'middle'},
+            {title: '账号', field: 'account', visible: false, align: 'center', valign: 'middle'},
+            {title: '密码', field: 'password', visible: false, align: 'center', valign: 'middle'},
+            {title: 'md5密码盐', field: 'salt', visible: false, align: 'center', valign: 'middle'},
             {title: '名字', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '生日', field: 'birthday', visible: true, align: 'center', valign: 'middle'},
-            {title: '性别（1：男 2：女）', field: 'sex', visible: true, align: 'center', valign: 'middle'},
-            {title: '电子邮件', field: 'email', visible: true, align: 'center', valign: 'middle'},
+            {title: '性别', field: 'sexName', visible: true, align: 'center', valign: 'middle'},
+            {title: '电子邮件', field: 'email', visible: false, align: 'center', valign: 'middle'},
             {title: '电话', field: 'phone', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'}
+            {title: '创建时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
+            {title: '更新时间', field: 'updatetime', visible: true, align: 'center', valign: 'middle'}
     ];
 };
+
+
+/**
+ * 点击打开用户详情模态框
+ * @param
+ */
+UserApi.userInfoDetail = function () {
+
+    if (this.check()) {
+        var index = layer.open({
+            type: 2,
+            title: '用户详情',
+            area: ['800px','560px'], //宽高
+            fix: false, //不固定
+            maxmin: true,
+            content: Feng.ctxPath + '/userApi/user_info/' + this.seItem.id
+        });
+        this.layerIndex = index;
+    }
+};
+
 
 /**
  * 检查是否选中
@@ -49,7 +71,7 @@ UserApi.openAddUserApi = function () {
     var index = layer.open({
         type: 2,
         title: '添加',
-        area: ['800px', '420px'], //宽高
+        area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/userApi/userApi_add'
@@ -65,7 +87,7 @@ UserApi.openUserApiDetail = function () {
         var index = layer.open({
             type: 2,
             title: '详情',
-            area: ['800px', '420px'], //宽高
+            area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/userApi/userApi_update/' + UserApi.seItem.id

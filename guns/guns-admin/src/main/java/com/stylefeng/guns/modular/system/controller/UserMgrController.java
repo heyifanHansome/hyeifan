@@ -200,26 +200,25 @@ public class UserMgrController extends BaseController {
         user.setCreatetime(new Date());
 
         this.userService.insert(UserFactory.createUser(user));
-//        this.userService.insert(user);
-        //添加用户详情默认值
-
-
-        EntityWrapper<User> entityWrapper = new EntityWrapper<>();
-        entityWrapper.orderDesc(Collections.singleton("id"));
-        List<User> users = userService.selectList(entityWrapper);
-
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(users.get(0).getId());
-        userInfo.setApiToken(ShiroKit.getRandomSalt(5));
-        userInfo.setCredits(0);
-        userInfo.setMoney(0);
-        userInfo.setLoginIp("192.168.0.0.1");
-        userInfo.setCreateTime(new DateTime());
-        userInfo.setRealName(user.getName());
-        userInfo.setJoinClub(2);
-        userInfo.setAppointment(2);
-        userInfo.setEnlightening(2);
-        userInfoService.insert(userInfo);
+////        this.userService.insert(user);
+//        //添加用户详情默认值
+//
+//        EntityWrapper<User> entityWrapper = new EntityWrapper<>();
+//        entityWrapper.orderDesc(Collections.singleton("id"));
+//        List<User> users = userService.selectList(entityWrapper);
+//
+//        UserInfo userInfo = new UserInfo();
+//        userInfo.setUserId(users.get(0).getId());
+//        userInfo.setApiToken(ShiroKit.getRandomSalt(5));
+//        userInfo.setCredits(0);
+//        userInfo.setMoney(0);
+//        userInfo.setLoginIp("192.168.0.0.1");
+//        userInfo.setCreateTime(new DateTime());
+//        userInfo.setRealName(user.getName());
+//        userInfo.setJoinClub(2);
+//        userInfo.setAppointment(2);
+//        userInfo.setEnlightening(2);
+//        userInfoService.insert(userInfo);
         return SUCCESS_TIP;
     }
 
@@ -406,21 +405,5 @@ public class UserMgrController extends BaseController {
         }
 
     }
-    /**
-     * 跳转到用户详情页面页面
-     */
-    //@RequiresPermissions("/mgr/role_assign")  //利用shiro自带的权限检查
-    @RequestMapping("/user_info/{userId}")
-    public String userInfoDetail(@PathVariable Integer userId, Model model) {
-        if (ToolUtil.isEmpty(userId)) {
-            throw new GunsException(BizExceptionEnum.REQUEST_NULL);
-        }
-        User user = userService.selectById(userId);
-        EntityWrapper<UserInfo>  userInfoEntityWrapper = new EntityWrapper<>();
-        userInfoEntityWrapper.eq("user_id" ,userId);
-        List<UserInfo> userInfos = userInfoService.selectList(userInfoEntityWrapper);
-        model.addAttribute("item", userInfos.get(0));
-        model.addAttribute("userName",user.getName());
-        return PREFIX+ "/user_info_detail.html";
-    }
+
 }

@@ -93,25 +93,6 @@ MgrUser.roleAssign = function () {
     }
 };
 
-/**
- * 点击打开用户详情模态框
- * @param
- */
-MgrUser.userInfoDetail = function () {
-
-    if (this.check()) {
-        var index = layer.open({
-            type: 2,
-            title: '用户详情',
-            area: ['800px','560px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/mgr/user_info/' + this.seItem.id
-        });
-        this.layerIndex = index;
-    }
-};
-
 
 /**
  * 删除用户

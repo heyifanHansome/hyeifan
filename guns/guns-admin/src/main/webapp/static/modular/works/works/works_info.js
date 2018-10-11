@@ -33,7 +33,6 @@ WorksInfoDlg.set = function(key, val,val2, isClass ) {
                 this.worksInfoData[key] = '';
                 return this;
             }
-
     }
 
     if(isClass !== undefined) {

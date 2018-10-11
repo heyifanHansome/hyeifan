@@ -102,6 +102,9 @@ public class Classroom extends Model<Classroom> {
      */
     private String images;
 
+    @TableField("tag_id")
+    private String tagId;
+
     @Override
     protected Serializable pkVal() {
         return this.id;

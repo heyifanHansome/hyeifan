@@ -20,6 +20,7 @@
         <result column="update_time" property="updateTime" />
         <result column="images" property="images" />
         <result column="video" property="video" />
+        <result column="tag_id" property="tagId" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

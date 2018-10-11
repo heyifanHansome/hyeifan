@@ -17,15 +17,10 @@ Information.initColumn = function () {
             {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '栏目类型', field: 'columnTypeName', visible: true, align: 'center', valign: 'middle'},
             {title: '标题', field: 'title', visible: true, align: 'center', valign: 'middle'},
-            {title: '缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
-            {title: '图集', field: 'images', visible: true, align: 'center', valign: 'middle'},
-            {title: '视频地址', field: 'url', visible: true, align: 'center', valign: 'middle'},
             {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
             {title: '城市', field: 'cityName', visible: true, align: 'center', valign: 'middle'},
             {title: '来源', field: 'sourceName', visible: true, align: 'center', valign: 'middle'},
             {title: '发布人', field: 'userName', visible: true, align: 'center', valign: 'middle'},
-            {title: '发布IP', field: 'publish_ip', visible: true, align: 'center', valign: 'middle'},
-            {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'}
     ];
@@ -52,7 +47,7 @@ Information.openAddInformation = function () {
     var index = layer.open({
         type: 2,
         title: '添加资讯管理',
-        area: ['800px', '420px'], //宽高
+        area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/information/information_add'
@@ -68,7 +63,7 @@ Information.openInformationDetail = function () {
         var index = layer.open({
             type: 2,
             title: '资讯管理详情',
-            area: ['800px', '420px'], //宽高
+            area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/information/information_update/' + Information.seItem.id

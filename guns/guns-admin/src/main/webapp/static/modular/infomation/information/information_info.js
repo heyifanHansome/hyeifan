@@ -10,7 +10,7 @@ var InformationInfoDlg = {
  */
 InformationInfoDlg.clearData = function() {
     this.informationInfoData = {};
-}
+};
 
 /**
  * 设置对话框中的数据
@@ -21,7 +21,7 @@ InformationInfoDlg.clearData = function() {
 InformationInfoDlg.set = function(key, val) {
     this.informationInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
     return this;
-}
+};
 
 /**
  * 设置对话框中的数据
@@ -31,14 +31,14 @@ InformationInfoDlg.set = function(key, val) {
  */
 InformationInfoDlg.get = function(key) {
     return $("#" + key).val();
-}
+};
 
 /**
  * 关闭此对话框
  */
 InformationInfoDlg.close = function() {
     parent.layer.close(window.parent.Information.layerIndex);
-}
+};
 
 /**
  * 收集数据
@@ -50,14 +50,12 @@ InformationInfoDlg.collectData = function() {
     .set('title')
     .set('thumb')
     .set('images')
-    .set('url')
     .set('description')
     .set('cityId')
     .set('sourceId')
     .set('uid')
-    .set('publishIp')
     .set('content')
-}
+};
 
 /**
  * 提交添加
@@ -77,7 +75,7 @@ InformationInfoDlg.addSubmit = function() {
     });
     ajax.set(this.informationInfoData);
     ajax.start();
-}
+};
 
 /**
  * 提交修改
@@ -97,7 +95,7 @@ InformationInfoDlg.editSubmit = function() {
     });
     ajax.set(this.informationInfoData);
     ajax.start();
-}
+};
 
 $(function() {
 
@@ -150,4 +148,10 @@ $(function() {
     avatarUp.setUploadBarId("progressBar");
     avatarUp.init();
 
+    //初始化编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
+    editor.txt.html($("#content").val());
+    ClassroomInfoDlg.editor = editor;
 });

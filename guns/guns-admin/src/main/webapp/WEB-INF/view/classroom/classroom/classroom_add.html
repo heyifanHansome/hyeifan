@@ -35,13 +35,35 @@
             <#select id ="uid" name="发布者" underline="true">
             </#select>
             <#input id="description" name="描述" underline="true"/>
-        <!--<#input id="publishIp" name="发布IP" underline="true"/>-->
-        <!--<#input id="content" name="内容" underline="true"/>-->
         <#input id="startTime" name="开播时间" underline="true"/>
     </div>
 </div>
 
-            <div >
+
+    <div id="example" role="application" style="margin-bottom: 3%">
+        <div class="demo-section k-content">
+            <h2>请选择课堂标签</h2>
+            <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
+            </select>
+
+        </div>
+
+        <style>
+            .demo-section label {
+                display: block;
+                margin: 15px 0 5px 0;
+            }
+            #get {
+                float: right;
+                margin: 25px auto 0;
+            }
+        </style>
+
+    </div>
+
+
+
+    <div >
                 <fieldset style="margin-top: 3%">
                     <h2>内容</h2>
                     <div class="form-group">
@@ -81,7 +103,6 @@
 
 </div>
 </div>
-
 <script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
 <script src="${ctxPath}/static/modular/classroom/classroom/classroom_info.js"></script>
 <script>
@@ -91,6 +112,29 @@
     laydate.render({
         elem: '#startTime'
     });
+
+/*初始化kendoui标签下拉框*/
+    $(document).ready(function() {
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/classroom/getClassRoom",
+                    dataType: "json"
+                }
+            }
+        });
+
+        $("#tagId").kendoMultiSelect({
+            placeholder: "请选择活动标签",
+            dataTextField: "name",
+            dataValueField: "id",
+            autoBind: false,
+            dataSource: dataSource,
+        });
+    });
+
+
 
 
     //

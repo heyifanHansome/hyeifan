@@ -5,8 +5,13 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
+import com.stylefeng.guns.modular.system.dao.Dao;
 import com.stylefeng.guns.modular.system.model.Picture;
+import com.stylefeng.guns.modular.system.model.Tag;
+import com.stylefeng.guns.modular.system.model.TagRelation;
 import com.stylefeng.guns.modular.system.warpper.ClassroomWarpper;
+import com.stylefeng.guns.modular.tag.service.ITagService;
+import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Classroom;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +46,11 @@ public class ClassroomController extends BaseController {
 
     @Autowired
     private IPictureService pictureService;
+    @Autowired
+    private ITagService tagService;
+
+    @Autowired
+    private ITagRelationService tagRelationService;
     /**
      * 跳转到星厨课堂首页
      */
@@ -119,6 +130,24 @@ public class ClassroomController extends BaseController {
     public Object add(Classroom classroom) {
         classroom.setCreateTime(new DateTime());
         classroomService.insert(classroom);
+
+        //插入标签关联表
+        if (classroom.getTagId() != "") {
+            TagRelation tagRelation = new TagRelation();
+            tagRelation.setCreateTime(new DateTime());
+            tagRelation.setRelationId(classroom.getId());
+            String tagArrId = classroom.getTagId();
+            String[] heyifan = tagArrId.split(",");
+
+            for (int i = 0; i < heyifan.length; i++) {
+                tagRelation.setRelationId(classroom.getId());
+                tagRelation.setCreateTime(new DateTime());
+                tagRelation.setCommonTypeId(27);
+                tagRelation.setColumnId(Integer.parseInt(heyifan[i]));
+                tagRelationService.insert(tagRelation);
+            }
+
+        }
         return SUCCESS_TIP;
     }
 
@@ -143,10 +172,18 @@ public class ClassroomController extends BaseController {
         return SUCCESS_TIP;
     }
 
-
-
-
-
+    /**
+     * 获取视频标签管理表
+     */
+    @RequestMapping(value = "/getClassRoom")
+    @ResponseBody
+    public Object getClassRoom() {
+    EntityWrapper<Tag> tagEntityWrapper = new EntityWrapper<>();
+    tagEntityWrapper.where("column_id={0}","0").or("  column_id={0}","17")  ;
+    List<Tag> tags = tagService.selectList(tagEntityWrapper);
+        System.err.println(tags);
+        return  tags;
+    }
 
     /**
      * 星厨课堂详情

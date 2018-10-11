@@ -19,9 +19,28 @@ ClassroomInfoDlg.clearData = function() {
  * @param val 数据的具体值
  */
 ClassroomInfoDlg.set = function(key, val) {
-    this.classroomInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
-    return this;
-}
+
+    if(key == 'tagId'){
+        var heyifanArr = $('#tagId').val();
+        var newDemo ="" ;
+        if(heyifanArr!=null&&heyifanArr.length>0){
+            for (var z=0;z< heyifanArr.length;z++) {
+                newDemo += heyifanArr[z] +",";
+            }
+            this.classroomInfoData[key] = newDemo;
+            return this;
+        }else {
+            this.classroomInfoData[key] = '';
+            return this;
+        }
+    }else {
+        this.classroomInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
+        return this;
+    }
+
+
+
+};
 
 /**
  * 设置对话框中的数据
@@ -59,6 +78,7 @@ ClassroomInfoDlg.collectData = function() {
     .set('publishIp')
     .set('video')
     .set('images')
+    .set('tagId')
 };
 
 /**

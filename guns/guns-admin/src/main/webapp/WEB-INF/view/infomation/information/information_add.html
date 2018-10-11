@@ -9,9 +9,7 @@
                             </#select>
                             <#input id="title" name="标题" underline="true"/>
                             <#avatar id="thumb" name="缩略图" avatarImg="" underline="true"/>
-                            <#input id="images" name="图集" underline="true"/>
-                            <#input id="url" name="视频地址" underline="true"/>
-
+                            <#input id="description" name="描述" underline="true"/>
                 </div>
 
                 <div class="col-sm-6">
@@ -23,22 +21,60 @@
                             </#select>
                             <#select name="发布者" id="uid" underline="true" >
                             </#select>
-                            <#input id="publishIp" name="发布IP" underline="true"/>
-                            <#input id="content" name="内容" underline="true"/>
-                            <#input id="description" name="描述" underline="true"/>
-                </div>
-            </div>
+    <div id="example" role="application" style="margin-bottom: 3%">
+        <div class="demo-section k-content">
+            <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
+            </select>
 
-            <div class="row btn-group-m-t">
-                <div class="col-sm-10">
-                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="InformationInfoDlg.addSubmit()"/>
-                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="InformationInfoDlg.close()"/>
-                </div>
-            </div>
         </div>
+
+        <style>
+            .demo-section label {
+                display: block;
+                margin: 15px 0 5px 0;
+            }
+            #get {
+                float: right;
+                margin: 25px auto 0;
+            }
+        </style>
+
+    </div>
+
+</div>
+            </div>
+                    <div >
+                        <fieldset style="margin-top: 3%">
+                            <h2>内容</h2>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div id="editor" class="editorHeight">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div id="imagesContent">
+                        <fieldset style="margin-top: 3%">
+                            <legend>图集上传</legend>
+                            <div class="putimg">
+                                <input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="row btn-group-m-t">
+                        <div class="col-sm-10">
+                            <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="InformationInfoDlg.addSubmit()"/>
+                            <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="InformationInfoDlg.close()"/>
+                        </div>
+                    </div>
+                </div>
 
     </div>
 </div>
+<script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
 <script src="${ctxPath}/static/modular/infomation/information/information_info.js"></script>
 <script>
     laydate.render({
@@ -47,5 +83,95 @@
     laydate.render({
         elem: '#startTime'
     });
+
+
+
+    /*初始化kendoui标签下拉框*/
+    $(document).ready(function() {
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/classroom/getClassRoom",
+                    dataType: "json"
+                }
+            }
+        });
+
+        $("#tagId").kendoMultiSelect({
+            placeholder: "请选择活动标签",
+            dataTextField: "name",
+            dataValueField: "id",
+            autoBind: false,
+            dataSource: dataSource,
+        });
+    });
+
+
+
+    /* 封装bootstrap fileInput 多文本框文件上传方法 */
+    function randomPassword() {
+        var seed = new Array(
+            '11', '22', '35', '48', '58', '67', '79', '88', '98', '31', '15', '52', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        );//数组
+        seedlength = seed.length;//数组长度
+        var createPassword = ''
+        for (i = 0; i < 15; i++) {
+            j = Math.floor(Math.random() * seedlength);
+            createPassword += seed[j]
+        }
+        return createPassword;
+    }
+
+    //参数1:控件id、参数2:上传地址
+    var FileInput = function () {
+
+        var oFile = new Object();
+        //初始化fileinput控件（第一次初始化）
+        oFile.Init = function (ctrlName, uploadUrl, uploadId) {
+            var control = $('#' + ctrlName);
+            control.fileinput({
+                language: 'zh',                                         //设置语言
+                uploadUrl: uploadUrl,                                   //上传的地址
+                overwriteInitial: false, 								//让预览图片和新选择的图片在同一页面进行操作
+                minFileCount: 1,										//最小上传数
+                maxFileCount: 10,										//最大上传数
+                allowedFileExtensions: ['jpg', 'gif', 'jpeg', 'png', 'pdf', 'mp4','.wmv'],    //接收的文件后缀
+                showUpload: false,                                      //是否显示上传按钮
+                showRemove: false,										//是否显示移除按钮
+                showCaption: true,                                     //是否显示标题
+                browseClass: "btn btn-primary",                         //按钮样式
+                initialPreviewAsData: true,             //
+                enctype: 'multipart/form-data',
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+                uploadExtraData: function (previewId, index) {
+                    return {'goodsTypeId': uploadId};
+                }
+            });
+            //导入文件上传完成之后的事件
+            $("#ctrlName").on("fileuploaded", function (event, data, previewId, index) {
+                toastr.success('上传成功!');
+            });
+            //删除预览图片事件
+            $('#ctrlName').on('filepredelete', function (event, key) {
+                toastr.success('删除成功!');
+            });
+        };
+        return oFile;
+    };
+
+    //初始化fileinput
+    var createFileInput = function () {
+        var oFileInput = new FileInput();
+        //参数1:控件id、参数2:上传地址  3.初始化展示图片数组  4.图片预览参数、删除url配置
+        var imagesId = randomPassword();
+        var videoId = randomPassword();
+        $('#images').val(imagesId);
+        $('#video').val(videoId);
+        oFileInput.Init("imageFile", "/img/imgUploadMul", imagesId);
+    };
+    createFileInput();
+
 </script>
 @}

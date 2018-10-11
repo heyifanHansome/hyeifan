@@ -1,6 +1,6 @@
 @layout("/common/_container.html"){
-<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
-<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+<!--<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">-->
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
@@ -8,9 +8,13 @@
             <div class="row">
 
                 <div class="row">
-                            <#select id="parentId" name="父级栏目" underline="true"></#select>
-                            <#input id="orders" name="排序"/>
-                            <#input id="name" name="栏目类型名" underline="true"/>
+                    <#input id="pcodeName" name="所属板块/菜单" underline="true"
+                    hidden="menuId" readonly="readonly"
+                    clickFun="MenuInfoDlg.showMenuSelectTree(); return false;"
+                    style="background-color: #ffffff !important;"
+                    selectFlag="true" selectId="pcodeTreeDiv" selectTreeId="pcodeTree" selectStyle="width:244px !important;"/>
+                    <#input id="orders" name="排序"/>
+                    <#input id="name" name="栏目类型名" underline="true"/>
             </div>
 
             </div>
@@ -28,7 +32,8 @@
 <#input id="createTime" name="" underline="true" type="hidden"/>
 <#input id="updateTime" name="" underline="true" type="hidden"/>
 <#input id="id" name="" underline="true" type="hidden"/>
-<#input id="parentId_" name="" underline="true" type="hidden"/>
 </div>
+<script src="${ctxPath}/static/modular/system/menu/menu_info.js"></script>
 <script src="${ctxPath}/static/modular/cloumnType/columnType/columnType_info.js"></script>
+
 @}

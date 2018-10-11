@@ -148,6 +148,9 @@ MenuInfoDlg.editSubmit = function () {
 MenuInfoDlg.onClickDept = function (e, treeId, treeNode) {
     $("#pcodeName").attr("value", MenuInfoDlg.ztreeInstance.getSelectedVal());
     $("#pcode").attr("value", treeNode.id);
+    //李俊的column_type用到
+    console.log("menu_iddd")
+    $("#menuId").attr("value", treeNode.id);
 };
 
 

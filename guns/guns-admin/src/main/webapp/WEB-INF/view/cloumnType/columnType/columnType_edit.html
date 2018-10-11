@@ -1,13 +1,17 @@
 @layout("/common/_container.html"){
-<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
-<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+<!--<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">-->
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
 
             <div class="row">
                 <div class="row">
-                    <#select id="parentId" name="父级栏目" underline="true"></#select>
+                    <#input id="pcodeName" name="所属板块/菜单" value="${item.menuName}" underline="true"
+                    hidden="menuId" readonly="readonly" hiddenValue="${item.menuId}"
+                    clickFun="MenuInfoDlg.showMenuSelectTree(); return false;"
+                    style="background-color: #ffffff !important;"
+                    selectFlag="true" selectId="pcodeTreeDiv" selectTreeId="pcodeTree" selectStyle="width:244px !important;"/>
                     <#input id="orders" name="排序" value="${item.orders}" />
                     <#input id="name" name="栏目类型名" value="${item.name}" underline="true"/>
                 </div>
@@ -22,10 +26,10 @@
     </div>
 </div>
     <#input id="id" name="" value="${item.id}"  type="hidden"/>
-    <#input id="parentId_" name="" value="${item.parentId}" type="hidden"/>
     <#input id="createTime" name="" value="${item.createTime}"  type="hidden"/>
     <#input id="updateTime" name="" value="${item.updateTime}" type="hidden" />
     </div>
 </div>
+<script src="${ctxPath}/static/modular/system/menu/menu_info.js"></script>
 <script src="${ctxPath}/static/modular/cloumnType/columnType/columnType_info.js"></script>
 @}

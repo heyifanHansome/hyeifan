@@ -2,8 +2,11 @@ package com.stylefeng.guns.modular.cloumnType.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.modular.lijun.util.JavaBeanUtil;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.dao.Dao;
+import com.stylefeng.guns.modular.system.model.Menu;
+import com.stylefeng.guns.modular.system.service.IMenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,9 +18,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Date;
 import java.sql.Wrapper;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 栏目分类控制器
@@ -32,7 +43,8 @@ public class ColumnTypeController extends BaseController {
     private String PREFIX = "/cloumnType/columnType/";
     @Autowired
     private Dao dao;
-
+    @Autowired
+    private IMenuService menuService;
     @Autowired
     private IColumnTypeService columnTypeService;
 
@@ -57,9 +69,14 @@ public class ColumnTypeController extends BaseController {
      * 跳转到修改栏目分类
      */
     @RequestMapping("/columnType_update/{columnTypeId}")
-    public String columnTypeUpdate(@PathVariable Integer columnTypeId, Model model) {
+    public String columnTypeUpdate(@PathVariable Integer columnTypeId, Model model) throws IntrospectionException, InvocationTargetException, IllegalAccessException  {
         ColumnType columnType = columnTypeService.selectById(columnTypeId);
-        model.addAttribute("item",columnType);
+        Map<String,Object>result= JavaBeanUtil.convertBeanToMap(columnType);
+        Menu menu=new Menu();
+        menu.setId(Long.parseLong(columnType.getMenuId()));
+        menu=menuService.selectOne(new EntityWrapper<>(menu));
+        result.put("menuName",menu!=null?menu.getName():"");
+        model.addAttribute("item",result);
         LogObjectHolder.me().set(columnType);
         return PREFIX + "columnType_edit.html";
     }
@@ -75,16 +92,11 @@ public class ColumnTypeController extends BaseController {
         ew.orderBy("orders",false);
         List<ColumnType>columnTypes=columnTypeService.selectList(ew);
         for (ColumnType type : columnTypes) {
-            if(Tool.isNull(type.getParentId())||type.getParentId().equals("0")){
-                type.setParentId("<span style='color:red;'>顶级目录</span>");
-            }else{
-                EntityWrapper ew_=new EntityWrapper(new ColumnType());
-                ew_.eq("id",type.getParentId());
-                List<ColumnType>columnTypeList=columnTypeService.selectList(ew_);
-                type.setParentId(!Tool.listIsNull(columnTypeList)?columnTypeList.get(0).getName():"<span style='color:red;'>*上级分类已被删除*</span>");
-            }
+                EntityWrapper ew_=new EntityWrapper(new Menu());
+                ew_.eq("id",type.getMenuId());
+                List<Menu>menuList=menuService.selectList(ew_);
+                type.setMenuId(!Tool.listIsNull(menuList)?menuList.get(0).getName():"<span style='color:red;'>*对应板块/菜单已被删除*</span>");
         }
-
         return columnTypes;
     }
 
@@ -95,7 +107,6 @@ public class ColumnTypeController extends BaseController {
     @ResponseBody
     public Object add(ColumnType columnType) {
         columnType.setCreateTime(new Date(System.currentTimeMillis()));
-        if(Tool.isNull(columnType.getParentId()))columnType.setParentId("0");
         columnTypeService.insert(columnType);
         return SUCCESS_TIP;
     }
@@ -116,6 +127,7 @@ public class ColumnTypeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(ColumnType columnType) {
+
         columnType.setUpdateTime(new Date(System.currentTimeMillis()));
         columnTypeService.updateById(columnType);
         return SUCCESS_TIP;
@@ -126,16 +138,17 @@ public class ColumnTypeController extends BaseController {
      */
     @RequestMapping(value = "/detail/{columnTypeId}")
     @ResponseBody
-    public Object detail(@PathVariable("columnTypeId") Integer columnTypeId) {
-        return columnTypeService.selectById(columnTypeId);
+    public Object detail(@PathVariable("columnTypeId") Integer columnTypeId){
+        ColumnType columnType=columnTypeService.selectById(columnTypeId);
+        return columnType;
     }
 
     /**
      *
      */
-    @RequestMapping("/getColumnTypeList")
+    @RequestMapping("/getMenuList")
     @ResponseBody
-    public Object getColumnTypeList(Integer id){
+    public Object getMenuList(Integer id){
 //        return dao.selectBySQL("select * from sys_column_type where parent_id=0"+(!Tool.isNull(id)?" and id<>"+id:""));
         return dao.selectBySQL("select * from sys_column_type"+(!Tool.isNull(id)?" where id<>"+id:""));
     }

@@ -46,7 +46,7 @@ ColumnTypeInfoDlg.close = function() {
 ColumnTypeInfoDlg.collectData = function() {
     this
     .set('id')
-    .set('parentId')
+    .set('menuId')
     .set('orders')
     .set('name')
     // .set('createTime')
@@ -93,7 +93,7 @@ ColumnTypeInfoDlg.editSubmit = function() {
     ajax.start();
 }
 
-$(function() {
+/*$(function() {
     $("#parentId").append('<option value="0">顶级栏目</option>');
     $.post(Feng.ctxPath + "/columnType/getColumnTypeList",{id:$('#id').val()}, function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -103,5 +103,5 @@ $(function() {
         }
         $('#parentId').searchableSelect();
     });
-});
+});*/
 

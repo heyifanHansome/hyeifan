@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +20,9 @@ import java.io.Serializable;
  * @author stylefeng
  * @since 2018-09-21
  */
+@Getter
+@Setter
+@ToString
 @TableName("sys_column_type")
 public class ColumnType extends Model<ColumnType> {
 
@@ -29,8 +36,8 @@ public class ColumnType extends Model<ColumnType> {
     /**
      * 父级栏目ID(0表示一级栏目)
      */
-    @TableField("parent_id")
-    private String parentId;
+    @TableField("menu_id")
+    private String menuId;
     /**
      * 排序
      */
@@ -51,68 +58,10 @@ public class ColumnType extends Model<ColumnType> {
     private Date updateTime;
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getOrders() {
-        return orders;
-    }
-
-    public void setOrders(String orders) {
-        this.orders = orders;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "ColumnType{" +
-        "id=" + id +
-        ", parentId=" + parentId +
-        ", orders=" + orders +
-        ", name=" + name +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

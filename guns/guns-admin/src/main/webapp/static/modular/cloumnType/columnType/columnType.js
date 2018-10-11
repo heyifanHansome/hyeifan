@@ -15,7 +15,7 @@ ColumnType.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
             // {title: 'ID', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '父级栏目', field: 'parentId', visible: true, align: 'center', valign: 'middle'},
+            {title: '板块/菜单', field: 'menuId', visible: true, align: 'center', valign: 'middle'},
             {title: '排序', field: 'orders', visible: true, align: 'center', valign: 'middle'},
             {title: '栏目类型名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},

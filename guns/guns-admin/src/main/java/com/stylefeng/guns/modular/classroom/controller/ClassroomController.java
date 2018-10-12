@@ -4,11 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.Dao;
-import com.stylefeng.guns.modular.system.model.Picture;
-import com.stylefeng.guns.modular.system.model.Tag;
-import com.stylefeng.guns.modular.system.model.TagRelation;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.warpper.ClassroomWarpper;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.Classroom;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 
 import javax.annotation.PostConstruct;
@@ -51,6 +49,10 @@ public class ClassroomController extends BaseController {
 
     @Autowired
     private ITagRelationService tagRelationService;
+
+    @Autowired
+    private IColumnTypeService columnTypeService;
+
     /**
      * 跳转到星厨课堂首页
      */
@@ -78,10 +80,10 @@ public class ClassroomController extends BaseController {
          * 获取前台需要展示的样式 1为视频集合,2为图片集
          */
 
-        if(classroom.getColumnId() !=27){
-            model.addAttribute("modelType","2");
-        }else {
-            model.addAttribute("modelType","1");
+        if (classroom.getColumnId() != 27) {
+            model.addAttribute("modelType", "2");
+        } else {
+            model.addAttribute("modelType", "1");
         }
 
         /**
@@ -106,7 +108,7 @@ public class ClassroomController extends BaseController {
 
         model.addAttribute("videoArray", videoArray);
 
-        model.addAttribute("item",classroom);
+        model.addAttribute("item", classroom);
         LogObjectHolder.me().set(classroom);
         return PREFIX + "classroom_edit.html";
     }
@@ -117,9 +119,9 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        List<Map<String,Object>> list = classroomService.list(condition);
+        List<Map<String, Object>> list = classroomService.list(condition);
 
-     return  super.warpObject(new ClassroomWarpper(list));
+        return super.warpObject(new ClassroomWarpper(list));
     }
 
     /**
@@ -178,11 +180,11 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "/getClassRoom")
     @ResponseBody
     public Object getClassRoom() {
-    EntityWrapper<Tag> tagEntityWrapper = new EntityWrapper<>();
-    tagEntityWrapper.where("column_id={0}","0").or("  column_id={0}","17")  ;
-    List<Tag> tags = tagService.selectList(tagEntityWrapper);
+        EntityWrapper<Tag> tagEntityWrapper = new EntityWrapper<>();
+        tagEntityWrapper.where("column_id={0}", "0").or("  column_id={0}", "17");
+        List<Tag> tags = tagService.selectList(tagEntityWrapper);
         System.err.println(tags);
-        return  tags;
+        return tags;
     }
 
     /**
@@ -192,5 +194,30 @@ public class ClassroomController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("classroomId") Integer classroomId) {
         return classroomService.selectById(classroomId);
+    }
+
+    /**
+     * 获取栏目详情
+     */
+    @RequestMapping(value = "/getAllColumunType")
+    @ResponseBody
+    public List<ColumnType> getAllColumunType() {
+        EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("menu_id","1049863045267951779");
+        List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
+        return  columnTypes;
+    }
+
+
+    /**
+     * 联动标签
+     */
+    @RequestMapping(value = "/getCurrentTag/{values}")
+    @ResponseBody
+    public List<Tag> getCurrentTag(@PathVariable("values") Integer values) {
+        EntityWrapper<Tag> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("column_id ={0} or column_id={1}","0",values) ;
+        List<Tag> tags = tagService.selectList(entityWrapper);
+        return  tags;
     }
 }

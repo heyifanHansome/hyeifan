@@ -99,7 +99,6 @@ InformationInfoDlg.editSubmit = function() {
 
 $(function() {
 
-
     /**
      * 动态获取所有栏目
      */

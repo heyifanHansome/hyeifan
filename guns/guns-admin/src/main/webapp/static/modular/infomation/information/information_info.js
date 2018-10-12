@@ -103,7 +103,7 @@ $(function() {
     /**
      * 动态获取所有栏目
      */
-    var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/information/getColumnTypeInformation", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
@@ -116,7 +116,7 @@ $(function() {
 
 
     /**
-     * 动态获取所有用户
+     * 动态获取所有城市
      */
     var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -132,7 +132,7 @@ $(function() {
     /**
      * 动态获取所有用户
      */
-    var ajax = new $ax(Feng.ctxPath + "/mgr/getAllUser", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/userApi/getAllUserApi", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
@@ -153,5 +153,5 @@ $(function() {
     var editor = new E('#editor');
     editor.create();
     editor.txt.html($("#content").val());
-    ClassroomInfoDlg.editor = editor;
+    InformationInfoDlg.editor = editor;
 });

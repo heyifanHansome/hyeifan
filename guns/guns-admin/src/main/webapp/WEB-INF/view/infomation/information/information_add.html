@@ -3,6 +3,8 @@
     <div class="ibox-content">
         <div class="form-horizontal">
             <input id="id" type="hidden" value="">
+
+            <input id="content" name="" type="hidden" underline="true"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#select id="columnId" name="栏目类型" underline="true">
@@ -92,7 +94,7 @@
         var dataSource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "/classroom/getClassRoom",
+                    url: "/information/",
                     dataType: "json"
                 }
             }

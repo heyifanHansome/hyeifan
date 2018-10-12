@@ -270,7 +270,7 @@ public class WorksController extends BaseController {
         entityWrapper.eq("name","课堂");
         List<ColumnType> ColumnTypes = columnTypeService.selectList(entityWrapper);
         EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
-        columnTypeEntityWrapper.eq("parent_id",    ColumnTypes.get(0).getId());
+        columnTypeEntityWrapper.eq("menu_id",    ColumnTypes.get(0).getId());
         List<ColumnType> parentColumnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
 
 

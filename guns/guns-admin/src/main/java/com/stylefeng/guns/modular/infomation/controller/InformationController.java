@@ -1,7 +1,12 @@
 package com.stylefeng.guns.modular.infomation.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.support.DateTime;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.system.model.ColumnType;
+import com.stylefeng.guns.modular.system.model.Tag;
+import com.stylefeng.guns.modular.system.model.UserApi;
 import com.stylefeng.guns.modular.system.warpper.InformationWarpper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +37,8 @@ public class InformationController extends BaseController {
     @Autowired
     private IInformationService informationService;
 
+    @Autowired
+    private IColumnTypeService columnTypeService;
     /**
      * 跳转到资讯管理首页
      */
@@ -110,4 +117,32 @@ public class InformationController extends BaseController {
     public Object detail(@PathVariable("informationId") Integer informationId) {
         return informationService.selectById(informationId);
     }
+
+    /**
+     * 获取栏目类型
+     */
+    @RequestMapping(value = "/getColumnTypeInformation")
+    @ResponseBody
+    public Object getColumnTypeInformation() {
+        EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("menu_id ={0}","1049863045267951793");
+        List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
+        return  columnTypes;
+    }
+
+    /**
+     * 获取标签数据
+     */
+    @RequestMapping(value = "/getTagValues")
+    @ResponseBody
+    public Object getTagValues() {
+        EntityWrapper<Tag> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("","1049863045267951793");
+
+        return  "";
+    }
+
+
+
+
 }

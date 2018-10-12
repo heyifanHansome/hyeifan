@@ -8,6 +8,7 @@ import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.system.model.UserApi;
 import com.stylefeng.guns.modular.system.warpper.InformationWarpper;
+import com.stylefeng.guns.modular.tag.service.ITagService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +40,10 @@ public class InformationController extends BaseController {
 
     @Autowired
     private IColumnTypeService columnTypeService;
+
+    @Autowired
+    private ITagService tagService;
+
     /**
      * 跳转到资讯管理首页
      */
@@ -61,7 +66,7 @@ public class InformationController extends BaseController {
     @RequestMapping("/information_update/{informationId}")
     public String informationUpdate(@PathVariable Integer informationId, Model model) {
         Information information = informationService.selectById(informationId);
-        model.addAttribute("item",information);
+        model.addAttribute("item", information);
         LogObjectHolder.me().set(information);
         return PREFIX + "information_edit.html";
     }
@@ -73,8 +78,8 @@ public class InformationController extends BaseController {
     @ResponseBody
     public Object list(String condition) {
 
-        List<Map<String,Object>> list = informationService.list(condition);
-        return  super.warpObject(new InformationWarpper(list));
+        List<Map<String, Object>> list = informationService.list(condition);
+        return super.warpObject(new InformationWarpper(list));
     }
 
     /**
@@ -125,24 +130,22 @@ public class InformationController extends BaseController {
     @ResponseBody
     public Object getColumnTypeInformation() {
         EntityWrapper<ColumnType> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("menu_id ={0}","1049863045267951793");
+        entityWrapper.where("menu_id ={0}", "1049863045267951793");
         List<ColumnType> columnTypes = columnTypeService.selectList(entityWrapper);
-        return  columnTypes;
+        return columnTypes;
     }
 
     /**
      * 获取标签数据
      */
-    @RequestMapping(value = "/getTagValues")
+    @RequestMapping(value = "/getTagValues/{values}")
     @ResponseBody
-    public Object getTagValues() {
+    public Object getTagValues(@PathVariable("values") Integer values) {
         EntityWrapper<Tag> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where("","1049863045267951793");
-
-        return  "";
+        entityWrapper.where("column_id={0} ", "0").or("column_id={0}",values);
+        List<Tag> tags = tagService.selectList(entityWrapper);
+        return tags;
     }
-
-
 
 
 }

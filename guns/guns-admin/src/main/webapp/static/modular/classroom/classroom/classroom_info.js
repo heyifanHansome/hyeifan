@@ -129,7 +129,7 @@ var classRoomArray;
     /**
      * 动态获取所有栏目
      */
-    var ajax = new $ax(Feng.ctxPath + "/works/getAllColumnType", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/classroom/getAllColumunType", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#columnId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
@@ -142,7 +142,7 @@ var classRoomArray;
 
 
     /**
-     * 动态获取所有用户
+     * 动态获取所有城市
      */
     var ajax = new $ax(Feng.ctxPath + "/city/getAllCity", function (data) {
         for (var i = 0; i < data.length; i++) {

@@ -21,7 +21,6 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +75,24 @@ public class ClassroomController extends BaseController {
     public String classroomUpdate(@PathVariable Integer classroomId, Model model) {
         Classroom classroom = classroomService.selectById(classroomId);
 
+        ColumnType columnType = columnTypeService.selectById(classroom.getColumnId());
+        model.addAttribute("columnName",columnType.getName());
+
+        /**
+         *回显标签定义
+         */
+        EntityWrapper<TagRelation> tagRelationEntityWrapper = new EntityWrapper<>();
+        tagRelationEntityWrapper.eq("relation_id", classroom.getId()).and("common_type_id ={0}",classroom.getColumnId());
+        List<TagRelation> tagRelations = tagRelationService.selectList(tagRelationEntityWrapper);
+        List<Integer> multArr = new ArrayList<>();
+        for (int i = 0; i < tagRelations.size(); i++) {
+            Integer temp = tagRelations.get(i).getColumnId();
+            multArr.add(temp);
+        }
+        model.addAttribute("multArr", multArr);
+
+
+
         /**
          * 获取前台需要展示的样式 1为视频集合,2为图片集
          */
@@ -120,7 +137,6 @@ public class ClassroomController extends BaseController {
     @ResponseBody
     public Object list(String condition) {
         List<Map<String, Object>> list = classroomService.list(condition);
-
         return super.warpObject(new ClassroomWarpper(list));
     }
 
@@ -144,7 +160,7 @@ public class ClassroomController extends BaseController {
             for (int i = 0; i < heyifan.length; i++) {
                 tagRelation.setRelationId(classroom.getId());
                 tagRelation.setCreateTime(new DateTime());
-                tagRelation.setCommonTypeId(27);
+                tagRelation.setCommonTypeId(classroom.getColumnId());
                 tagRelation.setColumnId(Integer.parseInt(heyifan[i]));
                 tagRelationService.insert(tagRelation);
             }
@@ -169,6 +185,31 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Classroom classroom) {
+
+
+        TagRelation tagRelation = new TagRelation();
+        EntityWrapper<TagRelation> relationEntityWrapper = new EntityWrapper<>();
+        relationEntityWrapper.eq("relation_id", classroom.getId()).and("common_type_id ={0}",classroom.getColumnId());
+        List<TagRelation> tagRelations = tagRelationService.selectList(relationEntityWrapper);
+        for (int i = 0; i < tagRelations.size(); i++) {
+            tagRelationService.deleteById(tagRelations.get(i).getId());
+        }
+            if (classroom.getTagId() != "") {
+                TagRelation addtagRelation = new TagRelation();
+                addtagRelation.setCreateTime(new DateTime());
+                addtagRelation.setRelationId(classroom.getId());
+                String tagArrId = classroom.getTagId();
+                String[] heyifan = tagArrId.split(",");
+
+                for (int i = 0; i < heyifan.length; i++) {
+                    addtagRelation.setRelationId(classroom.getId());
+                    addtagRelation.setCreateTime(new DateTime());
+                    addtagRelation.setCommonTypeId(classroom.getColumnId());
+                    addtagRelation.setColumnId(Integer.parseInt(heyifan[i]));
+                    tagRelationService.insert(addtagRelation);
+                }
+
+            }
         classroom.setUpdateTime(new DateTime());
         classroomService.updateById(classroom);
         return SUCCESS_TIP;
@@ -220,4 +261,6 @@ public class ClassroomController extends BaseController {
         List<Tag> tags = tagService.selectList(entityWrapper);
         return  tags;
     }
+
+
 }

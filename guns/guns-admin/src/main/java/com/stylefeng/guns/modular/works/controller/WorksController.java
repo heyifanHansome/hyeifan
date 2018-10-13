@@ -85,7 +85,7 @@ public class WorksController extends BaseController {
     public String worksUpdate(@PathVariable Integer worksId, Model model) {
         Works works = worksService.selectById(worksId);
         /**
-         *
+         *回显标签定义
          */
         model.addAttribute("item", works);
         EntityWrapper<TagRelation> tagRelationEntityWrapper = new EntityWrapper<>();
@@ -98,9 +98,8 @@ public class WorksController extends BaseController {
         }
         model.addAttribute("multArr", multArr);
 
-
         /**
-         *
+         *回显图片数组定义
          */
         EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("base_id", works.getVideo());

@@ -48,7 +48,7 @@ Works.heyifan = function () {
         var index = layer.open({
             type: 2,
             title: '作品管理详情',
-            area: ['800px', '420px'], //宽高
+            area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/works/works_update/' + Works.seItem.id
@@ -64,7 +64,7 @@ Works.openAddWorks = function () {
     var index = layer.open({
         type: 2,
         title: '添加作品管理',
-        area: ['800px', '420px'], //宽高
+        area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/works/works_add'
@@ -80,7 +80,7 @@ Works.openWorksDetail = function () {
         var index = layer.open({
             type: 2,
             title: '作品管理详情',
-            area: ['800px', '420px'], //宽高
+            area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/works/works_update/' + Works.seItem.id

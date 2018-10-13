@@ -11,12 +11,10 @@ import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
-import com.stylefeng.guns.modular.system.model.ColumnType;
-import com.stylefeng.guns.modular.system.model.Picture;
-import com.stylefeng.guns.modular.system.model.TagRelation;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
+import com.stylefeng.guns.modular.tag.service.ITagService;
 import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
-import com.stylefeng.guns.modular.system.model.Works;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +54,10 @@ public class WorksController extends BaseController {
 
     @Autowired
     private ITagRelationService tagRelationService;
+
+    @Autowired
+    private ITagService tagService;
+
 
     private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
     private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
@@ -304,10 +305,6 @@ public class WorksController extends BaseController {
 @RequestMapping(value = "/deleteVideoByObjectName")
 @ResponseBody
 public  Object deleteVideoByObjectName (String objectName){
-    /*先删除oss的objectname*/
-//    ossClient = new OSSClient(endpoint,accessKeyId,accessKeySecret);
-//    ossClient.deleteObject("data/",objectName);
-//    ossClient.shutdown();
     OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
     int index   = objectName.indexOf("/data");
     String newString =  objectName.substring(index+1);
@@ -325,12 +322,12 @@ public  Object deleteVideoByObjectName (String objectName){
     return "返回成功!";
 }
 
-    /**
-     *
-     * @param objectName
-     * @return
-     */
 
+    /**
+     *  审核视频
+     * @param objectName 文件名称
+     * @return 审核结果
+     */
     @RequestMapping(value = "/checkVideo")
     @ResponseBody
     public boolean checkVideo(String objectName){
@@ -347,5 +344,22 @@ public  Object deleteVideoByObjectName (String objectName){
         }
      return true;
     }
+
+
+
+    /**
+     * 联动标签
+     */
+    @RequestMapping(value = "/getCurrentTag")
+    @ResponseBody
+    public List<Tag> getCurrentTag() {
+        EntityWrapper<Tag> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where("column_id ={0} or column_id={1}",0,17 );
+        List<Tag> tags = tagService.selectList(entityWrapper);
+        return  tags;
+    }
+
+
+
 
 }

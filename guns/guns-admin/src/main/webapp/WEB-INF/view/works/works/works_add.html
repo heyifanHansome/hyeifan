@@ -37,9 +37,6 @@
                             <#select id="userId" name="用户" underline="true">
                             </#select>
                             <#input id="name" name="作品名称 " value="" underline="true"/>
-                            <!--<#select id="columnId" name="栏目类型" readonly="readonly"  underline="true">-->
-                            <!--</#select>-->
-                            <!--<#input id="x" name="栏目类型 " value="作品" readonly="readonly" underline="true"/>-->
                     <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
                         <div class='col-sm-12'>  <input  class='form-control main_ingredient'  placeholder="请添加主料 如肉"  type='text' underline='true'/></div> <div class='col-sm-12'> </div>
@@ -53,14 +50,6 @@
                         <div class='col-sm-12'> <input  class='form-control seasoning'  placeholder="请添加配料 如肉"   type='text' underline='true'/></div> <div class='col-sm-12' underline="true"> </div>
                     </div>
 
-                    <!--<#select id="tagId" name="栏目类型" type="radio" readonly="readonly"  underline="true">-->
-                    <!--</#select>-->
-
-
-
-        <!--<#dictSelector id="sex" name ="sex" code="sys_sex"  readonly="readonly" label="性别" type="checkbox" underline="true"  />-->
-
-
                      </div>
 
 
@@ -72,7 +61,7 @@
                                 <option value="1">通过</option>
                                 <option value="2">拒绝</option>
                             </#select>
-                            <#input id="updateTime" name="更新时间" readonly="readonly" underline="true"/>
+                            <!--<#input id="updateTime" name="更新时间" readonly="readonly" underline="true"/>-->
                     <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
                     <div id='onerightbuttons'>
                         <div class='col-sm-12'> <input  class='form-control main_ingredient'    placeholder="请添加主料单位 如一斤" type='text' underline='true'/></div> <div class='col-sm-12'> </div>
@@ -130,15 +119,11 @@
 <script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"> </script>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
-
-
-
     $(document).ready(function() {
-
         var dataSource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "/tag/getAllTag",
+                    url: "/works/getCurrentTag",
                     dataType: "json"
                 }
             }
@@ -183,7 +168,6 @@
         if(v=='3'){
             deleteInputs('threerightbuttons','threeleftbuttons','seasoning')
         }
-        // deleteInputs('rightbuttons','leftbuttons','main_ingredient')
     }
     function  deleteInputs(rightInputId,leftInputId,inputClass) {
         var rightinputs =$("#"+rightInputId+" ."+inputClass);

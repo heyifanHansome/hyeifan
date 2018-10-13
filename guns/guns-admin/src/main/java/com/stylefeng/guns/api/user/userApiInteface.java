@@ -1,4 +1,4 @@
-package com.stylefeng.guns.api;
+package com.stylefeng.guns.api.user;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -10,7 +10,6 @@ import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,9 +82,9 @@ private IUserInfoService userInfoService;
                 userInfo.setLoginIp("192.168.0.0.1");
                 userInfo.setCreateTime(new DateTime());
                 userInfo.setRealName(userApi.getName());
-                userInfo.setJoinClub(2);
-                userInfo.setAppointment(2);
-                userInfo.setEnlightening(2);
+                userInfo.setJoinClub(0);
+                userInfo.setAppointment(0);
+                userInfo.setEnlightening(0);
                 userInfoService.insert(userInfo);
             return   ResultMsg.success("登录成功!","code : 404",HttpStatus.BAD_REQUEST);
             }
@@ -98,6 +97,15 @@ private IUserInfoService userInfoService;
         }
         return   ResultMsg.success("登录成功!","code : 404",HttpStatus.BAD_REQUEST);
     }
+
+
+
+
+
+
+
+
+
 
 
 }

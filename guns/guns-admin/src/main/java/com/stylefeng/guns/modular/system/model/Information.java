@@ -93,6 +93,8 @@ public class Information extends Model<Information> {
     @TableField("update_time")
     private Date updateTime;
 
+    @TableField("tag_id")
+    private String tagId;
 
     @Override
     protected Serializable pkVal() {

@@ -19,8 +19,24 @@ InformationInfoDlg.clearData = function() {
  * @param val 数据的具体值
  */
 InformationInfoDlg.set = function(key, val) {
-    this.informationInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
-    return this;
+    if(key == 'tagId'){
+        var heyifanArr = $('#tagId').val();
+        var newDemo ="" ;
+        if(heyifanArr!=null&&heyifanArr.length>0){
+            for (var z=0;z< heyifanArr.length;z++) {
+                newDemo += heyifanArr[z] +",";
+            }
+            this.informationInfoData[key] = newDemo;
+            return this;
+        }else {
+            this.informationInfoData[key] = '';
+            return this;
+        }
+    }else{
+        this.informationInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
+        return this;
+    }
+
 };
 
 /**
@@ -44,6 +60,7 @@ InformationInfoDlg.close = function() {
  * 收集数据
  */
 InformationInfoDlg.collectData = function() {
+    this.informationInfoData['content'] = InformationInfoDlg.editor.txt.html();
     this
     .set('id')
     .set('columnId')
@@ -54,7 +71,7 @@ InformationInfoDlg.collectData = function() {
     .set('cityId')
     .set('sourceId')
     .set('uid')
-    .set('content')
+    .set('tagId')
 };
 
 /**

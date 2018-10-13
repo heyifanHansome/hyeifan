@@ -186,14 +186,17 @@ public class ClassroomController extends BaseController {
     @ResponseBody
     public Object update(Classroom classroom) {
 
-
+        //先全部删除标签所有所有管理的表 ,然后在根据前台传入的tagid的数组重新生成标签关联表的数据
         TagRelation tagRelation = new TagRelation();
         EntityWrapper<TagRelation> relationEntityWrapper = new EntityWrapper<>();
         relationEntityWrapper.eq("relation_id", classroom.getId()).and("common_type_id ={0}",classroom.getColumnId());
+        //先删除之前数据库里面有的标签关联表的数据
         List<TagRelation> tagRelations = tagRelationService.selectList(relationEntityWrapper);
         for (int i = 0; i < tagRelations.size(); i++) {
             tagRelationService.deleteById(tagRelations.get(i).getId());
         }
+
+        //在生成标签管理表
             if (classroom.getTagId() != "") {
                 TagRelation addtagRelation = new TagRelation();
                 addtagRelation.setCreateTime(new DateTime());

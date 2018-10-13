@@ -5,10 +5,11 @@
             <input id="id" type="hidden" value="">
 
             <input id="content" name="" type="hidden" underline="true"/>
+
+            <input id="images" name="" type="hidden" underline="true"/>
+
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <!--<#select id="columnId" name="栏目类型" underline="true" onchange="changeDataSource($(this).val())">-->
-                            <!--</#select>-->
                     <div class="form-group">
                         <label class="col-sm-3 control-label">栏目类型<span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
                         <div class="col-sm-9">
@@ -21,36 +22,33 @@
                     <div class="hr-line-dashed"></div>
                             <#input id="title" name="标题" underline="true"/>
                             <#avatar id="thumb" name="缩略图" avatarImg="" underline="true"/>
-                            <#input id="description" name="描述" underline="true"/>
                 </div>
 
                 <div class="col-sm-6">
                             <#select name="城市" id="cityId" underline="true">
                             </#select>
-                            <#select id="sourceId" name="来源" underline="true">
-                            <option value="0">官方</option>
-                            <option value="1">个人</option>
-                            </#select>
                             <#select name="发布者" id="uid" underline="true" >
                             </#select>
+
+                            <#input id="description" name="描述" underline="true"/>
     <div id="example" role="application" style="margin-bottom: 3%">
         <div class="demo-section k-content">
             <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签" >
             </select>
         </div>
-    </div>
-        <style>
-            .demo-section label {
-                display: block;
-                margin: 15px 0 5px 0;
-            }
-            #get {
-                float: right;
-                margin: 25px auto 0;
-            }
-        </style>
+            </div>
+                <style>
+                    .demo-section label {
+                        display: block;
+                        margin: 15px 0 5px 0;
+                    }
+                    #get {
+                        float: right;
+                        margin: 25px auto 0;
+                    }
+                </style>
 
-</div>
+            </div>
             </div>
                     <div >
                         <fieldset style="margin-top: 3%">
@@ -102,11 +100,11 @@
         });
         ajax.start();
         $('#example').replaceWith('<div id="example" role="application" style="margin-bottom: 3%">' +
-            '            <div class="demo-section k-content">' +
-            '            <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签" >' +
-            '            </select>' +
-            '            </div>' +
-            '            </div>');
+            '<div class="demo-section k-content">' +
+            '<select id="tagId" multiple="multiple" data-placeholder="请选择活动标签" >' +
+            '</select>' +
+            '</div>' +
+            '</div>');
 
         $("#tagId").kendoMultiSelect({
             placeholder: "请选择活动标签",
@@ -199,7 +197,6 @@
         var imagesId = randomPassword();
         var videoId = randomPassword();
         $('#images').val(imagesId);
-        $('#video').val(videoId);
         oFileInput.Init("imageFile", "/img/imgUploadMul", imagesId);
     };
     createFileInput();

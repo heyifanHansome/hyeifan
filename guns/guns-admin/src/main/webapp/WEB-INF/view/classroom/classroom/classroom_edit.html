@@ -13,19 +13,10 @@
             <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <!--<div class="form-group">-->
-                                <!--<label class="col-sm-3 control-label">栏目类型<span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>-->
-                                <!--<div class="col-sm-9">-->
-                                    <!--<select onchange="gradeChange($(this).val())" class="form-control" id="columnId"-->
-                                            <!--name="columnId"  underline="true">-->
-                                    <!--</select >-->
-                                <!--</div>-->
-                            <!--</div>-->
                             <#input id="title" name="栏目类型" value="${columnName}" readonly="readonly" underline="true"/>
                             <div class="hr-line-dashed"></div>
                             <#input id="title" name="标题" value="${item.title}" underline="true"/>
                             <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
-                            <!--<#input id="url" name="视频链接地址" value="${item.url}" underline="true"/>-->
 
                 </div>
 
@@ -49,16 +40,16 @@
 
         </div>
 
-        <style>
-            .demo-section label {
-                display: block;
-                margin: 15px 0 5px 0;
-            }
-            #get {
-                float: right;
-                margin: 25px auto 0;
-            }
-        </style>
+                <style>
+                    .demo-section label {
+                        display: block;
+                        margin: 15px 0 5px 0;
+                    }
+                    #get {
+                        float: right;
+                        margin: 25px auto 0;
+                    }
+                </style>
 
     </div>
 

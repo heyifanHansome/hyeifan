@@ -93,7 +93,8 @@ public class ImgQrTool {
         try {
             String format = "jpg";// 图像类型
             Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+//            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
             BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height, hints);// 生成矩阵
             File dest = new File(destImagePath);
             output = new FileOutputStream(dest);

@@ -43,7 +43,7 @@ UserApi.userInfoDetail = function () {
             area: ['800px','560px'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/userApi/user_info/' + this.seItem.id
+            content: Feng.ctxPath + '/userLoginApi/user_info/' + this.seItem.id
         });
         this.layerIndex = index;
     }
@@ -74,7 +74,7 @@ UserApi.openAddUserApi = function () {
         area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
-        content: Feng.ctxPath + '/userApi/userApi_add'
+        content: Feng.ctxPath + '/userLoginApi/userApi_add'
     });
     this.layerIndex = index;
 };
@@ -90,7 +90,7 @@ UserApi.openUserApiDetail = function () {
             area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/userApi/userApi_update/' + UserApi.seItem.id
+            content: Feng.ctxPath + '/userLoginApi/userApi_update/' + UserApi.seItem.id
         });
         this.layerIndex = index;
     }
@@ -101,7 +101,7 @@ UserApi.openUserApiDetail = function () {
  */
 UserApi.delete = function () {
     if (this.check()) {
-        var ajax = new $ax(Feng.ctxPath + "/userApi/delete", function (data) {
+        var ajax = new $ax(Feng.ctxPath + "/userLoginApi/delete", function (data) {
             Feng.success("删除成功!");
             UserApi.table.refresh();
         }, function (data) {
@@ -123,7 +123,7 @@ UserApi.search = function () {
 
 $(function () {
     var defaultColunms = UserApi.initColumn();
-    var table = new BSTable(UserApi.id, "/userApi/list", defaultColunms);
+    var table = new BSTable(UserApi.id, "/userLoginApi/list", defaultColunms);
     table.setPaginationType("client");
     UserApi.table = table.init();
 });

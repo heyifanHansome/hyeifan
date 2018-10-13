@@ -16,6 +16,7 @@
         <result column="phone" property="phone" />
         <result column="createtime" property="createtime" />
         <result column="updatetime" property="updatetime" />
+        <result column="verification_code" property="verificationCode" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

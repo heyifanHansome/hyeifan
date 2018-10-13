@@ -36,7 +36,7 @@ import java.util.Map;
 @RequestMapping("/userApi")
 public class UserApiController extends BaseController {
 
-    private String PREFIX = "/system/userApi/";
+    private String PREFIX = "/system/userLoginApi/";
 
     @Autowired
     private IUserApiService userApiService;
@@ -49,7 +49,7 @@ public class UserApiController extends BaseController {
      */
     @RequestMapping("")
     public String index() {
-        return PREFIX + "userApi.html";
+        return PREFIX + "userLoginApi.html";
     }
 
     /**

@@ -148,7 +148,7 @@ $(function() {
     /**
      * 动态获取所有用户
      */
-    var ajax = new $ax(Feng.ctxPath + "/userApi/getAllUserApi", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/userLoginApi/getAllUserApi", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');

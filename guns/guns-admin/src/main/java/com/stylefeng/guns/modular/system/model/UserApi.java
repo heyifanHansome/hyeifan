@@ -1,7 +1,9 @@
 package com.stylefeng.guns.modular.system.model;
 
 import java.util.Date;
+
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
@@ -74,6 +76,8 @@ public class UserApi extends Model<UserApi> {
      */
     private Date updatetime;
 
+    @TableField("verification_code")
+    private String verificationCode;
 
     @Override
     protected Serializable pkVal() {

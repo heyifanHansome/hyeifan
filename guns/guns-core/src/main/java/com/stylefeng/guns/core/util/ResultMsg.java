@@ -4,6 +4,8 @@ package com.stylefeng.guns.core.util;
 /**
  * Created by Enzo Cotter on 2018/7/16.
  */
+
+
 public class ResultMsg {
 
     private String success;

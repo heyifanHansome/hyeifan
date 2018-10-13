@@ -85,20 +85,26 @@
 <script src="${ctxPath}/static/modular/infomation/information/information_info.js"></script>
 <script>
 
+
+
+
     var values =${item.columnId};
-    $("#columnId").val(${item.columnId});
 
-    $("#cityId").val(${item.cityId});
-
-    $("#uid").val(${item.uid});
-
-    $("#sourceId").val(${item.sourceId});
     multArrays =${multArr} ;
 
 
 
     /*初始化kendoui标签下拉框*/
     $(document).ready(function() {
+
+
+        $("#columnId").val(${item.columnId});
+
+        $("#cityId").val(${item.cityId});
+
+        $("#uid").val(${item.uid});
+
+        $("#sourceId").val(${item.sourceId});
         var dataSource = new kendo.data.DataSource({
             transport: {
                 read: {

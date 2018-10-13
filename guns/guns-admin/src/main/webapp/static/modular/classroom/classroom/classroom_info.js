@@ -79,6 +79,7 @@ ClassroomInfoDlg.collectData = function() {
     .set('video')
     .set('images')
     .set('tagId')
+    .set('coverphoto')
 };
 
 /**
@@ -173,6 +174,13 @@ var classRoomArray;
     var avatarUp = new $WebUpload("thumb","/tool/uploadFile");
     avatarUp.setUploadBarId("progressBar");
     avatarUp.init("/tool/uploadFile");
+
+
+    // 初始化缩略图上传
+    var avatarUp = new $WebUpload("coverphoto","/tool/uploadFile");
+    avatarUp.setUploadBarId("progressBar");
+    avatarUp.init("/tool/uploadFile");
+
 
     //初始化编辑器
     var E = window.wangEditor;

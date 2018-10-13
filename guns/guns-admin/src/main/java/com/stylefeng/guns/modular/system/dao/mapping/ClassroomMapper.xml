@@ -21,6 +21,8 @@
         <result column="images" property="images" />
         <result column="video" property="video" />
         <result column="tag_id" property="tagId" />
+        <result column="coverphoto" property="coverphoto" />
+
     </resultMap>
 
     <!-- 通用查询结果列 -->

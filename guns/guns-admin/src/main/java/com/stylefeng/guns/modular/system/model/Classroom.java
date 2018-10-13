@@ -104,6 +104,10 @@ public class Classroom extends Model<Classroom> {
 
     @TableField("tag_id")
     private String tagId;
+    /**
+     * 封面图片
+     */
+    private String coverphoto;
 
     @Override
     protected Serializable pkVal() {

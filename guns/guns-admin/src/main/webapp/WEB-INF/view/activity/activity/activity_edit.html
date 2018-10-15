@@ -10,7 +10,38 @@
                 <div class="row">
                     <#select id="columnId" name="栏目类型" value="${item.columnId}"  underline="true"/>
                     <#input id="title" name="活动名" value="${item.title}" underline="true"/>
-                    <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
+                    <#input id="apply_num" name="报名人数" value="${item.applyNum}" underline="true"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            图片(最多9张)
+                            <input type="button" value="+" onclick="$(this).next().click();" />
+                            <input type="file" style="display: none;" onchange="addImg($(this),'image');" />
+                        </label>
+                        <div class="putimg"	>
+                        </div>
+                    </div>
+                    <textarea id="images"  name="" style="display: none;">${item.thumb}</textarea>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            视频(最多1个)
+                            <input type="button" value="+" onclick="$(this).next().click();" />
+                            <input type="file" style="display: none;" onchange="addImg($(this),'video');" />
+                        </label>
+                        <div class="putimg"	>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            审核状态
+                        </label>
+                        <div>
+                            <select id="is_ok" onchange="sendUserApiMsg($(this),$(this).val());" style="float: left;">
+                                <option value="0">待审核</option>
+                                <option value="1">通过</option>
+                                <option value="2">拒绝</option>
+                            </select>
+                        </div>
+                    </div>
                     <#input id="description" name="描述" value="${item.description}" underline="true"/>
                     <#input id="startTime" name="开始时间" value="${item.startTime}" underline="true"/>
                     <#input id="endTime" name="结束时间" value="${item.endTime}"  underline="true"/>
@@ -28,11 +59,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-1 control-label">内容</label>
-                        <div class="col-sm-11">
-                            <div id="editor" class="editorHeight">
-                            </div>
+                        <label class="col-sm-3 control-label">
+                            版块/内容
+                            <input type="button" value="+" onclick="addContent($('#contentArray').children().length,$('#contentArray'));" />
+                        </label>
+                        <div class="col-sm-9">
+
                         </div>
+                    </div>
+                    <div id="contentArray">
+
                     </div>
                 </div>
             </div>
@@ -55,4 +91,7 @@
 <#input id="id" value="${item.id}" name="" underline="true" type="hidden"/>
 <#input id="old_object_name" name="" underline="true" type="hidden"/>
 <#input id="content" value="${item.content}" name="" type="hidden"/>
+<#input id="video_" value="${item.video}" name="" type="hidden"/>
+<#input id="video_object_name_" value="${item.video_object_name}" name="" type="hidden"/>
+<#input id="is_ok_" value="${item.is_ok}" name="" type="hidden"/>
 @}

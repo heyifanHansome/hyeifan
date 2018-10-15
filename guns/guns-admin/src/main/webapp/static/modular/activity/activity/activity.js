@@ -22,7 +22,8 @@ Activity.initColumn = function () {
             {title: '开始时间', field: 'start_time', visible: true, align: 'center', valign: 'middle'},
             {title: '结束时间', field: 'end_time', visible: true, align: 'center', valign: 'middle'},
             {title: '城市名称', field: 'city_id', visible: true, align: 'center', valign: 'middle'},
-            {title: '来源', field: 'source_id', visible: true, align: 'center', valign: 'middle'},
+        {title: '来源', field: 'source_id', visible: true, align: 'center', valign: 'middle'},
+        {title: '审核状态', field: 'is_ok', visible: true, align: 'center', valign: 'middle'},
             // {title: '发布者', field: 'userName', visible: true, align: 'center', valign: 'middle'},
             // {title: '发布IP', field: 'publishIp', visible: false, align: 'center', valign: 'middle'},
             // {title: '内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
@@ -105,7 +106,6 @@ Activity.search = function () {
 $(function () {
     var defaultColunms = Activity.initColumn();
     var table = new BSTable(Activity.id, "/activity/list", defaultColunms);
-    console.log(table)
     table.setPaginationType("client");
     Activity.table = table.init();
 });

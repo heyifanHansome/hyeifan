@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.restaurantManager.controller;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.ResultMsg;
@@ -23,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.RestaurantInfoManager;
 import com.stylefeng.guns.modular.restaurantManager.service.IRestaurantInfoManagerService;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 餐厅信息管理控制器
@@ -115,7 +113,6 @@ public class RestaurantInfoManagerController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(RestaurantInfoManager restaurantInfoManager,String old_object_name) {
-        System.err.println(restaurantInfoManager);
         if(!Tool.isNull(old_object_name)){
             OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
             ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
@@ -135,9 +132,12 @@ public class RestaurantInfoManagerController extends BaseController {
         RestaurantInfoManager restaurantInfoManager = restaurantInfoManagerService.selectOne(new EntityWrapper<>(new RestaurantInfoManager()).eq("id", restaurantInfoManagerId));
         List<Map<String, Object>> imgs = JSONArray.fromObject(restaurantInfoManager.getImages());
         OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        List<String>img_objects=new ArrayList<>();
         for (Iterator it = imgs.iterator(); it.hasNext(); ) {
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, ((Map<String, Object>) it.next()).get("object_name").toString());
+            img_objects.add(((Map<String, Object>) it.next()).get("object_name").toString());
         }
+        if(!Tool.isNull(restaurantInfoManager.getObject_name()))ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET,restaurantInfoManager.getObject_name());
+        if(!Tool.listIsNull(img_objects))ossClient.deleteObjects(new DeleteObjectsRequest(FinalStaticString.ALI_OSS_BUCKET).withKeys(img_objects));
         ossClient.shutdown();
         restaurantInfoManagerService.deleteById(restaurantInfoManagerId);
         return SUCCESS_TIP;

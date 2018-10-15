@@ -19,11 +19,17 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="object_name" property="object_name" />
+        <result column="apply_num" property="apply_num" />
+        <result column="is_ok" property="is_ok" />
+        <result column="video" property="video" />
+        <result column="video_object_name" property="video_object_name" />
+        <result column="model" property="model" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, column_id, title, thumb, description, start_time, end_time, city_id, source_id, uid, publish_ip, content, create_time, update_time, object_nam
+        id, column_id, title, thumb, description, start_time, end_time, city_id, source_id, uid, publish_ip, content, create_time, update_time, object_name, apply_num
+        ,is_ok ,video ,video_object_name ,model
     </sql>
 
 

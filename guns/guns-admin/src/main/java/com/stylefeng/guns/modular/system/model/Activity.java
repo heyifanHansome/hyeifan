@@ -94,7 +94,18 @@ public class Activity extends Model<Activity> {
     @TableField("update_time")
     private Date updateTime;
 
+
+    /**
+     * 报名人数
+     */
+    @TableField("apply_num")
+    private String applyNum;
+
     private String object_name;
+    private String is_ok;
+    private String video;
+    private String video_object_name;
+    private String model;
     @Override
     protected Serializable pkVal() {
         return this.id;

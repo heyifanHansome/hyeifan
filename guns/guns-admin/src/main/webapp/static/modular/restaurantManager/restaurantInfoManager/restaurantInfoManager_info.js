@@ -52,8 +52,6 @@ RestaurantInfoManagerInfoDlg.collectData = function() {
         img.object_name=imgHTMLObject.find('#object_name').val();
         images.push(img);
     });
-    console.log(images)
-    console.log(JSON.stringify(images))
     this.restaurantInfoManagerInfoData['images'] = JSON.stringify(images);
     this
     .set('id')
@@ -155,6 +153,8 @@ function addImg(obj) {
     formData.append("file",uploadFile);
     console.log(uploadFile);
     if("undefined" != typeof(uploadFile) && uploadFile != null && uploadFile != ""){
+        var imgTypes=uploadFile.type.split("/");
+        if(imgTypes[0]!='image'){alert("请勿上传图片之外的文件");return false;}
         $.ajax({
             url:'/tool/uploadFile',
             type:'POST',

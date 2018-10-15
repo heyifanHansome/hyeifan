@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.lijun.util;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
+import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -132,7 +133,7 @@ public class OSSClientUtil {
             //上传文件
             //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
             PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
-
+//            PutObjectResult putResult = ossClient.putObject(new PutObjectRequest(bucketName, filedir + fileName, instream).<PutObjectRequest>withProgressListener(new PutObjectProgressListener()));
             ret = putResult.getETag();
             /*李俊添加,开始*/
             result.put("ret",ret);

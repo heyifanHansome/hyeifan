@@ -39,7 +39,7 @@
         <if test="condition != null and condition != ''">
             where a.title like CONCAT('%',#{condition},'%')
         </if>
-        order by create_time ASC
+        order by create_time ASC,is_ok DESC
     </select>
 
 

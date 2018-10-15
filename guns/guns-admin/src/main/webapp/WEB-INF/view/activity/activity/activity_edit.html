@@ -10,7 +10,7 @@
                 <div class="row">
                     <#select id="columnId" name="栏目类型" value="${item.columnId}"  underline="true"/>
                     <#input id="title" name="活动名" value="${item.title}" underline="true"/>
-                    <#input id="apply_num" name="报名人数" value="${item.applyNum}" underline="true"/>
+                    <#input id="applyNum" name="报名人数" value="${item.applyNum}" underline="true"/>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">
                             图片(最多9张)
@@ -84,14 +84,14 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/activity/activity/activity_info.js"></script>
-<#input id="sourceId" name="" value="0" underline="true" type="hidden"/>
-<#input id="columnId_" name="" value="${item.columnId}" underline="true" type="hidden"/>
-<#input id="cityId_" name="" value="${item.cityId}" underline="true" type="hidden"/>
-<#input id="object_name" value="${item.object_name}" name="" underline="true" type="hidden"/>
-<#input id="id" value="${item.id}" name="" underline="true" type="hidden"/>
-<#input id="old_object_name" name="" underline="true" type="hidden"/>
-<#input id="content" value="${item.content}" name="" type="hidden"/>
-<#input id="video_" value="${item.video}" name="" type="hidden"/>
-<#input id="video_object_name_" value="${item.video_object_name}" name="" type="hidden"/>
-<#input id="is_ok_" value="${item.is_ok}" name="" type="hidden"/>
+<input id="sourceId" name="" value="0" underline="true" type="hidden"/>
+<input id="columnId_" name="" value="${item.columnId}" underline="true" type="hidden"/>
+<input id="cityId_" name="" value="${item.cityId}" underline="true" type="hidden"/>
+<input id="object_name" value="${item.object_name}" name="" underline="true" type="hidden"/>
+<input id="id" value="${item.id}" name="" underline="true" type="hidden"/>
+<input id="old_object_name" name="" underline="true" type="hidden"/>
+<textarea id="content" style="display: none;">${item.content}</textarea>
+<input id="video_" value="${item.video}" name="" type="hidden"/>
+<input id="video_object_name_" value="${item.video_object_name}" name="" type="hidden"/>
+<input id="is_ok_" value="${item.is_ok}" name="" type="hidden"/>
 @}

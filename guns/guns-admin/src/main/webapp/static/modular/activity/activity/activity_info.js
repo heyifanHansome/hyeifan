@@ -46,29 +46,32 @@ ActivityInfoDlg.close = function() {
  */
 ActivityInfoDlg.collectData = function() {
     var images=[];
-    $('.putimg').children().each(function () {
+    $('.putimg').eq(0).children().each(function () {
         var imgHTMLObject=$(this);
         var img={};
         img.url=imgHTMLObject.find('img').attr('src');
         img.object_name=imgHTMLObject.find('#object_name').val();
         images.push(img);
     });
-    if($('#msg').val()!=undefined)this.restaurantInfoManagerInfoData['msg'] = $('#msg').val();
-    this.restaurantInfoManagerInfoData['video'] = $('#video').attr('href');
-    this.restaurantInfoManagerInfoData['thumb'] = JSON.stringify(images);
+    console.log(images)
+    if($('#msg').val()!=undefined)this.activityInfoData['msg'] = $('#msg').val();//给用户发审核不通过的内容
+    this.activityInfoData['video'] = $('#video')!=undefined?$('#video').attr('href'):'';
+    this.activityInfoData['thumb'] = JSON.stringify(images).toString();
+    console.log(this.activityInfoData.thumb);
     // this.activityInfoData['content'] = ActivityInfoDlg.editor.txt.html();
     var contents=[];
     $(contentArray).each(function () {
-        var content={};
-        content.title=$(this.title).find('#title').val();
-        content.content=this.content.txt.html();
+            var content={};
+            content.title=$(this.title).find('#title').val();
+            content.content=this.editor.txt.html();
+            contents.push(content);
     });
+    this.activityInfoData['content'] = JSON.stringify(contents);
     this
     .set('id')
     .set('columnId')
     .set('title')
-    .set('thumb')
-        .set('object_name')
+        // .set('object_name')
         .set('old_object_name')
     .set('description')
     .set('startTime')
@@ -77,13 +80,7 @@ ActivityInfoDlg.collectData = function() {
         .set('sourceId')
         .set('video_object_name')
         .set('is_ok')
-        .set('apply_num')
-    // model
-
-    // .set('uid')
-    // .set('publishIp')
-    // .set('createTime')
-    // .set('updateTime');
+        .set('applyNum')
 }
 
 /**
@@ -93,7 +90,10 @@ ActivityInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    if(isNaN(this.activityInfoData.applyNum)){
+        alert("报名人数只能是数字");
+        return false;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/activity/add", function(data){
         Feng.success("添加成功!");
@@ -110,10 +110,12 @@ ActivityInfoDlg.addSubmit = function() {
  * 提交修改
  */
 ActivityInfoDlg.editSubmit = function() {
-
     this.clearData();
     this.collectData();
-
+    if(isNaN(this.activityInfoData.applyNum)){
+        alert("报名人数只能是数字");
+        return false;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/activity/update", function(data){
         Feng.success("修改成功!");
@@ -159,6 +161,11 @@ $(function() {
     // editor.create();
     // editor.txt.html($("#content").val());
     // ActivityInfoDlg.editor = editor;
+    if($.trim($("#content").val()).length>0){
+        $(JSON.parse($("#content").val())).each(function (i) {
+            addContent(i,$('#contentArray'),this.title,this.content);
+        });
+    }
     // // 初始化缩略图上传
     // var avatarUp = new $WebUpload("thumb","/tool/uploadFile");
     // avatarUp.setUploadBarId("progressBar");
@@ -179,18 +186,19 @@ $(function() {
 
     if($.trim($('#video_').val()).length>0||$.trim($('#video_object_name_').val()).length>0){
         $('.putimg').eq(1).empty().append('<div style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +
-            '                     <div><a id="video" href="'+$.trim($('#video_').val())+'" target="_blank" style="width: 100%" /></div>' +
+            '                     <div><a id="video" href="'+$.trim($('#video_').val())+'" target="_blank" style="width: 100%">'+$.trim($('#video_').val())+'</a></div>' +
             '                     <input type="hidden" id="video_object_name" value="'+$.trim($('#video_object_name_').val())+'" />' +
             '                 </div>');
     }
 
 });
-function addContent(index_num,parentHtmlObj) {
+function addContent(index_num,parentHtmlObj,title,content_text) {
     var div=$('<div></div>');
     var title=$('<div class="form-group">' +
         '                              <label class="col-sm-2 control-label">标题</label>' +
         '                            <div class="col-sm-7">' +
-        '                              <input type="text" id="title" />' +
+        '                              <input type="text" id="title" value="'+($.trim(title)!=''?title:'')+'" />' +
+        '                              <input type="button" id="'+index_num+'" value="-" onclick="var obj=$(this);for (var i=0;i<contentArray.length;i++){if(contentArray[i].index==$(obj).attr(\'id\'))contentArray.splice(i,1);} $(obj).parent().parent().parent().remove();" />'+
         '                             </div>' +
         '                        </div>')
     var content=$('<div class="form-group">' +
@@ -204,9 +212,11 @@ function addContent(index_num,parentHtmlObj) {
     var editorName=('#editor'+index_num);
     var editor = new E(editorName);
     editor.create();
+    if(content_text!=undefined&&$.trim(content_text).length>0)editor.txt.html(content_text);
     var contentObj={};
-    contentObj.title=title
-    contentObj.editor=editor
+    contentObj.title=title;
+    contentObj.editor=editor;
+    contentObj.index=index_num;
     contentArray.push(contentObj);
 }
 function addImg(obj,objectType) {
@@ -228,8 +238,10 @@ function addImg(obj,objectType) {
             contentType: false, //不设置内容类型
             processData: false, //不处理数据
             beforeSend:function(){
-                if ($('.putimg').eq(1).children().length > 0) $('#old_object_name').val($('#video_object_name').val());
-                $('.putimg').eq(1).empty().append('<p>上传中...请稍后</p>')
+                if(objectType=='video'){
+                    if ($('.putimg').eq(1).children().length > 0) $('#old_object_name').val($('#video_object_name').val());
+                    $('.putimg').eq(1).empty().append('<p>上传中...请稍后</p>')
+                }
             },
         success:function(data){
                 console.log('video:',data)
@@ -237,8 +249,8 @@ function addImg(obj,objectType) {
                     $('.putimg').eq(0).append('<div class="img" style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +
                         '                     <img src="' + data.data + '" style="width: 100%" />' +
                         '                     <input type="button" value="删除图片" onclick="deleteImg($(this).parent(),$(this).next().val(),$(\'#id\').val());" style="width: 100%" />' +
-                        '                 </div>');
-                    '                     <input type="hidden" id="object_name" value="' + data.object_name + '" />'
+                        '                     <input type="hidden" id="object_name" value="' + data.object_name + '" />'+
+                    '                 </div>');
                 }
                 if(objectType=='video'){
                     $('.putimg').eq(1).empty().append('<div style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +

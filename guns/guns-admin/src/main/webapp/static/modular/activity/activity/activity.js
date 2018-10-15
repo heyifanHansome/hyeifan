@@ -53,7 +53,7 @@ Activity.openAddActivity = function () {
     var index = layer.open({
         type: 2,
         title: '添加活动管理',
-        area: ['800px', '420px'], //宽高
+        area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/activity/activity_add'
@@ -69,7 +69,7 @@ Activity.openActivityDetail = function () {
         var index = layer.open({
             type: 2,
             title: '活动管理详情',
-            area: ['800px', '420px'], //宽高
+            area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/activity/activity_update/' + Activity.seItem.id

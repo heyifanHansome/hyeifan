@@ -1,4 +1,4 @@
-package com.stylefeng.guns.api.user.classroom;
+package com.stylefeng.guns.api.classroom;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;

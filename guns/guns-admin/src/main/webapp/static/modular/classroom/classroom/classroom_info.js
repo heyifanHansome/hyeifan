@@ -183,6 +183,7 @@ var classRoomArray;
 
 
     //初始化编辑器
+
     var E = window.wangEditor;
     var editor = new E('#editor');
     editor.create();

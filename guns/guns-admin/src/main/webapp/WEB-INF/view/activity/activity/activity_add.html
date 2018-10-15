@@ -10,17 +10,55 @@
                 <div class="row">
                     <#select id="columnId" name="栏目类型" underline="true" />
                     <#input id="title" name="活动名" underline="true"/>
-                    <#input id="description" name="描述" underline="true"/>
-                    <#input id="startTime" name="开始时间" value="" underline="true"/>
-                    <#input id="endTime" name="结束时间" value="" />
-                    <#select name="城市" id="cityId" underline="true" />
+                    <#input id="applyNum" name="报名人数"  underline="true"/>
                     <div class="form-group">
-                        <label class="col-sm-1 control-label">内容</label>
-                        <div class="col-sm-11">
-                            <div id="editor" class="editorHeight">
-                            </div>
+                        <label class="col-sm-3 control-label">
+                            图片(最多9张)
+                            <input type="button" value="+" onclick="$(this).next().click();" />
+                            <input type="file" style="display: none;" onchange="addImg($(this),'image');" />
+                        </label>
+                        <div class="putimg"	>
                         </div>
                     </div>
+                    <textarea id="images"  name="" style="display: none;"></textarea>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            视频(最多1个)
+                            <input type="button" value="+" onclick="$(this).next().click();" />
+                            <input type="file" style="display: none;" onchange="addImg($(this),'video');" />
+                        </label>
+                        <div class="putimg"	>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            审核状态
+                        </label>
+                        <div>
+                            <select id="is_ok" onchange="sendUserApiMsg($(this),$(this).val());" style="float: left;">
+                                <option value="0">待审核</option>
+                                <option value="1">通过</option>
+                                <option value="2">拒绝</option>
+                            </select>
+                        </div>
+                    </div>
+                    <#input id="description" name="描述" underline="true"/>
+                    <#input id="startTime" name="开始时间" underline="true"/>
+                    <#input id="endTime" name="结束时间"  underline="true"/>
+                    <#select id="cityId" name="城市"  underline="true" />
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            版块/内容
+                            <input type="button" value="+" onclick="addContent($('#contentArray').children().length,$('#contentArray'));" />
+                        </label>
+                        <div class="col-sm-9">
+
+                        </div>
+                    </div>
+                    <div id="contentArray">
+
+                    </div>
+                </div>
                 </div>
             </div>
 
@@ -43,9 +81,14 @@
         elem: '#startTime'
     });
 </script>
-<#input id="sourceId" name="" value="0" underline="true" type="hidden"/>
-<#input id="columnId_" name="" underline="true" type="hidden"/>
-<#input id="cityId_" name="" underline="true" type="hidden"/>
-<#input id="object_name" name="" underline="true" type="hidden"/>
-<#input id="old_object_name" name="" underline="true" type="hidden"/>
+<input id="sourceId" name="" value="0" underline="true" type="hidden"/>
+<input id="columnId_" name=""  underline="true" type="hidden"/>
+<input id="cityId_" name="" underline="true" type="hidden"/>
+<input id="object_name" name="" underline="true" type="hidden"/>
+<input id="id" name="" underline="true" type="hidden"/>
+<input id="old_object_name" name="" underline="true" type="hidden"/>
+<textarea id="content" style="display: none;"></textarea>
+<input id="video_" name="" type="hidden"/>
+<input id="video_object_name_" name="" type="hidden"/>
+<input id="is_ok_"  name="" type="hidden"/>
 @}

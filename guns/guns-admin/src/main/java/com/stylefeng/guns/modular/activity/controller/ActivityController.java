@@ -74,15 +74,15 @@ public class ActivityController extends BaseController {
     @RequestMapping("/activity_update/{activityId}")
     public String activityUpdate(@PathVariable Integer activityId, Model model) {
         Activity activity = activityService.selectById(activityId);
-        switch (activity.getUid()){
-            case "0":
+        switch (activity.getSourceId()){
+            case 0:
                 User user=new User();
                 user.setId(Integer.valueOf(activity.getUid()));
                 EntityWrapper<User>userEntityWrapper=new EntityWrapper<>(user);
                 user=userService.selectOne(userEntityWrapper);
                 activity.setUid(((user!=null?user.getName():"<span style='color:red;'>该管理员已被删除</span>")+"<span style='color:red;'>(管理员)</span>"));
                 break;
-            case "1":
+            case 1:
                 UserApi api=new UserApi();
                 api.setId(Integer.valueOf(activity.getUid()));
                 EntityWrapper<UserApi>apiEntityWrapper=new EntityWrapper<>(api);
@@ -119,6 +119,20 @@ public class ActivityController extends BaseController {
                 }
             }else{
                 activity.put("source_id","<span style='color:red'>*空*</span>");
+            }
+            if(!Tool.isNull(activity.get("is_ok"))){
+                switch (activity.get("is_ok").toString()){
+                    case "0":activity.put("is_ok","待审核");
+                        break;
+                    case "1":activity.put("is_ok","通过");
+                        break;
+                    case "2":activity.put("is_ok","拒绝");
+                        break;
+                    default:activity.put("is_ok","未知");
+                        break;
+                }
+            }else{
+                activity.put("is_ok","<span style='color:red'>*空*</span>");
             }
         }
         return list;

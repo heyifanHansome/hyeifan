@@ -132,5 +132,6 @@ public class oneImages {
 
     public static void main(String[] args) {
         pressImage("http://cheshi654321.oss-cn-beijing.aliyuncs.com/data/1539593701464.png",   "F:/images/8.jpg", 50, 90);
+
     }
 }

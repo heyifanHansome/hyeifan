@@ -1,6 +1,10 @@
 package com.stylefeng.guns.modular.lijun.util;
 
 public class FinalStaticString {
+	/**
+	 * 登录验证码session里的字段名
+	 */
+	public static final String LOGIN_CODE="loginCode";
 
 	public static final String ALI_OSS_ENDPOINT="http://oss-cn-beijing.aliyuncs.com";
 	public static final String ALI_OSS_BUCKET="cheshi654321";

@@ -17,11 +17,12 @@
         <result column="createtime" property="createtime" />
         <result column="updatetime" property="updatetime" />
         <result column="verification_code" property="verificationCode" />
+        <result column="object_name" property="object_name" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, avatar, account, password, salt, name, birthday, sex, email, phone, createtime
+        id, avatar, account, password, salt, name, birthday, sex, email, phone, createtime, object_name
     </sql>
 
 

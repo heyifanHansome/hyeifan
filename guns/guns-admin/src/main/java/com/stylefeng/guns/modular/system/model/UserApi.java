@@ -75,6 +75,7 @@ public class UserApi extends Model<UserApi> {
      * 更新时间
      */
     private Date updatetime;
+    private String object_name;
 
     @TableField("verification_code")
     private String verificationCode;

@@ -7,8 +7,10 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.City;
+import com.stylefeng.guns.modular.system.model.Setting;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import net.sf.json.JSONArray;
@@ -37,7 +39,8 @@ import java.util.*;
 public class RestaurantInfoManagerController extends BaseController {
 
     private String PREFIX = "/restaurantManager/restaurantInfoManager/";
-
+@Autowired
+private SettingConfiguration settingConfiguration;
     @Autowired
     private IRestaurantInfoManagerService restaurantInfoManagerService;
     @Autowired
@@ -114,8 +117,9 @@ public class RestaurantInfoManagerController extends BaseController {
     @ResponseBody
     public Object add(RestaurantInfoManager restaurantInfoManager,String old_object_name) {
         if(!Tool.isNull(old_object_name)){
-            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
             ossClient.shutdown();
         }
         restaurantInfoManager.setCreateTime(new Date(System.currentTimeMillis()));
@@ -131,13 +135,14 @@ public class RestaurantInfoManagerController extends BaseController {
     public Object delete(@RequestParam Integer restaurantInfoManagerId) {
         RestaurantInfoManager restaurantInfoManager = restaurantInfoManagerService.selectOne(new EntityWrapper<>(new RestaurantInfoManager()).eq("id", restaurantInfoManagerId));
         List<Map<String, Object>> imgs = JSONArray.fromObject(restaurantInfoManager.getImages());
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
         List<String>img_objects=new ArrayList<>();
         for (Iterator it = imgs.iterator(); it.hasNext(); ) {
             img_objects.add(((Map<String, Object>) it.next()).get("object_name").toString());
         }
-        if(!Tool.isNull(restaurantInfoManager.getObject_name()))ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET,restaurantInfoManager.getObject_name());
-        if(!Tool.listIsNull(img_objects))ossClient.deleteObjects(new DeleteObjectsRequest(FinalStaticString.ALI_OSS_BUCKET).withKeys(img_objects));
+        if(!Tool.isNull(restaurantInfoManager.getObject_name()))ossClient.deleteObject(setting.getAliOssBucket(),restaurantInfoManager.getObject_name());
+        if(!Tool.listIsNull(img_objects))ossClient.deleteObjects(new DeleteObjectsRequest(setting.getAliOssBucket()).withKeys(img_objects));
         ossClient.shutdown();
         restaurantInfoManagerService.deleteById(restaurantInfoManagerId);
         return SUCCESS_TIP;
@@ -150,8 +155,9 @@ public class RestaurantInfoManagerController extends BaseController {
     @ResponseBody
     public Object update(RestaurantInfoManager restaurantInfoManager,String old_object_name) {
         if(!Tool.isNull(old_object_name)){
-            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
             ossClient.shutdown();
         }
         restaurantInfoManager.setUpdateTime(new Date(System.currentTimeMillis()));
@@ -184,8 +190,9 @@ public class RestaurantInfoManagerController extends BaseController {
             restaurantInfoManager.setImages(imgsJSONString);
             restaurantInfoManagerService.updateById(restaurantInfoManager);
         }
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, object_name);
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+        ossClient.deleteObject(setting.getAliOssBucket(), object_name);
         ossClient.shutdown();
         return ResultMsg.success("删除成功",null,null);
     }

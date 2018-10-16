@@ -1,0 +1,32 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <input id="id" name="" value="${item.id}" underline="true" type="hidden"/>
+                            <#input id="aliSafrvCertCheckAppcode" name="阿里云实名认证的appcode" value="${item.aliSafrvCertCheckAppcode}" underline="true"/>
+                            <#input id="aliOssEndpoint" name="阿里云云存储endpoint" value="${item.aliOssEndpoint}" underline="true"/>
+                            <#input id="aliOssBucket" name="阿里云云存储bucket" value="${item.aliOssBucket}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="aliOssAccessKey" name="阿里云云存储access_key" value="${item.aliOssAccessKey}" underline="true"/>
+                            <#input id="aliOssAccessId" name="阿里云云存储access_id" value="${item.aliOssAccessId}" underline="true"/>
+                            <#input id="aliOssImgPath" name="阿里云云存储图片存储路径" value="${item.aliOssImgPath}" underline="true"/>
+                            <#input id="aliOssFilePath" name="阿里云云存储文件存储路径" value="${item.aliOssFilePath}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="SettingInfoDlg.editSubmit()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/systemSetting/setting/setting_info.js"></script>
+@}

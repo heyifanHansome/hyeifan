@@ -11,9 +11,11 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.PictureMapper;
 import com.stylefeng.guns.modular.system.model.Picture;
+import com.stylefeng.guns.modular.system.model.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,8 @@ import java.util.*;
 @Controller
 @RequestMapping("img")
 public class ImgUploadController {
-
+@Autowired
+private SettingConfiguration settingConfiguration;
     @Autowired
     public PictureMapper pictureMapper;
     @Autowired
@@ -44,12 +47,12 @@ public class ImgUploadController {
 
     private OSSClient ossClient;
 
-    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
-    // accessKey
-    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
-    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
-    //空间
-    private String bucketName = FinalStaticString.ALI_OSS_BUCKET;
+//    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
+//    // accessKey
+//    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
+//    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
+//    //空间
+//    private String bucketName = FinalStaticString.ALI_OSS_BUCKET;
     //文件存储目录
     private String filedir = "data/";
 
@@ -69,10 +72,11 @@ public class ImgUploadController {
 
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
         int index   = id.indexOf("/data");
        String newString =  id.substring(index+1);
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, newString);
+        ossClient.deleteObject(setting.getAliOssBucket(), newString);
 
         ossClient.shutdown();
 
@@ -162,8 +166,10 @@ public class ImgUploadController {
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             //上传文件
             //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
-            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
-            PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
+            Setting setting=settingConfiguration.getSetting();
+            ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+//            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+            PutObjectResult putResult = ossClient.putObject(setting.getAliOssBucket(), filedir + fileName, instream, objectMetadata);
 
             Picture picture = new Picture();
             picture.setBaseId(goodsTypeId);

@@ -177,6 +177,17 @@ public class Tool {
 	    });
 	    return list;
 	}
+
+	/**
+	 * 根据keys数组来移除map里对应的key和value
+	 * @param map
+	 * @param keys
+	 */
+	public static  void removeMapParmeByKey(Map map,String[]keys){
+		for (String key : keys) {
+			if(map.containsKey(key))map.remove(key);
+		}
+	}
 	/**
 	 * 随机生成六位数验证码
 	 * @return

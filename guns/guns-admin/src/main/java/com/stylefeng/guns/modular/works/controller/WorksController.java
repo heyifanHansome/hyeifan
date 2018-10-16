@@ -10,6 +10,7 @@ import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
@@ -42,7 +43,8 @@ import java.util.Map;
 public class WorksController extends BaseController {
     /*FuckingCrazying*/
     private String PREFIX = "/works/works/";
-
+@Autowired
+private SettingConfiguration settingConfiguration;
     @Autowired
     private IWorksService worksService;
 
@@ -59,10 +61,6 @@ public class WorksController extends BaseController {
     private ITagService tagService;
 
 
-    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
-    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
-    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
-    private OSSClient ossClient;
     /**
      * 跳转到作品管理首页
      */
@@ -305,10 +303,11 @@ public class WorksController extends BaseController {
 @RequestMapping(value = "/deleteVideoByObjectName")
 @ResponseBody
 public  Object deleteVideoByObjectName (String objectName){
-    OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+    Setting setting=settingConfiguration.getSetting();
+    OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
     int index   = objectName.indexOf("/data");
     String newString =  objectName.substring(index+1);
-    ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, newString);
+    ossClient.deleteObject(setting.getAliOssBucket(), newString);
 
     ossClient.shutdown();
 

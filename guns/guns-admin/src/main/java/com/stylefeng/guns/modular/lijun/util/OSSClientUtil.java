@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Random;
 @Slf4j
 public class OSSClientUtil {
-//    public String updateHead(MultipartFile file) throws IOException{
     public Map<String,Object> updateHead(MultipartFile file) throws IOException{
         if (file == null || file.getSize() <= 0) {
             throw new RuntimeException("图片不能为空");
@@ -30,14 +29,22 @@ public class OSSClientUtil {
     }
 
 
-    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
+    private String endpoint;
     // accessKey
-    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
-    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
+    private String accessKeyId;
+    private String accessKeySecret;
     //空间
-    private String bucketName = FinalStaticString.ALI_OSS_BUCKET;
+    private String bucketName;
     //文件存储目录
-    private String filedir = "data/";
+    private String filedir;
+
+    public OSSClientUtil(String endpoint, String accessKeyId, String accessKeySecret, String bucketName, String filedir) {
+        this.endpoint = endpoint;
+        this.accessKeyId = accessKeyId;
+        this.accessKeySecret = accessKeySecret;
+        this.bucketName = bucketName;
+        this.filedir = filedir;
+    }
 
     private OSSClient ossClient;
 

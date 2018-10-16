@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.model.Setting;
 import com.stylefeng.guns.modular.system.model.UserResume;
 import com.stylefeng.guns.modular.userResume.service.IUserResumeService;
 import org.springframework.stereotype.Controller;
@@ -34,7 +36,8 @@ import java.util.List;
 public class ResumeFjController extends BaseController {
 
     private String PREFIX = "/resumeFJ/resumeFj/";
-
+@Autowired
+private SettingConfiguration settingConfiguration;
     @Autowired
     private IResumeFjService resumeFjService;
 
@@ -95,8 +98,9 @@ public class ResumeFjController extends BaseController {
     @ResponseBody
     public Object add(ResumeFj resumeFj,String source,String old_object_name) {
         if(!Tool.isNull(old_object_name)){
-            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
             ossClient.shutdown();
         }
         resumeFj.setCreateTime(new Date(System.currentTimeMillis()));
@@ -112,8 +116,9 @@ public class ResumeFjController extends BaseController {
     @ResponseBody
     public Object delete(@RequestParam Integer resumeFjId) {
         ResumeFj resumeFj = resumeFjService.selectById(resumeFjId);
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, resumeFj.getObject_name());
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+        ossClient.deleteObject(setting.getAliOssBucket(), resumeFj.getObject_name());
         ossClient.shutdown();
         resumeFjService.deleteById(resumeFjId);
         return SUCCESS_TIP;
@@ -126,8 +131,9 @@ public class ResumeFjController extends BaseController {
     @ResponseBody
     public Object update(ResumeFj resumeFj,String source,String old_object_name) {
         if(!Tool.isNull(old_object_name)){
-            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
             ossClient.shutdown();
         }
         resumeFj.setUpdateTime(new Date(System.currentTimeMillis()));

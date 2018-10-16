@@ -149,7 +149,6 @@ MenuInfoDlg.onClickDept = function (e, treeId, treeNode) {
     $("#pcodeName").attr("value", MenuInfoDlg.ztreeInstance.getSelectedVal());
     $("#pcode").attr("value", treeNode.id);
     //李俊的column_type用到
-    console.log("menu_iddd")
     $("#menuId").attr("value", treeNode.id);
 };
 
@@ -167,6 +166,7 @@ $(function () {
     var ztree = new $ZTree("pcodeTree", "/menu/selectMenuTreeList");
     ztree.bindOnClick(MenuInfoDlg.onClickDept);
     ztree.init();
+    console.log(ztree)
     MenuInfoDlg.ztreeInstance = ztree;
 
     //初始化是否是菜单

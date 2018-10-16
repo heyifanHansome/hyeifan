@@ -7,11 +7,10 @@ import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.dao.Dao;
-import com.stylefeng.guns.modular.system.model.City;
-import com.stylefeng.guns.modular.system.model.ColumnType;
-import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.Recruit;
 import com.stylefeng.guns.modular.recruit.service.IRecruitService;
 
 import javax.servlet.http.HttpSession;
@@ -41,7 +39,8 @@ import java.util.Set;
 public class RecruitController extends BaseController {
 
     private String PREFIX = "/recruit/recruit/";
-
+@Autowired
+private SettingConfiguration settingConfiguration;
     @Autowired
     private IRecruitService recruitService;
     @Autowired
@@ -130,8 +129,9 @@ public class RecruitController extends BaseController {
     @ResponseBody
     public Object add(Recruit recruit,String old_object_name) {
         if(!Tool.isNull(old_object_name)){
-            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
             ossClient.shutdown();
         }
         recruit.setUid(String.valueOf(ShiroKit.getUser().getId()));
@@ -148,8 +148,9 @@ public class RecruitController extends BaseController {
     @ResponseBody
     public Object delete(@RequestParam Integer recruitId) {
         Recruit recruit = recruitService.selectById(recruitId);
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, recruit.getObject_name());
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+        ossClient.deleteObject(setting.getAliOssBucket(), recruit.getObject_name());
         ossClient.shutdown();
         recruitService.deleteById(recruitId);
         return SUCCESS_TIP;
@@ -162,8 +163,9 @@ public class RecruitController extends BaseController {
     @ResponseBody
     public Object update(Recruit recruit,String old_object_name) {
         if(!Tool.isNull(old_object_name)){
-            OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-            ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
             ossClient.shutdown();
         }
         recruit.setUid(String.valueOf(ShiroKit.getUser().getId()));

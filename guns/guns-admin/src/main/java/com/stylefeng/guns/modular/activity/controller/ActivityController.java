@@ -5,16 +5,14 @@ import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
-import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.system.service.IUserService;
-import com.stylefeng.guns.modular.system.warpper.ActivityWarpper;
-import com.stylefeng.guns.modular.system.warpper.UserInfoWarpper;
 import net.sf.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +38,8 @@ import java.util.*;
 public class ActivityController extends BaseController {
 
     private String PREFIX = "/activity/activity/";
-
+    @Autowired
+    private SettingConfiguration settingConfiguration;
     @Autowired
     private IActivityService activityService;
 
@@ -144,9 +143,10 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Activity activity,String old_object_name) {
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
         if(!Tool.isNull(old_object_name))
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+        ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
         ossClient.shutdown();
         activity.setUid(String.valueOf(ShiroKit.getUser().getId()));
         activity.setPublishIp(Tool.getIpAdrress());
@@ -162,15 +162,15 @@ public class ActivityController extends BaseController {
     @ResponseBody
     public Object delete(@RequestParam Integer activityId) {
         Activity activity = activityService.selectById(activityId);
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-        if(!Tool.isNull(activity.getVideo_object_name()))
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, activity.getVideo_object_name());
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());        if(!Tool.isNull(activity.getVideo_object_name()))
+        ossClient.deleteObject(setting.getAliOssBucket(), activity.getVideo_object_name());
         List<Map<String, Object>> imgs = JSONArray.fromObject(activity.getThumb());
         List<String>img_objects=new ArrayList<>();
         for (Iterator it = imgs.iterator(); it.hasNext(); ) {
             img_objects.add(((Map<String, Object>) it.next()).get("object_name").toString());
         }
-        if(!Tool.listIsNull(img_objects))ossClient.deleteObjects(new DeleteObjectsRequest(FinalStaticString.ALI_OSS_BUCKET).withKeys(img_objects));
+        if(!Tool.listIsNull(img_objects))ossClient.deleteObjects(new DeleteObjectsRequest(setting.getAliOssBucket()).withKeys(img_objects));
         ossClient.shutdown();
         activityService.deleteById(activityId);
         return SUCCESS_TIP;
@@ -182,9 +182,9 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Activity activity,String old_object_name) {
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-        if(!Tool.isNull(old_object_name))
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, old_object_name);
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());        if(!Tool.isNull(old_object_name))
+        ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
         ossClient.shutdown();
         activity.setUid(String.valueOf(ShiroKit.getUser().getId()));
         activity.setPublishIp(Tool.getIpAdrress());
@@ -218,8 +218,9 @@ public class ActivityController extends BaseController {
             activity.setThumb(imgsJSONString);
             activityService.updateById(activity);
         }
-        OSSClient ossClient = new OSSClient(FinalStaticString.ALI_OSS_ENDPOINT, FinalStaticString.ALI_OSS_ACCESS_ID, FinalStaticString.ALI_OSS_ACCESS_KEY);
-        ossClient.deleteObject(FinalStaticString.ALI_OSS_BUCKET, object_name);
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+        ossClient.deleteObject(setting.getAliOssBucket(), object_name);
         ossClient.shutdown();
         return ResultMsg.success("删除成功",null,null);
     }

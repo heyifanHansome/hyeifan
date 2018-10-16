@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +21,9 @@ import java.io.Serializable;
  * @since 2018-09-20
  */
 @TableName("sys_tag")
+@ToString
+@Getter
+@Setter
 public class Tag extends Model<Tag> {
 
     private static final long serialVersionUID = 1L;
@@ -46,60 +53,11 @@ public class Tag extends Model<Tag> {
     @TableField("update_time")
     private Date updateTime;
 
+    private String picture;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getColumnId() {
-        return columnId;
-    }
-
-    public void setColumnId(String columnId) {
-        this.columnId = columnId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.id;
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-        "id=" + id +
-        ", columnId=" + columnId +
-        ", name=" + name +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
     }
 }

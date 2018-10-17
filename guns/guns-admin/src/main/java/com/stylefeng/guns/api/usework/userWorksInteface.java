@@ -13,18 +13,28 @@ import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.HashMap;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Heyifan Cotter on 2018/10/17.
  */
-@RequestMapping("userWorksInteface")
+@RequestMapping("userWorksApi")
 @RestController
 public class userWorksInteface {
     @Autowired
@@ -109,9 +119,6 @@ public class userWorksInteface {
 
         return ResultMsg.success("请求成功!", "", HttpStatus.OK);
     }
-
-
-
 
 
 

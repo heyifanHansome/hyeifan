@@ -8,14 +8,30 @@ import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.core.util.Time;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.tag.service.ITagService;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import org.apache.http.HttpResponse;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 
 /**
@@ -201,4 +217,161 @@ public class classroomApiInteface {
     }
 
 
+
+
+    @RequestMapping("/generatePoster")
+    void generatePoster(String avater, String  qr, String description, HttpServletResponse response) {
+
+        try {
+            //目标文件
+            File _file = new File("F:\\tempd\\1.jpg");
+            Image src = ImageIO.read(_file);
+            int wideth = src.getWidth(null);
+            int height = src.getHeight(null);
+            BufferedImage image = new BufferedImage(wideth, height,
+                    BufferedImage.TYPE_INT_RGB);
+            Graphics g = image.createGraphics();
+            g.drawImage(src, 0, 0, wideth, height, null);
+
+            URL url = new URL(qr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            //超时响应时间为5秒
+            conn.setConnectTimeout(5 * 1000);
+            //通过输入流获取图片数据
+            InputStream inStream = conn.getInputStream();
+
+            //得到图片的二进制数据，以二进制封装得到数据，具有通用性
+            //水印文件
+//            File _filebiao = new File(pressImg);
+//            System.out.println(_filebiao.exists());
+            Image src_biao = ImageIO.read(inStream);
+            int wideth_biao = src_biao.getWidth(null);
+            int height_biao = src_biao.getHeight(null);
+            g.drawImage(src_biao,  25,
+                    642 + 52 + 213, 152, 151, null);
+            //水印文件结束
+            conn.disconnect();
+
+            URL  avaterurl = new URL(avater);
+            HttpURLConnection avaterurlconn = (HttpURLConnection) avaterurl.openConnection();
+            avaterurlconn.setRequestMethod("GET");
+            //超时响应时间为5秒
+            avaterurlconn.setConnectTimeout(5 * 1000);
+            //通过输入流获取图片数据
+            InputStream dinStream = avaterurlconn.getInputStream();
+            //得到图片的二进制数据，以二进制封装得到数据，具有通用性
+            //水印文件
+//            File _filebiao = new File(pressImg);
+//            System.out.println(_filebiao.exists());
+            Image sd = ImageIO.read(dinStream);
+            int wq = src_biao.getWidth(null);
+            int qew = src_biao.getHeight(null);
+            g.drawImage(sd, 55 , 521, 152, 151, null);
+            //水印文件结束
+
+
+
+            g.setColor(Color.RED);
+            g.setFont(new Font(description, 1, 12));
+            g.drawString(description, 253, 526 );
+            g.dispose();
+
+            FileOutputStream out = new FileOutputStream("F:/images/何一凡发送到.jpg");
+            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+            encoder.encode(image);
+            out.close();
+            File file  = new File("F:/images/何一凡发送到.jpg");
+            FileInputStream fileInputStream =  new FileInputStream(file);
+            IOUtils.copy(fileInputStream, response.getOutputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        Map<String, MultipartFile> map=((MultipartHttpServletRequest)request).getFileMap();
+//        MultipartFile avaterPicture = null;
+//        MultipartFile qrPicture = null;
+//        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
+//            String obj = i.next();
+//            if(obj.equals("userPic")){
+//                avaterPicture = (MultipartFile) map.get(obj);
+//            }
+//            if(obj.equals("qrPicture")){
+//                qrPicture = (MultipartFile) map.get(obj);
+//            }
+//        }
+//
+//
+//                try {
+//                    InputStream tiltePictureStream = avaterPicture.getInputStream();
+//                    //目标文件
+//                    Image src = ImageIO.read(tiltePictureStream);
+//                    int wideth = src.getWidth(null);
+//                    int height = src.getHeight(null);
+//                    BufferedImage image = new BufferedImage(wideth, height,
+//                            BufferedImage.TYPE_INT_RGB);
+//                    Graphics g = image.createGraphics();
+//                    g.drawImage(src, 0, 0, wideth, height, null);
+//
+//                    InputStream thumnStream = qrPicture.getInputStream();
+//                    Image src_biao = ImageIO.read(thumnStream);
+//                    int wideth_biao = src_biao.getWidth(null);
+//                    int height_biao = src_biao.getHeight(null);
+//                    g.drawImage(src_biao, 536  +55 +25,
+//                            642+52 +213, 152, 151, null);
+//                    //水印文件结束
+//                    g.dispose();
+//
+//
+//                    FileOutputStream out = new FileOutputStream("F:/images/nm.jpg");
+//                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//
+//                    FileInputStream in = new FileInputStream("F:/images/dasfasd.jpg");
+//                    IOUtils.copy(in, response.getOutputStream());
+
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+
+
+        }
+
+
+
+
+//            try {
+//                InputStream inputStream = multipartFile.getInputStream();
+////            result=this.uploadFile2OSS(inputStream, name,goodsTypeId);
+//            } catch (Exception e) {
+//                throw new RuntimeException("图片上传失败");
+//            }
+//
+//            try {
+//                return "";
+//            } catch (IllegalStateException e) {
+//                e.printStackTrace();
 }

@@ -136,6 +136,7 @@ private ISettingService settingService;
     }
 
 
+
    /* @RequestMapping("realName")
     @ResponseBody
     public ResultMsg realName(String IDcard,String name){

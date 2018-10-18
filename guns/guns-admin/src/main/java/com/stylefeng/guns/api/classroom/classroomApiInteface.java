@@ -12,7 +12,9 @@ import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
+import com.stylefeng.guns.modular.system.vo.commentVo;
 import com.stylefeng.guns.modular.tag.service.ITagService;
+import com.stylefeng.guns.modular.userCommentModel.service.IUserCommentService;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.http.HttpResponse;
@@ -53,6 +55,9 @@ public class classroomApiInteface {
 
     @Autowired
     private IUserApiService userApiService;
+
+    @Autowired
+    private IUserCommentService userCommentService;
 
     /**
      * 根据传入的栏目id获得当前的所有数据
@@ -207,8 +212,8 @@ public class classroomApiInteface {
             ).getRecords();
             Map<String, Object> map = new HashMap<>();
             for (int i = 0; i < classrooms.size(); i++) {
-                map.put("thmub",classrooms.get(i).getTitle());
-                map.put("title",classrooms.get(i).getTitle());
+                map.put("thmub", classrooms.get(i).getTitle());
+                map.put("title", classrooms.get(i).getTitle());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,106 +222,6 @@ public class classroomApiInteface {
 
         return ResultMsg.success("", "", HttpStatus.OK);
     }
-
-    @RequestMapping("/heyifan")
-    public  String GenerateInviteQrcode(String inviteCode, String file) throws Exception {
-        //生成带logo 的二维码
-        String text = "https://blog.csdn.net/m0_37172806/article/details/78193126";
-        return QRCodeUtil.encode(text, new ClassPathResource("static/apk/log/log.png").getFile().getAbsolutePath(), "F:\\images\\", true);
-    }
-
-
-    @RequestMapping("/generatePoster")
-    void generatePoster(String avater, String  qr, String description, HttpServletResponse response) {
-
-        try {
-            //目标文件
-            File _file = new File("F:\\tempd\\1.jpg");
-            System.out.println(_file);
-            Image src = ImageIO.read(_file);
-            int wideth = src.getWidth(null);
-            int height = src.getHeight(null);
-            BufferedImage image = new BufferedImage(wideth, height,
-                    BufferedImage.TYPE_INT_RGB);
-            Graphics g = image.createGraphics();
-            g.drawImage(src, 0, 0, wideth, height, null);
-
-            URL url = new URL(qr);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            //超时响应时间为5秒
-            conn.setConnectTimeout(5 * 1000);
-            //通过输入流获取图片数据
-            InputStream inStream = conn.getInputStream();
-
-            //得到图片的二进制数据，以二进制封装得到数据，具有通用性
-            //水印文件
-//            File _filebiao = new File(pressImg);
-//            System.out.println(_filebiao.exists());
-            Image src_biao = ImageIO.read(inStream);
-            int wideth_biao = src_biao.getWidth(null);
-            int height_biao = src_biao.getHeight(null);
-            g.drawImage(src_biao,  25,
-                    642 + 52 + 213, 152, 151, null);
-            //水印文件结束
-            conn.disconnect();
-
-            URL  avaterurl = new URL(avater);
-            HttpURLConnection avaterurlconn = (HttpURLConnection) avaterurl.openConnection();
-            avaterurlconn.setRequestMethod("GET");
-            //超时响应时间为5秒
-            avaterurlconn.setConnectTimeout(5 * 1000);
-            //通过输入流获取图片数据
-            InputStream dinStream = avaterurlconn.getInputStream();
-            //得到图片的二进制数据，以二进制封装得到数据，具有通用性
-            //水印文件
-//            File _filebiao = new File(pressImg);
-//            System.out.println(_filebiao.exists());
-            Image sd = ImageIO.read(dinStream);
-            int wq = src_biao.getWidth(null);
-            int qew = src_biao.getHeight(null);
-            g.drawImage(sd, 55 , 521, 152, 151, null);
-            //水印文件结束
-
-
-
-            g.setColor(Color.RED);
-            g.setFont(new Font(description, 1, 12));
-            g.drawString(description, 253, 526 );
-            g.dispose();
-
-            FileOutputStream out = new FileOutputStream("F:/images/何一凡发送到.jpg");
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-            encoder.encode(image);
-            out.close();
-            File file  = new File("F:/images/何一凡发送到.jpg");
-            FileInputStream fileInputStream =  new FileInputStream(file);
-            IOUtils.copy(fileInputStream, response.getOutputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //        Map<String, MultipartFile> map=((MultipartHttpServletRequest)request).getFileMap();
@@ -365,10 +270,7 @@ public class classroomApiInteface {
 //                }
 
 
-
-        }
-
-
+}
 
 
 //            try {
@@ -382,4 +284,8 @@ public class classroomApiInteface {
 //                return "";
 //            } catch (IllegalStateException e) {
 //                e.printStackTrace();
-}
+
+
+
+
+

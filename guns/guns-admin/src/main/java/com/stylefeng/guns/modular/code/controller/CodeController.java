@@ -49,6 +49,7 @@ public class CodeController extends BaseController {
     @ApiOperation("生成代码")
     @RequestMapping(value = "/generate", method = RequestMethod.POST)
     @ResponseBody
+
     public Object generate(GenQo genQo) {
         genQo.setUrl(druidProperties.getUrl());
         genQo.setUserName(druidProperties.getUsername());

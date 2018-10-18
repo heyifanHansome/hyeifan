@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.stylefeng.guns.core.util.QRCodeUtil;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.core.util.Time;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
@@ -17,6 +18,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.http.HttpResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -216,7 +218,12 @@ public class classroomApiInteface {
         return ResultMsg.success("", "", HttpStatus.OK);
     }
 
-
+    @RequestMapping("/heyifan")
+    public  String GenerateInviteQrcode(String inviteCode, String file) throws Exception {
+        //生成带logo 的二维码
+        String text = "https://blog.csdn.net/m0_37172806/article/details/78193126";
+        return QRCodeUtil.encode(text, new ClassPathResource("static/apk/log/log.png").getFile().getAbsolutePath(), "F:\\images\\", true);
+    }
 
 
     @RequestMapping("/generatePoster")
@@ -225,6 +232,7 @@ public class classroomApiInteface {
         try {
             //目标文件
             File _file = new File("F:\\tempd\\1.jpg");
+            System.out.println(_file);
             Image src = ImageIO.read(_file);
             int wideth = src.getWidth(null);
             int height = src.getHeight(null);

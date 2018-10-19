@@ -217,13 +217,20 @@ public class userWorksInteface {
      */
     @RequestMapping("getCommentByUser")
     @ResponseBody
-    ResultMsg getCommentByUser(Integer worksId, Integer userId) {
+    ResultMsg getCommentByUser(Integer columnId, Integer userId,Integer worksId ) {
         Map<String, Object> map = new HashMap<>();
         try {
             Time time = new Time();
             List<commentVo> userComments = userCommentService.selectCommentByUserId(25, 321);
+            /**
+             *  设置时间和点赞数量
+             */
             for (commentVo comment : userComments) {
                 comment.setBeforetime(time.CalculateTime(comment.getBeforetime()));
+                EntityWrapper<UserFabulous> entityWrapper = new EntityWrapper<>();
+                entityWrapper.where("  user_id={0} and column_id={1}  and  works_id={2}",comment.getUserid(),columnId,worksId);
+                List<UserFabulous> userFabulousList = userFabulousService.selectList(entityWrapper);
+                comment.setLike(userFabulousList.size());
             }
             map.put("commentCount", userComments.size());
             map.put("commentList", userComments);
@@ -235,17 +242,14 @@ public class userWorksInteface {
         return ResultMsg.success("访问成功!", HttpStatus.OK.toString(), map);
     }
 
-
     /**
      * 点赞取消赞公用接口
-     *
      * @param userFabulous 点赞表
      * @return
      */
     @RequestMapping("clickLike")
     @ResponseBody
     ResultMsg clickLike(UserFabulous userFabulous) {
-
         try {
             EntityWrapper<UserFabulous> entityWrapper = new EntityWrapper<>();
             entityWrapper.where("user_id ={0} and column_id={1} and works_id={2}", userFabulous.getUserId(), userFabulous.getColumnId(), userFabulous.getWorksId());

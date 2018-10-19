@@ -13,9 +13,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class commentVo{
+    private String userid;
     private String username ;
     private String avatar;
     private String beforetime;
     private String content;
-    private String like;
+    private Integer like;
 }

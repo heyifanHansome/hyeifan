@@ -17,7 +17,7 @@
     </resultMap>
 
 
-    <resultMap id="vo"  type="com.stylefeng.guns.modular.system.vo.commentVo">
+    <resultMap id="vo" type="com.stylefeng.guns.modular.system.vo.commentVo">
         <result column="username" property="username"/>
         <result column="avatar" property="avatar"/>
         <result column="beforetime" property="beforetime"/>
@@ -31,12 +31,29 @@
         id, user_id, column_id, item_id, content, create_time, update_time, comment_id
     </sql>
 
-    <select id="selectCommentByUserId" resultMap="vo">
+    <!--<select id="selectCommentByUserId" resultMap="vo">-->
+     <!--select a.`name`as username,a.avatar,b.content,b.create_time  as beforetime from sys_user_comment b LEFT JOIN sys_user_api a on a.id = b.user_id-->
+      <!--where  b.user_id =#{userId}  and column_id=#{columnId}-->
+            <!--order by  create_time  DESC-->
+    <!--</select>-->
 
- select a.`name`as username,a.avatar,b.content,b.create_time  as beforetime from sys_user_comment b LEFT JOIN sys_user_api a on a.id = b.user_id
-  where  b.user_id =#{userId}  and column_id=#{columnId}
-        order by  create_time  DESC
+    <select id="selectCommentByUserId" resultMap="vo">
+            SELECT
+            a.id AS userid,
+            a.`name` AS username,
+            a.avatar,
+            b.content,
+            b.create_time AS beforetime
+        FROM
+            sys_user_comment b
+            LEFT JOIN sys_user_api a ON a.id = b.user_id
+        WHERE
+            column_id = #{columnId}
+
+        ORDER BY
+            create_time DESC
     </select>
+
 
 
 </mapper>

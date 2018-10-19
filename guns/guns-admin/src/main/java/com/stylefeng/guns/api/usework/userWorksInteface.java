@@ -7,6 +7,7 @@ import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.core.util.Time;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.system.vo.commentVo;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
@@ -15,11 +16,13 @@ import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
 import com.stylefeng.guns.modular.works.service.IWorksService;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import io.swagger.annotations.*;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -170,8 +173,7 @@ public class userWorksInteface {
             Image src_biao = ImageIO.read(inStream);
             int wideth_biao = src_biao.getWidth(null);
             int height_biao = src_biao.getHeight(null);
-            g.drawImage(src_biao, 25,
-                    642 + 52 + 213, 152, 151, null);
+            g.drawImage(src_biao, 25,642 + 52 + 213, 152, 151, null);
             //水印文件结束
             conn.disconnect();
 
@@ -215,9 +217,16 @@ public class userWorksInteface {
      * @param userId
      * @return
      */
-    @RequestMapping("getCommentByUser")
+    @ApiOperation(value = "获取作品用户评论", notes = "获取通过作品id,获取作品的评论信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "columnId", value = "板块id", required = true),
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true),
+            @ApiImplicitParam(name = "worksId", value = "作品id", required = true),
+    })
+    @ApiResponses(@ApiResponse(code = 200, message = "data:{空,但是要注意看detail的返回内容}"))
+    @RequestMapping(value = "getCommentByUser", method = RequestMethod.POST)
     @ResponseBody
-    ResultMsg getCommentByUser(Integer columnId, Integer userId,Integer worksId ) {
+    ResultMsg getCommentByUser(Integer columnId, Integer userId, Integer worksId) {
         Map<String, Object> map = new HashMap<>();
         try {
             Time time = new Time();
@@ -228,7 +237,7 @@ public class userWorksInteface {
             for (commentVo comment : userComments) {
                 comment.setBeforetime(time.CalculateTime(comment.getBeforetime()));
                 EntityWrapper<UserFabulous> entityWrapper = new EntityWrapper<>();
-                entityWrapper.where("  user_id={0} and column_id={1}  and  works_id={2}",comment.getUserid(),columnId,worksId);
+                entityWrapper.where("  user_id={0} and column_id={1}  and  works_id={2}", comment.getUserid(), columnId, worksId);
                 List<UserFabulous> userFabulousList = userFabulousService.selectList(entityWrapper);
                 comment.setLike(userFabulousList.size());
             }
@@ -244,12 +253,20 @@ public class userWorksInteface {
 
     /**
      * 点赞取消赞公用接口
+     *
      * @param userFabulous 点赞表
      * @return
      */
-    @RequestMapping("clickLike")
+    @ApiOperation(value = "点赞取消赞", notes = "用来取消点赞")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "UserFabulous", value = "点赞对象", required = true)
+//            @ApiImplicitParam(name = "userId", value = "点赞用户id", required = true),
+//            @ApiImplicitParam(name = "columnId", value = "点赞板块id", required = true),
+//            @ApiImplicitParam(name = "worksId", value = "具体id", required = true)
+    )
+    @RequestMapping(value = "clickLike", method = RequestMethod.POST)
     @ResponseBody
-    ResultMsg clickLike(UserFabulous userFabulous) {
+    ResultMsg clickLike(UserFabulous userFabulous, Integer userId) {
         try {
             EntityWrapper<UserFabulous> entityWrapper = new EntityWrapper<>();
             entityWrapper.where("user_id ={0} and column_id={1} and works_id={2}", userFabulous.getUserId(), userFabulous.getColumnId(), userFabulous.getWorksId());

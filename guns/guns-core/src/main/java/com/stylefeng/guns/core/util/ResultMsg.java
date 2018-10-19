@@ -1,16 +1,22 @@
 package com.stylefeng.guns.core.util;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by Enzo Cotter on 2018/7/16.
  */
 
-
+@ApiModel(value = "返回说明")
 public class ResultMsg {
-
+    @ApiModelProperty(value = "成功标识;success:成功;fail:失败")
     private String success;
+    @ApiModelProperty(value = "可直接展示给用户看的消息")
     private String message;
+    @ApiModelProperty(value = "给前端程序员看的消息")
     private String detail;
+    @ApiModelProperty(value = "请参看每个接口Responses里状态码为200的补充说明")
     private Object data;
 
     public String getSuccess() {

@@ -53,7 +53,6 @@ ActivityInfoDlg.collectData = function() {
         img.object_name=imgHTMLObject.find('#object_name').val();
         images.push(img);
     });
-    console.log(images)
     if($('#msg').val()!=undefined)this.activityInfoData['msg'] = $('#msg').val();//给用户发审核不通过的内容
     this.activityInfoData['video'] = $('#video')!=undefined?$('#video').attr('href'):'';
     this.activityInfoData['thumb'] = JSON.stringify(images).toString();
@@ -224,7 +223,7 @@ function addImg(obj,objectType) {
     var formData = new FormData();
     var uploadFile = $(obj).get(0).files[0];
     formData.append("file",uploadFile);
-    console.log(uploadFile);
+    // console.log(uploadFile);//return false;
     if("undefined" != typeof(uploadFile) && uploadFile != null && uploadFile != ""){
         var imgTypes=uploadFile.type.split("/");
         if(objectType=='image'&&imgTypes[0]!='image'){alert("请勿上传图片之外的文件");return false;}
@@ -246,6 +245,7 @@ function addImg(obj,objectType) {
         success:function(data){
                 console.log('video:',data)
                 if(objectType=='image') {
+                    console.log("123")
                     $('.putimg').eq(0).append('<div class="img" style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +
                         '                     <img src="' + data.data + '" style="width: 100%" />' +
                         '                     <input type="button" value="删除图片" onclick="deleteImg($(this).parent(),$(this).next().val(),$(\'#id\').val());" style="width: 100%" />' +
@@ -268,11 +268,11 @@ function addImg(obj,objectType) {
     }else {
         alert("选择的文件无效！请重新选择");
     }
-    $(obj).replaceWith('<input type="file" style="display: none;" onchange="addImg($(this));" />');
+    $(obj).replaceWith('<input type="file" style="display: none;" onchange="addImg($(this),\''+objectType+'\');" />');
 }
 function deleteImg(parent_obj,object_name,id) {
     $.ajax({
-        url:'/avtivity/deleteImg',
+        url:'/activity/deleteImg',
         data:{object_name:object_name,id:id},
         success:function (data) {
             alert(data.message)

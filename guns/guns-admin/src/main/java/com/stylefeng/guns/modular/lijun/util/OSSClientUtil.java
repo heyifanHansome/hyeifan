@@ -43,6 +43,7 @@ public class OSSClientUtil {
         this.accessKeySecret = accessKeySecret;
         this.bucketName = bucketName;
         this.filedir = filedir;
+        ossClient=new OSSClient(endpoint,accessKeyId,accessKeySecret);
     }
 
     private OSSClient ossClient;
@@ -100,6 +101,7 @@ public class OSSClientUtil {
             result.put("name",name);
             return result;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("图片上传失败");
         }
     }
@@ -138,7 +140,7 @@ public class OSSClientUtil {
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             //上传文件
             //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
-            PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
+            PutObjectResult putResult = ossClient.putObject(bucketName,filedir + fileName,instream,objectMetadata);
 //            PutObjectResult putResult = ossClient.putObject(new PutObjectRequest(bucketName, filedir + fileName, instream).<PutObjectRequest>withProgressListener(new PutObjectProgressListener()));
             ret = putResult.getETag();
             /*李俊添加,开始*/

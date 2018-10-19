@@ -6,7 +6,6 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.dao.Dao;
@@ -22,11 +21,8 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.recruit.service.IRecruitService;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Date;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 招聘管理控制器

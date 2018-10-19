@@ -41,7 +41,7 @@ public class Tool {
 		return url.delete(url.length() - ((HttpServletRequest)getRequest_Response_Session()[0]).getRequestURI().length(), url.length()).append("/").toString();
 	}
 	public static String getImgUrlPrefix(){
-		return (Tool.getHttpDomain()+FinalStaticString.FILEPATHIMG.split("/")[FinalStaticString.FILEPATHIMG.split("/").length-1]+"/");
+		return (Tool.getHttpDomain()+ FSS.FILEPATHIMG.split("/")[FSS.FILEPATHIMG.split("/").length-1]+"/");
 	}
 	/**
 	 * 获取Ip地址

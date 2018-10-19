@@ -7,7 +7,6 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.city.service.ICityService;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.*;

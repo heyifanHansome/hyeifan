@@ -3,8 +3,6 @@ package com.stylefeng.guns.modular.resumeFJ.controller;
 import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
-import com.stylefeng.guns.core.util.ResultMsg;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.Setting;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.ResumeFj;
 import com.stylefeng.guns.modular.resumeFJ.service.IResumeFjService;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
 

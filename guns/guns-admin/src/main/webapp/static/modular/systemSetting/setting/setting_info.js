@@ -46,7 +46,11 @@ SettingInfoDlg.collectData = function() {
     .set('aliOssAccessKey')
     .set('aliOssAccessId')
     .set('aliOssImgPath')
-    .set('aliOssFilePath');
+        .set('aliOssFilePath')
+        .set('ali_appkey')
+        .set('ali_appsecret')
+        .set('ali_sm_appcode')
+        .set('yp_appkey');
 }
 
 

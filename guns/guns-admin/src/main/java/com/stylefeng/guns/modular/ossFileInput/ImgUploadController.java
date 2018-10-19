@@ -9,7 +9,6 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.ResultMsg;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
@@ -47,12 +46,12 @@ private SettingConfiguration settingConfiguration;
 
     private OSSClient ossClient;
 
-//    private String endpoint = FinalStaticString.ALI_OSS_ENDPOINT;
+//    private String endpoint = FSS.ALI_OSS_ENDPOINT;
 //    // accessKey
-//    private String accessKeyId = FinalStaticString.ALI_OSS_ACCESS_ID;
-//    private String accessKeySecret = FinalStaticString.ALI_OSS_ACCESS_KEY;;
+//    private String accessKeyId = FSS.ALI_OSS_ACCESS_ID;
+//    private String accessKeySecret = FSS.ALI_OSS_ACCESS_KEY;;
 //    //空间
-//    private String bucketName = FinalStaticString.ALI_OSS_BUCKET;
+//    private String bucketName = FSS.ALI_OSS_BUCKET;
     //文件存储目录
     private String filedir = "data/";
 

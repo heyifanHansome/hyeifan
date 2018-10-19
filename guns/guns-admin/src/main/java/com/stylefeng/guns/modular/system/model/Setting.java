@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -15,6 +19,9 @@ import java.io.Serializable;
  * @author lijun
  * @since 2018-10-15
  */
+@Getter
+@Setter
+@ToString
 @TableName("sys_setting")
 public class Setting extends Model<Setting> {
 
@@ -57,88 +64,25 @@ public class Setting extends Model<Setting> {
      */
     @TableField("ali_oss_file_path")
     private String aliOssFilePath;
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getAliSafrvCertCheckAppcode() {
-        return aliSafrvCertCheckAppcode;
-    }
-
-    public void setAliSafrvCertCheckAppcode(String aliSafrvCertCheckAppcode) {
-        this.aliSafrvCertCheckAppcode = aliSafrvCertCheckAppcode;
-    }
-
-    public String getAliOssEndpoint() {
-        return aliOssEndpoint;
-    }
-
-    public void setAliOssEndpoint(String aliOssEndpoint) {
-        this.aliOssEndpoint = aliOssEndpoint;
-    }
-
-    public String getAliOssBucket() {
-        return aliOssBucket;
-    }
-
-    public void setAliOssBucket(String aliOssBucket) {
-        this.aliOssBucket = aliOssBucket;
-    }
-
-    public String getAliOssAccessKey() {
-        return aliOssAccessKey;
-    }
-
-    public void setAliOssAccessKey(String aliOssAccessKey) {
-        this.aliOssAccessKey = aliOssAccessKey;
-    }
-
-    public String getAliOssAccessId() {
-        return aliOssAccessId;
-    }
-
-    public void setAliOssAccessId(String aliOssAccessId) {
-        this.aliOssAccessId = aliOssAccessId;
-    }
-
-    public String getAliOssImgPath() {
-        return aliOssImgPath;
-    }
-
-    public void setAliOssImgPath(String aliOssImgPath) {
-        this.aliOssImgPath = aliOssImgPath;
-    }
-
-    public String getAliOssFilePath() {
-        return aliOssFilePath;
-    }
-
-    public void setAliOssFilePath(String aliOssFilePath) {
-        this.aliOssFilePath = aliOssFilePath;
-    }
-
+    /**
+     * 阿里云appkey
+     */
+    private String ali_appkey;
+    /**
+     * 阿里云appSecret
+     */
+    private String ali_appsecret;
+    /**
+     * 阿里云实名认证接口appcode
+     */
+    private String ali_sm_appcode;
+    /**
+     * 云片网(短信)appkey
+     */
+    private String yp_appkey;
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "Setting{" +
-        "id=" + id +
-        ", aliSafrvCertCheckAppcode=" + aliSafrvCertCheckAppcode +
-        ", aliOssEndpoint=" + aliOssEndpoint +
-        ", aliOssBucket=" + aliOssBucket +
-        ", aliOssAccessKey=" + aliOssAccessKey +
-        ", aliOssAccessId=" + aliOssAccessId +
-        ", aliOssImgPath=" + aliOssImgPath +
-        ", aliOssFilePath=" + aliOssFilePath +
-        "}";
-    }
 }

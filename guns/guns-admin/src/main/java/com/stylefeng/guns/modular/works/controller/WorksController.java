@@ -9,7 +9,6 @@ import com.stylefeng.guns.core.common.constant.Const;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.*;

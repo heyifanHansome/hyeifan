@@ -1,23 +1,15 @@
 package com.stylefeng.guns.modular.lijun.web;
 
-import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.model.Callback;
-import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.PutObjectResult;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.stylefeng.guns.modular.lijun.util.FinalStaticString;
 import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
-import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.Setting;
 import com.stylefeng.guns.modular.systemSetting.service.ISettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import javax.servlet.http.HttpServletRequest;
+
 import java.io.*;
 import java.util.*;
 
@@ -40,6 +32,7 @@ private ISettingService settingService;
             value.put("errorMsg", "系统设置'阿里云云存储'所有参数为空,请到'系统版块'→'系统设置'填写相关参数");
             return value;
         }
+        System.err.println(setting);
         OSSClientUtil ossClientUtil=new OSSClientUtil(setting.getAliOssEndpoint(),setting.getAliOssAccessId(),setting.getAliOssAccessKey(),setting.getAliOssBucket(),setting.getAliOssFilePath());
         try {
             Map<String,Object>result=ossClientUtil.updateHead(file);

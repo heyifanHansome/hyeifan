@@ -40,27 +40,27 @@ public class DuanXin_LiJun {
     //编码格式。发送编码格式统一用UTF-8
     private static String ENCODING = "UTF-8";
 
+    private String APIKEY;
+    private String TPL_ID_XXTC;
+    public DuanXin_LiJun(String APIKEY, String TPL_ID_XXTC) {
+        this.APIKEY = APIKEY;
+        this.TPL_ID_XXTC = TPL_ID_XXTC;
+    }
 
     /**
      * 通过模板发送短信(不推荐)
      *
      * @param code    验证码
-     * @param apikey    apikey
-     * @param tpl_id    　模板id
-     * @param tpl_value 　模板变量值
-     * @param mobile    　接受的手机号
+     * @param phone    　接受的手机号
      * @return json格式字符串
      * @throws IOException
      */
-    private static final String APIKEY="da6ff66ce3b0b53bd6e140a24fa87bb1";
-    private static final String TPL_ID_XXTC="2441576";
-    public static String tplSendSms(String code, String phone) throws IOException {
+    public String tplSendSms(String code, String phone) throws IOException {
         System.out.println(code);
         Map < String, String > params = new HashMap < String, String > ();
         params.put("apikey", APIKEY);
         params.put("tpl_id",TPL_ID_XXTC);
-//        params.put("code", code);
-        params.put("tpl_value",(URLEncoder.encode(("#code#"), "UTF-8")+"="+URLEncoder.encode(code, "UTF-8")) );
+        params.put("tpl_value",(URLEncoder.encode(("#code#"), ENCODING)+"="+URLEncoder.encode(code, ENCODING)) );
         params.put("mobile", phone);
         return post(URI_TPL_SEND_SMS, params);
     }
@@ -72,7 +72,7 @@ public class DuanXin_LiJun {
      * @param phones
      * @return
      */
-    public static String tplSendSms(String phones){
+    public String tplSendSms(String phones){
         Map < String, String > params = new HashMap < String, String > ();
         params.put("apikey", APIKEY);
         params.put("tpl_id",TPL_ID_XXTC);

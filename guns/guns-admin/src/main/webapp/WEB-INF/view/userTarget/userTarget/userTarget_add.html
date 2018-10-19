@@ -1,0 +1,33 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="" underline="true"/>
+                            <#input id="uid" name="用户ID" underline="true"/>
+                            <#input id="target" name="评级指标的JSONArray内容" underline="true"/>
+                            <#input id="lv" name="会员等级1-6级(<8)1级(8-23)2级(24-31)3级(32-63)4级(64-95)5级(96-∞)6级"/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="check" name="是否审核(1-3级自动审核,4-6级线下审核)0:否,1:是" underline="true"/>
+                            <#input id="replenish" name="材料补充,格式:[{"name":"xxxx","data":["x.jpg","y.png"]}]" underline="true"/>
+                            <#input id="createtime" name="" underline="true"/>
+                            <#input id="updatetime" name="" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="UserTargetInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="UserTargetInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/userTarget/userTarget/userTarget_info.js"></script>
+@}

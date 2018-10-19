@@ -1,0 +1,195 @@
+@layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-12 b-r">
+                    <input id="id" name="" value="${item.id}" type="hidden"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            用户
+                        </label>
+                        <div class="col-sm-9">
+                            <img src="${item.user.avatar}" />
+                            <p>${item.user.name}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            评级内容
+                        </label>
+                        <div class="col-sm-9" id="target">
+                            <script>
+                                var targets='${item.target}'.startsWith('[')&&'${item.target}'.endsWith(']')?JSON.parse('${item.target}'):JSON.parse('[]');
+                                var targetSelectIds='${item.targetSelectIds}'.split(',')
+                                $(targets).each(function () {
+                                    var oneObject=this;
+                                    var one=$('<div class="form-group">' +
+                                        '          <label class="col-sm-3 control-label" id="name">' +
+                                                        oneObject.name +
+                                        '          </label>' +
+                                        '          <div class="col-sm-9">' +
+                                        '          </div>' +
+                                        '          <input id="oneId" value="'+oneObject.id+'" type="hidden" />' +
+                                        '       </div>');
+                                    $(oneObject.targets).each(function () {
+                                        var twoObject=this;
+                                        var two=$('<div>' +
+                                                      '<input id="twoId" value="'+twoObject.id+'" type="hidden"/>' +
+                                                      '<span>'+twoObject.name+'</span>'+
+                                                      '<select onchange="var score=0;$(\'#target\').find(\'select\').each(function() {score+=parseInt($(this).val())});$(\'#lv\').val(score>95?\'6\':score>63?\'5\':score>31?\'4\':score>23?\'3\':score>7?\'2\':\'1\');">' +
+                                                         '<option value="0">----请选择----</option>'+
+                                                      '</select>'+
+                                                  '</div>');
+                                        $(twoObject.targets).each(function () {
+                                            var threeObject=this;
+                                            var three=$('<option value="'+threeObject.score+'" grade="'+threeObject.grade+'" pid="'+threeObject.pid+'" id="'+threeObject.id+'"  '+($.inArray(threeObject.id.toString(),targetSelectIds)>-1?'selected="selected"':'')+'>'+threeObject.name+'</option>');
+                                            $(two).find('select').append(three);
+                                        });
+                                        $(one).children().eq(1).append(two);
+                                    });
+                                    $('#target').append(one);
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <#input id="lv" name="会员等级" value="${item.lv}" readonly="readonly" />
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            审核
+                        </label>
+                        <div class="col-sm-9">
+                            <select id="check">
+                                <option value="0">待审核</option>
+                                <option value="1">已审核</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input id="check_"  value="${item.check}" type="hidden"/>
+                    <script>$('#check').val($('#check_').val()).change();</script>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            材料补充
+                            <input type="button" value="+" onclick="addReplenish();" />
+                        </label>
+                        <div class="col-sm-9">
+
+                        </div>
+                    </div>
+                    <div  id="replenish">
+                        <script>
+                            var replenishArray='${item.replenish}'.startsWith('[')&&'${item.replenish}'.endsWith(']')?JSON.parse('${item.replenish}'):JSON.parse('[]');
+                            $(replenishArray).each(function () {
+                                addReplenish(this.title,this.data);
+                            });
+                            function addReplenish(title,imgObjects) {
+                                var div=$('<div></div>');
+                                var title=$('<div class="form-group">' +
+                                    '             <label class="col-sm-2 control-label">标题</label>' +
+                                    '             <div class="col-sm-7">' +
+                                    '                <input type="text" id="title" value="'+($.trim(title)!=''?title:'')+'" />' +
+                                    '                <input type="button" value="-" onclick="$(this).parent().parent().next().children().eq(1).children().each(function(i,item){$.post(\'/userTarget/deleteImg\', {object_name:$(item).find(\'#object_name\').val(),id:$(\'#id\').val()});});$(this).parent().parent().parent().remove();" />'+
+                                    '              </div>' +
+                                    '        </div>')
+                                var content=$('<div class="form-group">' +
+                                    '             <label class="col-sm-2 control-label">' +
+                                    '               图片/PDF' +
+                                    '               <input type="button" value="+" onclick="$(this).next().click();" />' +
+                                    '               <input type="file" style="display: none;" onchange="addImg($(this));" />' +
+                                    '             </label>' +
+                                    '             <div>' +
+                                    '             </div>' +
+                                    '          </div>');
+                                if(imgObjects!=undefined){
+                                    $(imgObjects).each(function () {
+                                        var imgObject=this;
+                                        var suffix=imgObject.url.substring(imgObject.url.lastIndexOf(".")+1,imgObject.url.indexOf("?"));
+                                        var suffixArray=['emf','svg','tag','wmf','tif','png','gif','bmp','jpeg','jpg'];
+                                        $(content).children('div').append('<div class="img" style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +
+                                            ($.inArray(suffix,suffixArray)>-1?
+                                                '                     <img src="' + imgObject.url + '" style="width: 100%" />' :
+                                                '                     <a href="'+imgObject.url+'" target="_blank">'+imgObject.url+'</a>')+
+                                            '                     <input type="button" value="删    除" onclick="deleteImg($(this).parent(),$(this).next().val(),$(\'#id\').val());" style="width: 100%" />' +
+                                            '                     <input type="hidden" id="object_name" value="' + imgObject.object_name + '" />'+
+                                            '                 </div>');
+                                    });
+                                }
+                                $('#replenish').append(div.append(title).append(content));
+                            }
+                            function addImg(obj) {
+                                var formData = new FormData();
+                                var uploadFile = $(obj).get(0).files[0];
+                                formData.append("file",uploadFile);
+                                console.log(uploadFile);
+                                if("undefined" != typeof(uploadFile) && uploadFile != null && uploadFile != ""){
+                                    if(uploadFile.type==undefined||$.trim(uploadFile.type).length==0){alert("不支持的文件类型");return false;}
+                                    var imgTypes=uploadFile.type.split("/");
+                                    // if(imgTypes[0]!='image'){alert("请勿上传图片之外的文件");return false;}
+                                    $.ajax({
+                                        url:'/tool/uploadFile',
+                                        type:'POST',
+                                        data:formData,
+                                        // async: false,
+                                        cache: false,
+                                        contentType: false, //不设置内容类型
+                                        processData: false, //不处理数据
+                                        success:function(data){
+                                            if(imgTypes[0]=='image') {
+                                                $(obj).parent().next().append('<div class="img" style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +
+                                                    '                     <img src="' + data.data + '" style="width: 100%" />' +
+                                                    '                     <input type="button" value="删    除" onclick="deleteImg($(this).parent(),$(this).next().val(),$(\'#id\').val());" style="width: 100%" />' +
+                                                    '                     <input type="hidden" id="object_name" value="' + data.object_name + '" />'+
+                                                    '                 </div>');
+                                            }else{
+                                                $(obj).parent().next().append('<div class="img" style="width: 20%;float: left;margin-right: 5%;margin-bottom: 20px;">' +
+                                                    '                     <a href="'+data.data+'" target="_blank">'+data.data+'</a>' +
+                                                    '                     <input type="button" value="删    除" onclick="deleteImg($(this).parent(),$(this).next().val(),$(\'#id\').val());" style="width: 100%" />' +
+                                                    '                     <input type="hidden" id="object_name" value="' + data.object_name + '" />'+
+                                                    '                 </div>');
+                                            }
+                                            $(obj).replaceWith('<input type="file" style="display: none;" onchange="addImg($(this));" />');
+                                        },
+                                        error:function(e){
+                                            console.log(e);
+                                            alert("上传失败！");
+                                        }
+                                    })
+                                }else {
+                                    alert("选择的文件无效！请重新选择");
+                                }
+                            }
+                            function deleteImg(parent_obj,object_name,id) {
+                                $.ajax({
+                                    url:'/userTarget/deleteImg',
+                                    data:{object_name:object_name,id:id},
+                                    success:function (data) {
+                                        alert(data.message)
+                                        $(parent_obj).remove();
+                                    },
+                                    error:function (e) {
+                                        console.log(e);
+                                        alert("删除失败")
+                                    }
+                                });
+                            }
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="UserTargetInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="UserTargetInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/userTarget/userTarget/userTarget_info.js"></script>
+@}

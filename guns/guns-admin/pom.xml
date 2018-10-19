@@ -117,6 +117,9 @@
             <optional>true</optional>
         </dependency>
 
+
+
+
         <!--shiro依赖-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -146,6 +149,10 @@
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
         </dependency>
+
+
+        <!--swagger2markup-->
+
 
         <!--需要分布式session的话需要放开注释-->
         <!--<dependency>-->

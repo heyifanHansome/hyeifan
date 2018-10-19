@@ -4,21 +4,39 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.UserComment">
-        <id column="id" property="id" />
-        <result column="user_id" property="userId" />
-        <result column="column_id" property="columnId" />
-        <result column="column_name" property="columnName" />
-        <result column="item_id" property="itemId" />
-        <result column="item_title" property="itemTitle" />
-        <result column="content" property="content" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="comment_id" property="commentId" />
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="column_id" property="columnId"/>
+        <result column="column_name" property="columnName"/>
+        <result column="item_id" property="itemId"/>
+        <result column="item_title" property="itemTitle"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="comment_id" property="commentId"/>
     </resultMap>
+
+
+    <resultMap id="vo"  type="com.stylefeng.guns.modular.system.vo.commentVo">
+        <result column="username" property="username"/>
+        <result column="avatar" property="avatar"/>
+        <result column="beforetime" property="beforetime"/>
+        <result column="content" property="content"/>
+        <result column="like" property="like"/>
+    </resultMap>
+
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, column_id, item_id, content, create_time, update_time, comment_id
     </sql>
+
+    <select id="selectCommentByUserId" resultMap="vo">
+
+ select a.`name`as username,a.avatar,b.content,b.create_time  as beforetime from sys_user_comment b LEFT JOIN sys_user_api a on a.id = b.user_id
+  where  b.user_id =#{userId}  and column_id=#{columnId}
+        order by  create_time  DESC
+    </select>
+
 
 </mapper>

@@ -2,6 +2,10 @@ package com.stylefeng.guns.modular.system.dao;
 
 import com.stylefeng.guns.modular.system.model.UserComment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.stylefeng.guns.modular.system.vo.commentVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface UserCommentMapper extends BaseMapper<UserComment> {
 
+
+    List<commentVo> selectCommentByUserId(@Param("userId") Integer userId,@Param("columnId") Integer columnId);
 }

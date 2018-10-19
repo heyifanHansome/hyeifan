@@ -161,15 +161,16 @@ public class ShiroConfig {
          */
         Map<String, String> hashMap = new LinkedHashMap<>();
         hashMap.put("/userApi/**", "anon");
-
         hashMap.put("/static/**", "anon");
         hashMap.put("/tool/**", "anon");
         hashMap.put("/gunsApi/**", "anon");
         hashMap.put("/login", "anon");
         hashMap.put("/classroomApi/**","anon");
+        hashMap.put("/userWorksApi/**","anon");
         hashMap.put("/global/sessionError", "anon");
         hashMap.put("/kaptcha", "anon");
         hashMap.put("/**", "user");
+        hashMap.put("/img/**","anon");
         shiroFilter.setFilterChainDefinitionMap(hashMap);
         return shiroFilter;
     }

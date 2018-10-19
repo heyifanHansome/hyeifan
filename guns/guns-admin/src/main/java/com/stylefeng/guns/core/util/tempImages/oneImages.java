@@ -20,6 +20,7 @@ public class oneImages {
     public oneImages() {
 
     }
+
     private String title;
     private String description;
     private String picture;
@@ -33,14 +34,12 @@ public class oneImages {
     /**
      * 把图片印刷到图片上
      *
-     * @param pressImg --
-     *            水印文件
+     * @param pressImg  --
+     *                  水印文件
      * @param targetImg --
-     *            目标文件
-     * @param x
-     *            --x坐标
-     * @param y
-     *            --y坐标
+     *                  目标文件
+     * @param x         --x坐标
+     * @param y         --y坐标
      */
     public final static void pressImage(String pressImg, String targetImg, int x, int y) {
         try {
@@ -49,13 +48,12 @@ public class oneImages {
             Image src = ImageIO.read(_file);
             int wideth = src.getWidth(null);
             int height = src.getHeight(null);
-            BufferedImage image = new BufferedImage(wideth, height,
-                    BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = new BufferedImage(wideth, height,BufferedImage.TYPE_INT_RGB);
             Graphics g = image.createGraphics();
             g.drawImage(src, 0, 0, wideth, height, null);
 
             URL url = new URL(pressImg);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             //超时响应时间为5秒
             conn.setConnectTimeout(5 * 1000);
@@ -68,11 +66,10 @@ public class oneImages {
             Image src_biao = ImageIO.read(inStream);
             int wideth_biao = src_biao.getWidth(null);
             int height_biao = src_biao.getHeight(null);
-            g.drawImage(src_biao, 536  +55 +25,
-                 642+52 +213, 152, 151, null);
+            g.drawImage(src_biao, 536 + 55 + 25, 642 + 52 + 213, 152, 151, null);
             //水印文件结束
             g.dispose();
-            FileOutputStream out = new FileOutputStream(targetImg);
+            FileOutputStream out = new FileOutputStream("F:/images/wosnbb.jpg");
             JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
             encoder.encode(image);
             out.close();
@@ -84,26 +81,23 @@ public class oneImages {
     /**
      * 打印文字水印图片
      *
-     * @param pressText
-     *            --文字
+     * @param pressText --文字
      * @param targetImg --
-     *            目标图片
-     * @param fontName --
-     *            字体名
+     *                  目标图片
+     * @param fontName  --
+     *                  字体名
      * @param fontStyle --
-     *            字体样式
-     * @param color --
-     *            字体颜色
-     * @param fontSize --
-     *            字体大小
-     * @param x --
-     *            偏移量
+     *                  字体样式
+     * @param color     --
+     *                  字体颜色
+     * @param fontSize  --
+     *                  字体大小
+     * @param x         --
+     *                  偏移量
      * @param y
      */
 
-    public static void pressText(String pressText, String targetImg,
-                                 String fontName, int fontStyle, int color, int fontSize, int x,
-                                 int y) {
+    public static void pressText(String pressText, String targetImg, String fontName, int fontStyle, int color, int fontSize, int x, int y) {
         try {
 
             File _file = new File(targetImg);
@@ -117,9 +111,7 @@ public class oneImages {
             // String s="www.qhd.com.cn";
             g.setColor(Color.RED);
             g.setFont(new Font(fontName, fontStyle, fontSize));
-
-            g.drawString(pressText, wideth - fontSize - x, height - fontSize
-                    / 2 - y);
+            g.drawString(pressText, wideth - fontSize - x, height - fontSize / 2 - y);
             g.dispose();
             FileOutputStream out = new FileOutputStream(targetImg);
             JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
@@ -131,7 +123,7 @@ public class oneImages {
     }
 
     public static void main(String[] args) {
-        pressImage("http://cheshi654321.oss-cn-beijing.aliyuncs.com/data/1539593701464.png",   "F:/images/8.jpg", 50, 90);
+        pressImage("http://cheshi654321.oss-cn-beijing.aliyuncs.com/data/1539593701464.png", "F:/images/8.jpg", 50, 90);
 
     }
 }

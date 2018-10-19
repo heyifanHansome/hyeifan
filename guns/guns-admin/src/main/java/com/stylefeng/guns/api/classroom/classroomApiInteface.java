@@ -4,18 +4,38 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.stylefeng.guns.core.util.QRCodeUtil;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.core.util.Time;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
+import com.stylefeng.guns.modular.system.vo.commentVo;
 import com.stylefeng.guns.modular.tag.service.ITagService;
+import com.stylefeng.guns.modular.userCommentModel.service.IUserCommentService;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import org.apache.http.HttpResponse;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 
 /**
@@ -35,6 +55,9 @@ public class classroomApiInteface {
 
     @Autowired
     private IUserApiService userApiService;
+
+    @Autowired
+    private IUserCommentService userCommentService;
 
     /**
      * 根据传入的栏目id获得当前的所有数据
@@ -189,8 +212,8 @@ public class classroomApiInteface {
             ).getRecords();
             Map<String, Object> map = new HashMap<>();
             for (int i = 0; i < classrooms.size(); i++) {
-                map.put("thmub",classrooms.get(i).getTitle());
-                map.put("title",classrooms.get(i).getTitle());
+                map.put("thmub", classrooms.get(i).getTitle());
+                map.put("title", classrooms.get(i).getTitle());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,4 +224,68 @@ public class classroomApiInteface {
     }
 
 
+//        Map<String, MultipartFile> map=((MultipartHttpServletRequest)request).getFileMap();
+//        MultipartFile avaterPicture = null;
+//        MultipartFile qrPicture = null;
+//        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
+//            String obj = i.next();
+//            if(obj.equals("userPic")){
+//                avaterPicture = (MultipartFile) map.get(obj);
+//            }
+//            if(obj.equals("qrPicture")){
+//                qrPicture = (MultipartFile) map.get(obj);
+//            }
+//        }
+//
+//
+//                try {
+//                    InputStream tiltePictureStream = avaterPicture.getInputStream();
+//                    //目标文件
+//                    Image src = ImageIO.read(tiltePictureStream);
+//                    int wideth = src.getWidth(null);
+//                    int height = src.getHeight(null);
+//                    BufferedImage image = new BufferedImage(wideth, height,
+//                            BufferedImage.TYPE_INT_RGB);
+//                    Graphics g = image.createGraphics();
+//                    g.drawImage(src, 0, 0, wideth, height, null);
+//
+//                    InputStream thumnStream = qrPicture.getInputStream();
+//                    Image src_biao = ImageIO.read(thumnStream);
+//                    int wideth_biao = src_biao.getWidth(null);
+//                    int height_biao = src_biao.getHeight(null);
+//                    g.drawImage(src_biao, 536  +55 +25,
+//                            642+52 +213, 152, 151, null);
+//                    //水印文件结束
+//                    g.dispose();
+//
+//
+//                    FileOutputStream out = new FileOutputStream("F:/images/nm.jpg");
+//                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//
+//                    FileInputStream in = new FileInputStream("F:/images/dasfasd.jpg");
+//                    IOUtils.copy(in, response.getOutputStream());
+
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+
 }
+
+
+//            try {
+//                InputStream inputStream = multipartFile.getInputStream();
+////            result=this.uploadFile2OSS(inputStream, name,goodsTypeId);
+//            } catch (Exception e) {
+//                throw new RuntimeException("图片上传失败");
+//            }
+//
+//            try {
+//                return "";
+//            } catch (IllegalStateException e) {
+//                e.printStackTrace();
+
+
+
+
+

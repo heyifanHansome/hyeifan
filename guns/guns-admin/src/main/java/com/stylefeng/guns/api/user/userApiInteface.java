@@ -209,7 +209,7 @@ public class userApiInteface {
         return ResultMsg.success(resultObject.getString("msg"),null,resultObject);
     }
 
-    @ApiOperation(value = "返回用户评级(星厨评级)等级评价指标体系集合",notes = "集合内对象嵌套集合,一共三层,第一层是用来分上下版显示,第二层是显示每一版的项目名称,第三层就是每个项目的选项等级分数等具体内容")
+    @ApiOperation(value = "获取用户评级(星厨评级)等级评价指标体系集合",notes = "集合内对象嵌套集合,一共三层,第一层是用来分上下版显示,第二层是显示每一版的项目名称,第三层就是每个项目的选项等级分数等具体内容")
     @ApiResponses(@ApiResponse(code = 200, message = "data:[" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
             "    {" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
             "      name: 一级板块名称(没什么用)," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
@@ -234,7 +234,7 @@ public class userApiInteface {
             "注意:用户在选择完之后,要以同样格式!要以同样格式!要以同样格式!将三级,也就是最里面\"选项\"有选中的包装起来提交,三级没有选中的,该三级所在的二级就不用包装,如果同一个一级下的二级都没有选中三级,那这个一级也不用包装给我,最后是JSON字符串形式提交"))
     @RequestMapping(value="getTargetJSONObjectList",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMsg getTargetJSONObjectList(){
+    public ResultMsg getTargetJSONObjectList(String uid){
         List<Map<String,Object>>targets=dao.selectBySQL("select id,name from "+FSS.target+" where pid='0'");
         for (Map<String, Object> target : targets) {
             List<Map<String,Object>>list=dao.selectBySQL("select id,name from "+FSS.target+" where pid='"+target.get("id")+"'");

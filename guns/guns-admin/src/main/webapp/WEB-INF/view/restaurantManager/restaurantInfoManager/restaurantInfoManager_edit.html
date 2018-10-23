@@ -47,13 +47,13 @@
 
     </div>
 </div>
-<#input id="id" name="" value="${item.id}" underline="true" type="hidden"/>
-<#input id="userId_" value="${item.userId}" name="" underline="true" type="hidden"/>
-<#input id="cityId_" value="${item.cityId}" name="" underline="true" type="hidden"/>
-<#input id="status_" value="${item.status}" name="" underline="true" type="hidden"/>
-<#input id="old_object_name" name="" type="hidden" />
-<#input id="object_name" value="${item.object_name}" name="" type="hidden" />
-<textarea id="images"  name="" style="display: none;">${item.images}</textarea>
+<input id="id" name="" value="${item.id}" type="hidden"/>
+<input id="userId_" value="${item.userId}" type="hidden"/>
+<input id="cityId_" value="${item.cityId}" type="hidden"/>
+<input id="status_" value="${item.status}" type="hidden"/>
+<input id="old_object_name" type="hidden" />
+<input id="object_name" value="${item.object_name}" type="hidden" />
+<textarea id="images" style="display: none;">${item.images}</textarea>
 <script>
     $(function () {
         $('input[name="status_"]').bind('click',function () {

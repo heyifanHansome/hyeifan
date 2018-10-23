@@ -29,7 +29,7 @@
                 <div class="logo-element">GS
                 </div>
             </li>
-            
+
             @for(title in titles){
                 @if(tool.isEmpty(title.children)){
                     <li>
@@ -49,7 +49,7 @@
                             @for(subTitle in title.children){
                                 @if(tool.isEmpty(subTitle.children)){
                                     <li>
-                                        <a class="J_menuItem" href="${ctxPath}${subTitle.url}" name="tabMenuItem">${subTitle.name}</a>
+                                        <a class="J_menuItem" href="${ctxPath}${subTitle.url}?menu_id=${subTitle.id}" name="tabMenuItem">${subTitle.name}</a>
                                     </li>
                                 @}else{
                                     <li>
@@ -57,7 +57,7 @@
                                         <ul class="nav nav-third-level">
                                             @for(thirdTitle in subTitle.children){
                                             <li>
-                                                <a class="J_menuItem" href="${ctxPath}${thirdTitle.url}" name="tabMenuItem">${thirdTitle.name}</a>
+                                                <a class="J_menuItem" href="${ctxPath}${thirdTitle.url}?menu_id=${subTitle.id}" name="tabMenuItem">${thirdTitle.name}</a>
                                             </li>
                                             @}
                                         </ul>

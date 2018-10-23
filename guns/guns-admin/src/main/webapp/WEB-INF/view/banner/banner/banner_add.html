@@ -1,0 +1,65 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-12 b-r">
+                    <input id="id" type="hidden"/>
+                    <input id="old_object_name" type="hidden"/>
+                    <#input id="title" name="标题" underline="true"/>
+                    <#avatar id="picture" name="封面图"/>
+                    <input id="object_name" name="阿里云OSS删除时用到的key" type="hidden"/>
+                    <#input id="href" name="广告跳转的超链接" underline="true"/>
+                    <div id="example" role="application" style="margin-bottom: 3%">
+                        <div class="demo-section k-content">
+                            <h2>请选择标签</h2>
+                            <select id="tagId" multiple="multiple" data-placeholder="请选择标签">
+                            </select>
+                        </div>
+                        <style>
+                            .demo-section label {
+                                display: block;
+                                margin: 15px 0 5px 0;
+                            }
+                            #get {
+                                float: right;
+                                margin: 25px auto 0;
+                            }
+                        </style>
+                    </div>
+                </div>
+                <script>
+                    $(function () {
+                        var dataSource = new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    url: "/banner/getTag?menu_id=${menu_id}",
+                                    dataType: "json"
+                                }
+                            }
+                        });
+
+                        $("#tagId").kendoMultiSelect({
+                            placeholder: "请选择标签",
+                            dataTextField: "name",
+                            dataValueField: "id",
+                            autoBind: false,
+                            dataSource: dataSource
+                        });
+                    });
+                </script>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="BannerInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="BannerInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/banner/banner/banner_info.js"></script>
+@}

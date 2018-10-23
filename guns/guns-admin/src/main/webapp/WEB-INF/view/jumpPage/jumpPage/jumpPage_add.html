@@ -1,0 +1,30 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="" underline="true"/>
+                            <#input id="picture" name="背景图" underline="true"/>
+                            <#input id="objectName" name="阿里云OSS删除的key"/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="orders" name="排序值" underline="true"/>
+                            <#input id="code" name="跳转页面代号(详情见接口文档)" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="JumpPageInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="JumpPageInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/jumpPage/jumpPage/jumpPage_info.js"></script>
+@}

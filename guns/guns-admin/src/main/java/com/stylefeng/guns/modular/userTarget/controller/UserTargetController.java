@@ -121,7 +121,9 @@ public class UserTargetController extends BaseController {
         List<UserTarget>userTargets=new ArrayList<>();
         if (!userApiIds.isEmpty()){
             EntityWrapper<UserTarget>userTargetEntityWrapper=new EntityWrapper<>();
-            userTargetEntityWrapper.in("uid",userApiIds);
+            if(!Tool.isNull(condition)){
+                userTargetEntityWrapper.in("uid",userApiIds);
+            }
             userTargetEntityWrapper.orderBy("'check'",true).orderBy("updatetime",false);
             userTargets=userTargetService.selectList(userTargetEntityWrapper);
             for (UserTarget userTarget : userTargets) {
@@ -178,7 +180,6 @@ public class UserTargetController extends BaseController {
         if(!Tool.isNull(id)) {
             UserTarget userTarget = userTargetService.selectOne(new EntityWrapper<>(new UserTarget()).eq("id", id));
             List<Map<String, Object>> replenish = JSONArray.fromObject(!Tool.isNull(userTarget.getReplenish())&&userTarget.getReplenish().startsWith("[")&&userTarget.getReplenish().endsWith("]")?userTarget.getReplenish():"[]");
-//            for (Map<String, Object> rep : replenish) {
             for (Iterator iterator = replenish.iterator(); iterator.hasNext();) {
                 Map<String,Object>rep=(Map<String, Object>) iterator.next();
                 List<Map<String, Object>>data=JSONArray.fromObject(rep.get("data"));

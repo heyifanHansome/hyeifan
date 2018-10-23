@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="row">
                             <!--<#input id="columnId" name="栏目类型" value="${item.columnId}" underline="true"/>-->
-                            <#select name="栏目类型" id="columnId"></#select>
+                            <#select name="栏目类型" id="columnId"/>
                             <#input id="name" name="标签名" value="${item.name}" />
                 </div>
 
@@ -20,9 +20,9 @@
             </div>
         </div>
 
-        <#input id="id" name="" value="${item.id}" underline="true" type="hidden"/>
-        <#input id="createTime" name="" value="${item.createTime}" underline="true" type="hidden"/>
-        <#input id="updateTime" name="" value="${item.updateTime}"  type="hidden"/>
+        <input id="id" value="${item.id}" type="hidden"/>
+        <input id="createTime"  value="${item.createTime}"  type="hidden"/>
+        <input id="updateTime"  value="${item.updateTime}"  type="hidden"/>
     </div>
 </div>
 <script src="${ctxPath}/static/modular/tag/tag/tag_info.js"></script>

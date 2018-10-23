@@ -1,3967 +1,1526 @@
-(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-        typeof define === 'function' && define.amd ? define(factory) :
-            (global.wangEditor = factory());
-}(this, (function () { 'use strict';
+!function (e, t) {
+    "object" == typeof exports && "undefined" != typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define(t) : e.wangEditor = t()
+}(this, function () {
+    "use strict";
 
-    /*
-     poly-fill
-     */
+    function e(e) {
+        var t = void 0;
+        return t = document.createElement("div"), t.innerHTML = e, t.children
+    }
 
-    var polyfill = function () {
+    function t(e) {
+        return !!e && (e instanceof HTMLCollection || e instanceof NodeList)
+    }
 
-        // Object.assign
-        if (typeof Object.assign != 'function') {
-            Object.assign = function (target, varArgs) {
-                // .length of function is 2
-                if (target == null) {
-                    // TypeError if undefined or null
-                    throw new TypeError('Cannot convert undefined or null to object');
+    function n(e) {
+        var n = document.querySelectorAll(e);
+        return t(n) ? n : [n]
+    }
+
+    function i(o) {
+        if (o) {
+            if (o instanceof i) return o;
+            this.selector = o;
+            var A = o.nodeType, r = [];
+            9 === A ? r = [o] : 1 === A ? r = [o] : t(o) || o instanceof Array ? r = o : "string" == typeof o && (o = o.replace("/\n/mg", "").trim(), r = 0 === o.indexOf("<") ? e(o) : n(o));
+            var c = r.length;
+            if (!c) return this;
+            var a = void 0;
+            for (a = 0; a < c; a++) this[a] = r[a];
+            this.length = c
+        }
+    }
+
+    function o(e) {
+        return new i(e)
+    }
+
+    function A(e, t) {
+        var n = void 0;
+        for (n in e) if (e.hasOwnProperty(n) && !1 === t.call(e, n, e[n])) break
+    }
+
+    function r(e, t) {
+        var n = void 0, i = void 0, o = e.length || 0;
+        for (n = 0; n < o && (i = e[n], !1 !== t.call(e, i, n)); n++) ;
+    }
+
+    function c(e) {
+        return e + Math.random().toString().slice(2)
+    }
+
+    function a(e) {
+        return null == e ? "" : e.replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;").replace(/(\r\n|\r|\n)/g, "<br/>")
+    }
+
+    function s(e) {
+        return "function" == typeof e
+    }
+
+    function l(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-bold"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function d(e, t) {
+        var n = this, i = e.editor;
+        this.menu = e, this.opt = t;
+        var A = o('<div class="w-e-droplist"></div>'), r = t.$title, c = void 0;
+        r && (c = r.html(), c = O(i, c), r.html(c), r.addClass("w-e-dp-title"), A.append(r));
+        var a = t.list || [], s = t.type || "list", l = t.onClick || $,
+            d = o('<ul class="' + ("list" === s ? "w-e-list" : "w-e-block") + '"></ul>');
+        A.append(d), a.forEach(function (e) {
+            var t = e.$elem, A = t.html();
+            A = O(i, A), t.html(A);
+            var r = e.value, c = o('<li class="w-e-item"></li>');
+            t && (c.append(t), d.append(c), c.on("click", function (e) {
+                l(r), n.hideTimeoutId = setTimeout(function () {
+                    n.hide()
+                }, 0)
+            }))
+        }), A.on("mouseleave", function (e) {
+            n.hideTimeoutId = setTimeout(function () {
+                n.hide()
+            }, 0)
+        }), this.$container = A, this._rendered = !1, this._show = !1
+    }
+
+    function u(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-header"></i></div>'), this.type = "droplist", this._active = !1, this.droplist = new d(this, {
+            width: 100,
+            $title: o("<p>设置标题</p>"),
+            type: "list",
+            list: [{$elem: o("<h1>H1</h1>"), value: "<h1>"}, {
+                $elem: o("<h2>H2</h2>"),
+                value: "<h2>"
+            }, {$elem: o("<h3>H3</h3>"), value: "<h3>"}, {
+                $elem: o("<h4>H4</h4>"),
+                value: "<h4>"
+            }, {$elem: o("<h5>H5</h5>"), value: "<h5>"}, {$elem: o("<p>正文</p>"), value: "<p>"}],
+            onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function h(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-text-heigh"></i></div>'), this.type = "droplist", this._active = !1, this.droplist = new d(this, {
+            width: 160,
+            $title: o("<p>字号</p>"),
+            type: "list",
+            list: [{
+                $elem: o('<span style="font-size: x-small;">x-small</span>'),
+                value: "1"
+            }, {$elem: o('<span style="font-size: small;">small</span>'), value: "2"}, {
+                $elem: o("<span>normal</span>"),
+                value: "3"
+            }, {
+                $elem: o('<span style="font-size: large;">large</span>'),
+                value: "4"
+            }, {
+                $elem: o('<span style="font-size: x-large;">x-large</span>'),
+                value: "5"
+            }, {$elem: o('<span style="font-size: xx-large;">xx-large</span>'), value: "6"}],
+            onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function p(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-font"></i></div>'), this.type = "droplist", this._active = !1;
+        var n = e.config, i = n.fontNames || [];
+        this.droplist = new d(this, {
+            width: 100, $title: o("<p>字体</p>"), type: "list", list: i.map(function (e) {
+                return {$elem: o('<span style="font-family: ' + e + ';">' + e + "</span>"), value: e}
+            }), onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function f(e, t) {
+        this.menu = e, this.opt = t
+    }
+
+    function m(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-link"></i></div>'), this.type = "panel", this._active = !1
+    }
+
+    function g(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-italic"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function w(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-redo"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function v(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-strikethrough"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function E(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-underline"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function b(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-undo"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function B(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-list2"></i></div>'), this.type = "droplist", this._active = !1, this.droplist = new d(this, {
+            width: 120,
+            $title: o("<p>设置列表</p>"),
+            type: "list",
+            list: [{
+                $elem: o('<span><i class="w-e-icon-list-numbered"></i> 有序列表</span>'),
+                value: "insertOrderedList"
+            }, {$elem: o('<span><i class="w-e-icon-list2"></i> 无序列表</span>'), value: "insertUnorderedList"}],
+            onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function y(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-paragraph-left"></i></div>'), this.type = "droplist", this._active = !1, this.droplist = new d(this, {
+            width: 100,
+            $title: o("<p>对齐方式</p>"),
+            type: "list",
+            list: [{
+                $elem: o('<span><i class="w-e-icon-paragraph-left"></i> 靠左</span>'),
+                value: "justifyLeft"
+            }, {
+                $elem: o('<span><i class="w-e-icon-paragraph-center"></i> 居中</span>'),
+                value: "justifyCenter"
+            }, {$elem: o('<span><i class="w-e-icon-paragraph-right"></i> 靠右</span>'), value: "justifyRight"}],
+            onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function C(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-pencil2"></i></div>'), this.type = "droplist";
+        var n = e.config, i = n.colors || [];
+        this._active = !1, this.droplist = new d(this, {
+            width: 120,
+            $title: o("<p>文字颜色</p>"),
+            type: "inline-block",
+            list: i.map(function (e) {
+                return {$elem: o('<i style="color:' + e + ';" class="w-e-icon-pencil2"></i>'), value: e}
+            }),
+            onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function x(e) {
+        var t = this;
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-paint-brush"></i></div>'), this.type = "droplist";
+        var n = e.config, i = n.colors || [];
+        this._active = !1, this.droplist = new d(this, {
+            width: 120,
+            $title: o("<p>背景色</p>"),
+            type: "inline-block",
+            list: i.map(function (e) {
+                return {$elem: o('<i style="color:' + e + ';" class="w-e-icon-paint-brush"></i>'), value: e}
+            }),
+            onClick: function (e) {
+                t._command(e)
+            }
+        })
+    }
+
+    function I(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-quotes-left"></i>\n        </div>'), this.type = "click", this._active = !1
+    }
+
+    function Q(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-terminal"></i>\n        </div>'), this.type = "panel", this._active = !1
+    }
+
+    function M(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu">\n            <i class="w-e-icon-happy"></i>\n        </div>'), this.type = "panel", this._active = !1
+    }
+
+    function S(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-table2"></i></div>'), this.type = "panel", this._active = !1
+    }
+
+    function k(e) {
+        this.editor = e, this.$elem = o('<div class="w-e-menu"><i class="w-e-icon-play"></i></div>'), this.type = "panel", this._active = !1
+    }
+
+    function D(e) {
+        this.editor = e;
+        var t = c("w-e-img");
+        this.$elem = o('<div class="w-e-menu" id="' + t + '"><i class="w-e-icon-image"></i></div>'), e.imgMenuId = t, this.type = "panel", this._active = !1
+    }
+
+    function _(e) {
+        this.editor = e, this.menus = {}
+    }
+
+    function N(e) {
+        var t = e.clipboardData || e.originalEvent && e.originalEvent.clipboardData, n = void 0;
+        return n = null == t ? window.clipboardData && window.clipboardData.getData("text") : t.getData("text/plain"), a(n)
+    }
+
+    function F(e, t, n) {
+        var i = e.clipboardData || e.originalEvent && e.originalEvent.clipboardData, o = void 0, A = void 0;
+        if (null == i ? o = window.clipboardData && window.clipboardData.getData("text") : (o = i.getData("text/plain"), A = i.getData("text/html")), !A && o && (A = "<p>" + a(o) + "</p>"), A) {
+            var r = A.split("</html>");
+            return 2 === r.length && (A = r[0]), A = A.replace(/<(meta|script|link).+?>/gim, ""), A = A.replace(/<!--.*?-->/gm, ""), A = A.replace(/\s?data-.+?=('|").+?('|")/gim, ""), n && (A = A.replace(/<img.+?>/gim, "")), A = t ? A.replace(/\s?(class|style)=('|").*?('|")/gim, "") : A.replace(/\s?class=('|").*?('|")/gim, "")
+        }
+    }
+
+    function T(e) {
+        var t = [];
+        if (N(e)) return t;
+        var n = e.clipboardData || e.originalEvent && e.originalEvent.clipboardData || {}, i = n.items;
+        return i ? (A(i, function (e, n) {
+            var i = n.type;
+            /image/i.test(i) && t.push(n.getAsFile())
+        }), t) : t
+    }
+
+    function R(e) {
+        var t = [];
+        return (e.childNodes() || []).forEach(function (e) {
+            var n = void 0, i = e.nodeType;
+            if (3 === i && (n = e.textContent, n = a(n)), 1 === i) {
+                n = {}, n.tag = e.nodeName.toLowerCase();
+                for (var A = [], r = e.attributes || {}, c = r.length || 0, s = 0; s < c; s++) {
+                    var l = r[s];
+                    A.push({name: l.name, value: l.value})
                 }
+                n.attrs = A, n.children = R(o(e))
+            }
+            t.push(n)
+        }), t
+    }
 
-                var to = Object(target);
+    function U(e) {
+        this.editor = e
+    }
 
-                for (var index = 1; index < arguments.length; index++) {
-                    var nextSource = arguments[index];
+    function Y(e) {
+        this.editor = e
+    }
 
-                    if (nextSource != null) {
-                        // Skip over if undefined or null
-                        for (var nextKey in nextSource) {
-                            // Avoid bugs when hasOwnProperty is shadowed
-                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                                to[nextKey] = nextSource[nextKey];
-                            }
-                        }
+    function P(e) {
+        this.editor = e, this._currentRange = null
+    }
+
+    function H(e) {
+        this.editor = e, this._time = 0, this._isShow = !1, this._isRender = !1, this._timeoutId = 0, this.$textContainer = e.$textContainerElem, this.$bar = o('<div class="w-e-progress"></div>')
+    }
+
+    function L(e) {
+        this.editor = e
+    }
+
+    function j(e, t) {
+        if (null == e) throw new Error("错误：初始化编辑器时候未传入任何参数，请查阅文档");
+        this.id = "wangEditor-" + W++, this.toolbarSelector = e, this.textSelector = t, this.customConfig = {}
+    }
+
+    var G = [];
+    i.prototype = {
+        constructor: i, forEach: function (e) {
+            var t = void 0;
+            for (t = 0; t < this.length; t++) {
+                var n = this[t];
+                if (!1 === e.call(n, n, t)) break
+            }
+            return this
+        }, clone: function (e) {
+            var t = [];
+            return this.forEach(function (n) {
+                t.push(n.cloneNode(!!e))
+            }), o(t)
+        }, get: function (e) {
+            var t = this.length;
+            return e >= t && (e %= t), o(this[e])
+        }, first: function () {
+            return this.get(0)
+        }, last: function () {
+            var e = this.length;
+            return this.get(e - 1)
+        }, on: function (e, t, n) {
+            n || (n = t, t = null);
+            var i = [];
+            return i = e.split(/\s+/), this.forEach(function (e) {
+                i.forEach(function (i) {
+                    if (i) {
+                        if (G.push({elem: e, type: i, fn: n}), !t) return void e.addEventListener(i, n);
+                        e.addEventListener(i, function (e) {
+                            var i = e.target;
+                            i.matches(t) && n.call(i, e)
+                        })
                     }
+                })
+            })
+        }, off: function (e, t) {
+            return this.forEach(function (n) {
+                n.removeEventListener(e, t)
+            })
+        }, attr: function (e, t) {
+            return null == t ? this[0].getAttribute(e) : this.forEach(function (n) {
+                n.setAttribute(e, t)
+            })
+        }, addClass: function (e) {
+            return e ? this.forEach(function (t) {
+                var n = void 0;
+                t.className ? (n = t.className.split(/\s/), n = n.filter(function (e) {
+                    return !!e.trim()
+                }), n.indexOf(e) < 0 && n.push(e), t.className = n.join(" ")) : t.className = e
+            }) : this
+        }, removeClass: function (e) {
+            return e ? this.forEach(function (t) {
+                var n = void 0;
+                t.className && (n = t.className.split(/\s/), n = n.filter(function (t) {
+                    return !(!(t = t.trim()) || t === e)
+                }), t.className = n.join(" "))
+            }) : this
+        }, css: function (e, t) {
+            var n = e + ":" + t + ";";
+            return this.forEach(function (t) {
+                var i = (t.getAttribute("style") || "").trim(), o = void 0, A = [];
+                i ? (o = i.split(";"), o.forEach(function (e) {
+                    var t = e.split(":").map(function (e) {
+                        return e.trim()
+                    });
+                    2 === t.length && A.push(t[0] + ":" + t[1])
+                }), A = A.map(function (t) {
+                    return 0 === t.indexOf(e) ? n : t
+                }), A.indexOf(n) < 0 && A.push(n), t.setAttribute("style", A.join("; "))) : t.setAttribute("style", n)
+            })
+        }, show: function () {
+            return this.css("display", "block")
+        }, hide: function () {
+            return this.css("display", "none")
+        }, children: function () {
+            var e = this[0];
+            return e ? o(e.children) : null
+        }, childNodes: function () {
+            var e = this[0];
+            return e ? o(e.childNodes) : null
+        }, append: function (e) {
+            return this.forEach(function (t) {
+                e.forEach(function (e) {
+                    t.appendChild(e)
+                })
+            })
+        }, remove: function () {
+            return this.forEach(function (e) {
+                if (e.remove) e.remove(); else {
+                    var t = e.parentElement;
+                    t && t.removeChild(e)
                 }
-                return to;
-            };
+            })
+        }, isContain: function (e) {
+            var t = this[0], n = e[0];
+            return t.contains(n)
+        }, getSizeData: function () {
+            return this[0].getBoundingClientRect()
+        }, getNodeName: function () {
+            return this[0].nodeName
+        }, find: function (e) {
+            return o(this[0].querySelectorAll(e))
+        }, text: function (e) {
+            return e ? this.forEach(function (t) {
+                t.innerHTML = e
+            }) : this[0].innerHTML.replace(/<.*?>/g, function () {
+                return ""
+            })
+        }, html: function (e) {
+            var t = this[0];
+            return null == e ? t.innerHTML : (t.innerHTML = e, this)
+        }, val: function () {
+            return this[0].value.trim()
+        }, focus: function () {
+            return this.forEach(function (e) {
+                e.focus()
+            })
+        }, parent: function () {
+            return o(this[0].parentElement)
+        }, parentUntil: function (e, t) {
+            var n = document.querySelectorAll(e), i = n.length;
+            if (!i) return null;
+            var A = t || this[0];
+            if ("BODY" === A.nodeName) return null;
+            var r = A.parentElement, c = void 0;
+            for (c = 0; c < i; c++) if (r === n[c]) return o(r);
+            return this.parentUntil(e, r)
+        }, equal: function (e) {
+            return 1 === e.nodeType ? this[0] === e : this[0] === e[0]
+        }, insertBefore: function (e) {
+            var t = o(e), n = t[0];
+            return n ? this.forEach(function (e) {
+                n.parentNode.insertBefore(e, n)
+            }) : this
+        }, insertAfter: function (e) {
+            var t = o(e), n = t[0];
+            return n ? this.forEach(function (e) {
+                var t = n.parentNode;
+                t.lastChild === n ? t.appendChild(e) : t.insertBefore(e, n.nextSibling)
+            }) : this
         }
-
-        // IE 中兼容 Element.prototype.matches
-        if (!Element.prototype.matches) {
-            Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (s) {
-                    var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                        i = matches.length;
-                    while (--i >= 0 && matches.item(i) !== this) {}
-                    return i > -1;
-                };
-        }
+    }, o.offAll = function () {
+        G.forEach(function (e) {
+            var t = e.elem, n = e.type, i = e.fn;
+            t.removeEventListener(n, i)
+        })
     };
-
-    /*
-     DOM 操作 API
-     */
-
-// 根据 html 代码片段创建 dom 对象
-    function createElemByHTML(html) {
-        var div = void 0;
-        div = document.createElement('div');
-        div.innerHTML = html;
-        return div.children;
-    }
-
-// 是否是 DOM List
-    function isDOMList(selector) {
-        if (!selector) {
-            return false;
-        }
-        if (selector instanceof HTMLCollection || selector instanceof NodeList) {
-            return true;
-        }
-        return false;
-    }
-
-// 封装 document.querySelectorAll
-    function querySelectorAll(selector) {
-        var result = document.querySelectorAll(selector);
-        if (isDOMList(result)) {
-            return result;
-        } else {
-            return [result];
-        }
-    }
-
-// 创建构造函数
-    function DomElement(selector) {
-        if (!selector) {
-            return;
-        }
-
-        // selector 本来就是 DomElement 对象，直接返回
-        if (selector instanceof DomElement) {
-            return selector;
-        }
-
-        this.selector = selector;
-
-        // 根据 selector 得出的结果（如 DOM，DOM List）
-        var selectorResult = [];
-        if (selector.nodeType === 1) {
-            // 单个 DOM 节点
-            selectorResult = [selector];
-        } else if (isDOMList(selector)) {
-            // DOM List
-            selectorResult = selector;
-        } else if (typeof selector === 'string') {
-            // 字符串
-            selector = selector.replace('/\n/mg', '').trim();
-            if (selector.indexOf('<') === 0) {
-                // 如 <div>
-                selectorResult = createElemByHTML(selector);
-            } else {
-                // 如 #id .class
-                selectorResult = querySelectorAll(selector);
-            }
-        }
-
-        var length = selectorResult.length;
-        if (!length) {
-            // 空数组
-            return this;
-        }
-
-        // 加入 DOM 节点
-        var i = void 0;
-        for (i = 0; i < length; i++) {
-            this[i] = selectorResult[i];
-        }
-        this.length = length;
-    }
-
-// 修改原型
-    DomElement.prototype = {
-        constructor: DomElement,
-
-        // 类数组，forEach
-        forEach: function forEach(fn) {
-            var i = void 0;
-            for (i = 0; i < this.length; i++) {
-                var elem = this[i];
-                var result = fn.call(elem, elem, i);
-                if (result === false) {
-                    break;
-                }
-            }
-            return this;
+    var z = {
+        menus: ["head", "bold", "fontSize", "fontName", "italic", "underline", "strikeThrough", "foreColor", "backColor", "link", "list", "justify", "quote", "emoticon", "image", "table", "video", "code", "undo", "redo"],
+        fontNames: ["宋体", "微软雅黑", "Arial", "Tahoma", "Verdana"],
+        colors: ["#000000", "#eeece0", "#1c487f", "#4d80bf", "#c24f4a", "#8baa4a", "#7b5ba1", "#46acc8", "#f9963b", "#ffffff"],
+        emotions: [{
+            title: "默认",
+            type: "image",
+            content: [{
+                alt: "[坏笑]",
+                src: "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png"
+            }, {
+                alt: "[舔屏]",
+                src: "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/pcmoren_tian_org.png"
+            }, {alt: "[污]", src: "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3c/pcmoren_wu_org.png"}]
+        }, {
+            title: "新浪",
+            type: "image",
+            content: [{
+                src: "http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif",
+                alt: "[草泥马]"
+            }, {
+                src: "http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif",
+                alt: "[神马]"
+            }, {src: "http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif", alt: "[浮云]"}]
+        }, {
+            title: "emoji",
+            type: "emoji",
+            content: "😀 😃 😄 😁 😆 😅 😂 😊 😇 🙂 🙃 😉 😓 😪 😴 🙄 🤔 😬 🤐".split(/\s/)
+        }],
+        zIndex: 1e4,
+        debug: !1,
+        linkCheck: function (e, t) {
+            return !0
         },
-
-        // 获取第几个元素
-        get: function get(index) {
-            var length = this.length;
-            if (index >= length) {
-                index = index % length;
-            }
-            return $(this[index]);
+        linkImgCheck: function (e) {
+            return !0
         },
-
-        // 第一个
-        first: function first() {
-            return this.get(0);
+        pasteFilterStyle: !0,
+        pasteIgnoreImg: !1,
+        pasteTextHandle: function (e) {
+            return e
         },
-
-        // 最后一个
-        last: function last() {
-            var length = this.length;
-            return this.get(length - 1);
+        showLinkImg: !0,
+        linkImgCallback: function (e) {
         },
-
-        // 绑定事件
-        on: function on(type, selector, fn) {
-            // selector 不为空，证明绑定事件要加代理
-            if (!fn) {
-                fn = selector;
-                selector = null;
-            }
-
-            // type 是否有多个
-            var types = [];
-            types = type.split(/\s+/);
-
-            return this.forEach(function (elem) {
-                types.forEach(function (type) {
-                    if (!type) {
-                        return;
-                    }
-
-                    if (!selector) {
-                        // 无代理
-                        elem.addEventListener(type, fn, false);
-                        return;
-                    }
-
-                    // 有代理
-                    elem.addEventListener(type, function (e) {
-                        var target = e.target;
-                        if (target.matches(selector)) {
-                            fn.call(target, e);
-                        }
-                    }, false);
-                });
-            });
-        },
-
-        // 取消事件绑定
-        off: function off(type, fn) {
-            return this.forEach(function (elem) {
-                elem.removeEventListener(type, fn, false);
-            });
-        },
-
-        // 获取/设置 属性
-        attr: function attr(key, val) {
-            if (val == null) {
-                // 获取值
-                return this[0].getAttribute(key);
-            } else {
-                // 设置值
-                return this.forEach(function (elem) {
-                    elem.setAttribute(key, val);
-                });
-            }
-        },
-
-        // 添加 class
-        addClass: function addClass(className) {
-            if (!className) {
-                return this;
-            }
-            return this.forEach(function (elem) {
-                var arr = void 0;
-                if (elem.className) {
-                    // 解析当前 className 转换为数组
-                    arr = elem.className.split(/\s/);
-                    arr = arr.filter(function (item) {
-                        return !!item.trim();
-                    });
-                    // 添加 class
-                    if (arr.indexOf(className) < 0) {
-                        arr.push(className);
-                    }
-                    // 修改 elem.class
-                    elem.className = arr.join(' ');
-                } else {
-                    elem.className = className;
-                }
-            });
-        },
-
-        // 删除 class
-        removeClass: function removeClass(className) {
-            if (!className) {
-                return this;
-            }
-            return this.forEach(function (elem) {
-                var arr = void 0;
-                if (elem.className) {
-                    // 解析当前 className 转换为数组
-                    arr = elem.className.split(/\s/);
-                    arr = arr.filter(function (item) {
-                        item = item.trim();
-                        // 删除 class
-                        if (!item || item === className) {
-                            return false;
-                        }
-                        return true;
-                    });
-                    // 修改 elem.class
-                    elem.className = arr.join(' ');
-                }
-            });
-        },
-
-        // 修改 css
-        css: function css(key, val) {
-            var currentStyle = key + ':' + val + ';';
-            return this.forEach(function (elem) {
-                var style = (elem.getAttribute('style') || '').trim();
-                var styleArr = void 0,
-                    resultArr = [];
-                if (style) {
-                    // 将 style 按照 ; 拆分为数组
-                    styleArr = style.split(';');
-                    styleArr.forEach(function (item) {
-                        // 对每项样式，按照 : 拆分为 key 和 value
-                        var arr = item.split(':').map(function (i) {
-                            return i.trim();
-                        });
-                        if (arr.length === 2) {
-                            resultArr.push(arr[0] + ':' + arr[1]);
-                        }
-                    });
-                    // 替换或者新增
-                    resultArr = resultArr.map(function (item) {
-                        if (item.indexOf(key) === 0) {
-                            return currentStyle;
-                        } else {
-                            return item;
-                        }
-                    });
-                    if (resultArr.indexOf(currentStyle) < 0) {
-                        resultArr.push(currentStyle);
-                    }
-                    // 结果
-                    elem.setAttribute('style', resultArr.join('; '));
-                } else {
-                    // style 无值
-                    elem.setAttribute('style', currentStyle);
-                }
-            });
-        },
-
-        // 显示
-        show: function show() {
-            return this.css('display', 'block');
-        },
-
-        // 隐藏
-        hide: function hide() {
-            return this.css('display', 'none');
-        },
-
-        // 获取子节点
-        children: function children() {
-            var elem = this[0];
-            if (!elem) {
-                return null;
-            }
-
-            return $(elem.children);
-        },
-
-        // 增加子节点
-        append: function append($children) {
-            return this.forEach(function (elem) {
-                $children.forEach(function (child) {
-                    elem.appendChild(child);
-                });
-            });
-        },
-
-        // 移除当前节点
-        remove: function remove() {
-            return this.forEach(function (elem) {
-                if (elem.remove) {
-                    elem.remove();
-                } else {
-                    var parent = elem.parentElement;
-                    parent && parent.removeChild(elem);
-                }
-            });
-        },
-
-        // 是否包含某个子节点
-        isContain: function isContain($child) {
-            var elem = this[0];
-            var child = $child[0];
-            return elem.contains(child);
-        },
-
-        // 尺寸数据
-        getSizeData: function getSizeData() {
-            var elem = this[0];
-            return elem.getBoundingClientRect(); // 可得到 bottom height left right top width 的数据
-        },
-
-        // 封装 nodeName
-        getNodeName: function getNodeName() {
-            var elem = this[0];
-            return elem.nodeName;
-        },
-
-        // 从当前元素查找
-        find: function find(selector) {
-            var elem = this[0];
-            return $(elem.querySelectorAll(selector));
-        },
-
-        // 获取当前元素的 text
-        text: function text(val) {
-            if (!val) {
-                // 获取 text
-                var elem = this[0];
-                return elem.innerHTML.replace(/<.*?>/g, function () {
-                    return '';
-                });
-            } else {
-                // 设置 text
-                return this.forEach(function (elem) {
-                    elem.innerHTML = val;
-                });
-            }
-        },
-
-        // 获取 html
-        html: function html(value) {
-            var elem = this[0];
-            if (value == null) {
-                return elem.innerHTML;
-            } else {
-                elem.innerHTML = value;
-                return this;
-            }
-        },
-
-        // 获取 value
-        val: function val() {
-            var elem = this[0];
-            return elem.value.trim();
-        },
-
-        // focus
-        focus: function focus() {
-            return this.forEach(function (elem) {
-                elem.focus();
-            });
-        },
-
-        // parent
-        parent: function parent() {
-            var elem = this[0];
-            return $(elem.parentElement);
-        },
-
-        // parentUntil 找到符合 selector 的父节点
-        parentUntil: function parentUntil(selector, _currentElem) {
-            var results = document.querySelectorAll(selector);
-            var length = results.length;
-            if (!length) {
-                // 传入的 selector 无效
-                return null;
-            }
-
-            var elem = _currentElem || this[0];
-            if (elem.nodeName === 'BODY') {
-                return null;
-            }
-
-            var parent = elem.parentElement;
-            var i = void 0;
-            for (i = 0; i < length; i++) {
-                if (parent === results[i]) {
-                    // 找到，并返回
-                    return $(parent);
-                }
-            }
-
-            // 继续查找
-            return this.parentUntil(selector, parent);
-        },
-
-        // 判断两个 elem 是否相等
-        equal: function equal($elem) {
-            if ($elem.nodeType === 1) {
-                return this[0] === $elem;
-            } else {
-                return this[0] === $elem[0];
-            }
-        },
-
-        // 将该元素插入到某个元素前面
-        insertBefore: function insertBefore(selector) {
-            var $referenceNode = $(selector);
-            var referenceNode = $referenceNode[0];
-            if (!referenceNode) {
-                return this;
-            }
-            return this.forEach(function (elem) {
-                var parent = referenceNode.parentNode;
-                parent.insertBefore(elem, referenceNode);
-            });
-        },
-
-        // 将该元素插入到某个元素后面
-        insertAfter: function insertAfter(selector) {
-            var $referenceNode = $(selector);
-            var referenceNode = $referenceNode[0];
-            if (!referenceNode) {
-                return this;
-            }
-            return this.forEach(function (elem) {
-                var parent = referenceNode.parentNode;
-                if (parent.lastChild === referenceNode) {
-                    // 最后一个元素
-                    parent.appendChild(elem);
-                } else {
-                    // 不是最后一个元素
-                    parent.insertBefore(elem, referenceNode.nextSibling);
-                }
-            });
-        }
-    };
-
-// new 一个对象
-    function $(selector) {
-        return new DomElement(selector);
-    }
-
-    /*
-     配置信息
-     */
-
-    var config = {
-
-        // 默认菜单配置
-        menus: ['head', 'bold', 'italic', 'underline', 'strikeThrough', 'foreColor', 'backColor', 'link', 'list', 'justify', 'quote', 'emoticon', 'image', 'table', 'video', 'code', 'undo', 'redo'],
-
-        // 编辑区域的 z-index
-        zIndex: 10000,
-
-        // 是否开启 debug 模式（debug 模式下错误会 throw error 形式抛出）
-        debug: false,
-
-        // onchange 事件
-        // onchange: function (html) {
-        //     // html 即变化之后的内容
-        //     console.log(html)
-        // },
-
-        // 是否显示添加网络图片的 tab
-        showLinkImg: true,
-
-        // 默认上传图片 max size: 5M
-        uploadImgMaxSize: 5 * 1024 * 1024,
-
-        // 配置一次最多上传几个图片
-        // uploadImgMaxLength: 5,
-
-        // 上传图片，是否显示 base64 格式
-        uploadImgShowBase64: false,
-
-        // 上传图片，server 地址（如果有值，则 base64 格式的配置则失效）
-        // uploadImgServer: '/upload',
-
-        // 自定义配置 filename
-        uploadFileName: '',
-
-        // 上传图片的自定义参数
-        uploadImgParams: {
-            token: 'abcdef12345'
-        },
-
-        // 上传图片的自定义header
-        uploadImgHeaders: {
-            // 'Accept': 'text/x-json'
-        },
-
-        // 配置 XHR withCredentials
-        withCredentials: false,
-
-        // 自定义上传图片超时时间 ms
-        uploadImgTimeout: 5000,
-
-        // 上传图片 hook
+        uploadImgMaxSize: 5242880,
+        uploadImgShowBase64: !1,
+        uploadFileName: "",
+        uploadImgParams: {},
+        uploadImgHeaders: {},
+        withCredentials: !1,
+        uploadImgTimeout: 1e4,
         uploadImgHooks: {
-            // customInsert: function (insertLinkImg, result, editor) {
-            //     console.log('customInsert')
-            //     // 图片上传并返回结果，自定义插入图片的事件，而不是编辑器自动插入图片
-            //     const data = result.data1 || []
-            //     data.forEach(link => {
-            //         insertLinkImg(link)
-            //     })
-            // },
-            before: function before(xhr, editor, files) {
-                // 图片上传之前触发
-            },
-            success: function success(xhr, editor, result) {
-                // 图片上传并返回结果，图片插入成功之后触发
-            },
-            fail: function fail(xhr, editor, result) {
-                // 图片上传并返回结果，但图片插入错误时触发
-            },
-            error: function error(xhr, editor) {
-                // 图片上传出错时触发
-            },
-            timeout: function timeout(xhr, editor) {
-                // 图片上传超时时触发
-            }
-        }
-    };
-
-    /*
-     工具
-     */
-
-// 和 UA 相关的属性
-    var UA = {
-        _ua: navigator.userAgent,
-
-        // 是否 webkit
-        isWebkit: function isWebkit() {
-            var reg = /webkit/i;
-            return reg.test(this._ua);
-        },
-
-        // 是否 IE
-        isIE: function isIE() {
-            return 'ActiveXObject' in window;
-        }
-    };
-
-// 遍历对象
-    function objForEach(obj, fn) {
-        var key = void 0,
-            result = void 0;
-        for (key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                result = fn.call(obj, key, obj[key]);
-                if (result === false) {
-                    break;
-                }
-            }
-        }
-    }
-
-// 遍历类数组
-    function arrForEach(fakeArr, fn) {
-        var i = void 0,
-            item = void 0,
-            result = void 0;
-        var length = fakeArr.length || 0;
-        for (i = 0; i < length; i++) {
-            item = fakeArr[i];
-            result = fn.call(fakeArr, item, i);
-            if (result === false) {
-                break;
-            }
-        }
-    }
-
-// 获取随机数
-    function getRandom(prefix) {
-        return prefix + Math.random().toString().slice(2);
-    }
-
-// 替换 html 特殊字符
-    function replaceHtmlSymbol(html) {
-        if (html == null) {
-            return '';
-        }
-        return html.replace(/</gm, '&lt;').replace(/>/gm, '&gt;').replace(/"/gm, '&quot;');
-    }
-
-// 返回百分比的格式
-
-    /*
-     bold-menu
-     */
-// 构造函数
-    function Bold(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-bold"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Bold.prototype = {
-        constructor: Bold,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            // 点击菜单将触发这里
-
-            var editor = this.editor;
-            var isSeleEmpty = editor.selection.isSelectionEmpty();
-
-            if (isSeleEmpty) {
-                // 选区是空的，插入并选中一个“空白”
-                editor.selection.createEmptyRange();
-            }
-
-            // 执行 bold 命令
-            editor.cmd.do('bold');
-
-            if (isSeleEmpty) {
-                // 需要将选取折叠起来
-                editor.selection.collapseRange();
-                editor.selection.restoreSelection();
+            before: function (e, t, n) {
+            }, success: function (e, t, n) {
+            }, fail: function (e, t, n) {
+            }, error: function (e, t) {
+            }, timeout: function (e, t) {
             }
         },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            if (editor.cmd.queryCommandState('bold')) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
+        qiniu: !1
+    }, J = {
+        _ua: navigator.userAgent, isWebkit: function () {
+            return /webkit/i.test(this._ua)
+        }, isIE: function () {
+            return "ActiveXObject" in window
         }
     };
-
-    /*
-     droplist
-     */
-    var _emptyFn = function _emptyFn() {};
-
-// 构造函数
-    function DropList(menu, opt) {
-        var _this = this;
-
-        // droplist 所依附的菜单
-        this.menu = menu;
-        this.opt = opt;
-        // 容器
-        var $container = $('<div class="w-e-droplist"></div>');
-
-        // 标题
-        var $title = opt.$title;
-        if ($title) {
-            $title.addClass('w-e-dp-title');
-            $container.append($title);
+    l.prototype = {
+        constructor: l, onClick: function (e) {
+            var t = this.editor, n = t.selection.isSelectionEmpty();
+            n && t.selection.createEmptyRange(), t.cmd.do("bold"), n && (t.selection.collapseRange(), t.selection.restoreSelection())
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem;
+            t.cmd.queryCommandState("bold") ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
         }
-
-        var list = opt.list || [];
-        var type = opt.type || 'list'; // 'list' 列表形式（如“标题”菜单） / 'inline-block' 块状形式（如“颜色”菜单）
-        var onClick = opt.onClick || _emptyFn;
-
-        // 加入 DOM 并绑定事件
-        var $list = $('<ul class="' + (type === 'list' ? 'w-e-list' : 'w-e-block') + '"></ul>');
-        $container.append($list);
-        list.forEach(function (item) {
-            var $elem = item.$elem;
-            var value = item.value;
-            var $li = $('<li class="w-e-item"></li>');
-            if ($elem) {
-                $li.append($elem);
-                $list.append($li);
-                $elem.on('click', function (e) {
-                    onClick(value);
-
-                    // 隐藏
-                    _this.hideTimeoutId = setTimeout(function () {
-                        _this.hide();
-                    }, 0);
-                });
-            }
-        });
-
-        // 绑定隐藏事件
-        $container.on('mouseleave', function (e) {
-            _this.hideTimeoutId = setTimeout(function () {
-                _this.hide();
-            }, 0);
-        });
-
-        // 记录属性
-        this.$container = $container;
-
-        // 基本属性
-        this._rendered = false;
-        this._show = false;
-    }
-
-// 原型
-    DropList.prototype = {
-        constructor: DropList,
-
-        // 显示（插入DOM）
-        show: function show() {
-            if (this.hideTimeoutId) {
-                // 清除之前的定时隐藏
-                clearTimeout(this.hideTimeoutId);
-            }
-
-            var menu = this.menu;
-            var $menuELem = menu.$elem;
-            var $container = this.$container;
-            if (this._show) {
-                return;
-            }
-            if (this._rendered) {
-                // 显示
-                $container.show();
-            } else {
-                // 加入 DOM 之前先定位位置
-                var menuHeight = $menuELem.getSizeData().height || 0;
-                var width = this.opt.width || 100; // 默认为 100
-                $container.css('margin-top', menuHeight + 'px').css('width', width + 'px');
-
-                // 加入到 DOM
-                $menuELem.append($container);
-                this._rendered = true;
-            }
-
-            // 修改属性
-            this._show = true;
-        },
-
-        // 隐藏（移除DOM）
-        hide: function hide() {
-            if (this.showTimeoutId) {
-                // 清除之前的定时显示
-                clearTimeout(this.showTimeoutId);
-            }
-
-            var $container = this.$container;
+    };
+    var O = function (e, t) {
+        var n = e.config.langArgs || [], i = t;
+        return n.forEach(function (e) {
+            var t = e.reg, n = e.val;
+            t.test(i) && (i = i.replace(t, function () {
+                return n
+            }))
+        }), i
+    }, $ = function () {
+    };
+    d.prototype = {
+        constructor: d, show: function () {
+            this.hideTimeoutId && clearTimeout(this.hideTimeoutId);
+            var e = this.menu, t = e.$elem, n = this.$container;
             if (!this._show) {
-                return;
+                if (this._rendered) n.show(); else {
+                    var i = t.getSizeData().height || 0, o = this.opt.width || 100;
+                    n.css("margin-top", i + "px").css("width", o + "px"), t.append(n), this._rendered = !0
+                }
+                this._show = !0
             }
-            // 隐藏并需改属性
-            $container.hide();
-            this._show = false;
+        }, hide: function () {
+            this.showTimeoutId && clearTimeout(this.showTimeoutId);
+            var e = this.$container;
+            this._show && (e.hide(), this._show = !1)
+        }
+    }, u.prototype = {
+        constructor: u, _command: function (e) {
+            var t = this.editor, n = t.selection.getSelectionContainerElem();
+            t.$textElem.equal(n) || t.cmd.do("formatBlock", e)
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem, i = /^h/i, o = t.cmd.queryCommandValue("formatBlock");
+            i.test(o) ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    }, h.prototype = {
+        constructor: h, _command: function (e) {
+            this.editor.cmd.do("fontSize", e)
+        }
+    }, p.prototype = {
+        constructor: p, _command: function (e) {
+            this.editor.cmd.do("fontName", e)
         }
     };
-
-    /*
-     menu - header
-     */
-// 构造函数
-    function Head(editor) {
-        var _this = this;
-
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-header"><i/></div>');
-        this.type = 'droplist';
-
-        // 当前是否 active 状态
-        this._active = false;
-
-        // 初始化 droplist
-        this.droplist = new DropList(this, {
-            width: 100,
-            $title: $('<p>设置标题</p>'),
-            type: 'list', // droplist 以列表形式展示
-            list: [{ $elem: $('<h1>H1</h1>'), value: '<h1>' }, { $elem: $('<h2>H2</h2>'), value: '<h2>' }, { $elem: $('<h3>H3</h3>'), value: '<h3>' }, { $elem: $('<h4>H4</h4>'), value: '<h4>' }, { $elem: $('<h5>H5</h5>'), value: '<h5>' }, { $elem: $('<p>正文</p>'), value: '<p>' }],
-            onClick: function onClick(value) {
-                // 注意 this 是指向当前的 Head 对象
-                _this._command(value);
-            }
-        });
-    }
-
-// 原型
-    Head.prototype = {
-        constructor: Head,
-
-        // 执行命令
-        _command: function _command(value) {
-            var editor = this.editor;
-            editor.cmd.do('formatBlock', value);
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            var reg = /^h/i;
-            var cmdValue = editor.cmd.queryCommandValue('formatBlock');
-            if (reg.test(cmdValue)) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     panel
-     */
-
-    var emptyFn = function emptyFn() {};
-
-// 记录已经显示 panel 的菜单
-    var _isCreatedPanelMenus = [];
-
-// 构造函数
-    function Panel(menu, opt) {
-        this.menu = menu;
-        this.opt = opt;
-    }
-
-// 原型
-    Panel.prototype = {
-        constructor: Panel,
-
-        // 显示（插入DOM）
-        show: function show() {
-            var _this = this;
-
-            var menu = this.menu;
-            if (_isCreatedPanelMenus.indexOf(menu) >= 0) {
-                // 该菜单已经创建了 panel 不能再创建
-                return;
-            }
-
-            var editor = menu.editor;
-            var $body = $('body');
-            var $textContainerElem = editor.$textContainerElem;
-            var opt = this.opt;
-
-            // panel 的容器
-            var $container = $('<div class="w-e-panel-container"></div>');
-            var width = opt.width || 300; // 默认 300px
-            $container.css('width', width + 'px').css('margin-left', (0 - width) / 2 + 'px');
-
-            // 添加关闭按钮
-            var $closeBtn = $('<i class="w-e-icon-close w-e-panel-close"></i>');
-            $container.append($closeBtn);
-            $closeBtn.on('click', function () {
-                _this.hide();
-            });
-
-            // 准备 tabs 容器
-            var $tabTitleContainer = $('<ul class="w-e-panel-tab-title"></ul>');
-            var $tabContentContainer = $('<div class="w-e-panel-tab-content"></div>');
-            $container.append($tabTitleContainer).append($tabContentContainer);
-
-            // 设置高度
-            var height = opt.height;
-            if (height) {
-                $tabContentContainer.css('height', height + 'px').css('overflow-y', 'auto');
-            }
-
-            // tabs
-            var tabs = opt.tabs || [];
-            var tabTitleArr = [];
-            var tabContentArr = [];
-            tabs.forEach(function (tab, tabIndex) {
-                if (!tab) {
-                    return;
-                }
-                var title = tab.title || '';
-                var tpl = tab.tpl || '';
-
-                // 添加到 DOM
-                var $title = $('<li class="w-e-item">' + title + '</li>');
-                $tabTitleContainer.append($title);
-                var $content = $(tpl);
-                $tabContentContainer.append($content);
-
-                // 记录到内存
-                $title._index = tabIndex;
-                tabTitleArr.push($title);
-                tabContentArr.push($content);
-
-                // 设置 active 项
-                if (tabIndex === 0) {
-                    $title._active = true;
-                    $title.addClass('w-e-active');
-                } else {
-                    $content.hide();
-                }
-
-                // 绑定 tab 的事件
-                $title.on('click', function (e) {
-                    if ($title._active) {
-                        return;
+    var V = function () {
+    }, K = [];
+    f.prototype = {
+        constructor: f, show: function () {
+            var e = this, t = this.menu;
+            if (!(K.indexOf(t) >= 0)) {
+                var n = t.editor, i = o("body"), A = n.$textContainerElem, r = this.opt,
+                    c = o('<div class="w-e-panel-container"></div>'), a = r.width || 300;
+                c.css("width", a + "px").css("margin-left", (0 - a) / 2 + "px");
+                var s = o('<i class="w-e-icon-close w-e-panel-close"></i>');
+                c.append(s), s.on("click", function () {
+                    e.hide()
+                });
+                var l = o('<ul class="w-e-panel-tab-title"></ul>'), d = o('<div class="w-e-panel-tab-content"></div>');
+                c.append(l).append(d);
+                var u = r.height;
+                u && d.css("height", u + "px").css("overflow-y", "auto");
+                var h = r.tabs || [], p = [], f = [];
+                h.forEach(function (e, t) {
+                    if (e) {
+                        var i = e.title || "", A = e.tpl || "";
+                        i = O(n, i), A = O(n, A);
+                        var r = o('<li class="w-e-item">' + i + "</li>");
+                        l.append(r);
+                        var c = o(A);
+                        d.append(c), r._index = t, p.push(r), f.push(c), 0 === t ? (r._active = !0, r.addClass("w-e-active")) : c.hide(), r.on("click", function (e) {
+                            r._active || (p.forEach(function (e) {
+                                e._active = !1, e.removeClass("w-e-active")
+                            }), f.forEach(function (e) {
+                                e.hide()
+                            }), r._active = !0, r.addClass("w-e-active"), c.show())
+                        })
                     }
-                    // 隐藏所有的 tab
-                    tabTitleArr.forEach(function ($title) {
-                        $title._active = false;
-                        $title.removeClass('w-e-active');
-                    });
-                    tabContentArr.forEach(function ($content) {
-                        $content.hide();
-                    });
-
-                    // 显示当前的 tab
-                    $title._active = true;
-                    $title.addClass('w-e-active');
-                    $content.show();
+                }), c.on("click", function (e) {
+                    e.stopPropagation()
+                }), i.on("click", function (t) {
+                    e.hide()
+                }), A.append(c), h.forEach(function (t, n) {
+                    if (t) {
+                        (t.events || []).forEach(function (t) {
+                            var i = t.selector, o = t.type, A = t.fn || V;
+                            f[n].find(i).on(o, function (t) {
+                                t.stopPropagation(), A(t) && e.hide()
+                            })
+                        })
+                    }
                 });
-            });
-
-            // 绑定关闭事件
-            $container.on('click', function (e) {
-                // 点击时阻止冒泡
-                e.stopPropagation();
-            });
-            $body.on('click', function (e) {
-                _this.hide();
-            });
-
-            // 添加到 DOM
-            $textContainerElem.append($container);
-
-            // 绑定 opt 的事件，只有添加到 DOM 之后才能绑定成功
-            tabs.forEach(function (tab, index) {
-                if (!tab) {
-                    return;
-                }
-                var events = tab.events || [];
-                events.forEach(function (event) {
-                    var selector = event.selector;
-                    var type = event.type;
-                    var fn = event.fn || emptyFn;
-                    var $content = tabContentArr[index];
-                    $content.find(selector).on(type, function (e) {
-                        e.stopPropagation();
-                        var needToHide = fn(e);
-                        // 执行完事件之后，是否要关闭 panel
-                        if (needToHide) {
-                            _this.hide();
-                        }
-                    });
-                });
-            });
-
-            // focus 第一个 elem
-            var $inputs = $container.find('input[type=text],textarea');
-            if ($inputs.length) {
-                $inputs.get(0).focus();
+                var m = c.find("input[type=text],textarea");
+                m.length && m.get(0).focus(), this.$container = c, this._hideOtherPanels(), K.push(t)
             }
-
-            // 添加到属性
-            this.$container = $container;
-
-            // 隐藏其他 panel
-            this._hideOtherPanels();
-            // 记录该 menu 已经创建了 panel
-            _isCreatedPanelMenus.push(menu);
-        },
-
-        // 隐藏（移除DOM）
-        hide: function hide() {
-            var menu = this.menu;
-            var $container = this.$container;
-            if ($container) {
-                $container.remove();
-            }
-
-            // 将该 menu 记录中移除
-            _isCreatedPanelMenus = _isCreatedPanelMenus.filter(function (item) {
-                if (item === menu) {
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-        },
-
-        // 一个 panel 展示时，隐藏其他 panel
-        _hideOtherPanels: function _hideOtherPanels() {
-            if (!_isCreatedPanelMenus.length) {
-                return;
-            }
-            _isCreatedPanelMenus.forEach(function (menu) {
-                var panel = menu.panel || {};
-                if (panel.hide) {
-                    panel.hide();
-                }
-            });
+        }, hide: function () {
+            var e = this.menu, t = this.$container;
+            t && t.remove(), K = K.filter(function (t) {
+                return t !== e
+            })
+        }, _hideOtherPanels: function () {
+            K.length && K.forEach(function (e) {
+                var t = e.panel || {};
+                t.hide && t.hide()
+            })
         }
-    };
-
-    /*
-     menu - link
-     */
-// 构造函数
-    function Link(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-link"><i/></div>');
-        this.type = 'panel';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Link.prototype = {
-        constructor: Link,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            var editor = this.editor;
-            var $linkelem = void 0;
-
+    }, m.prototype = {
+        constructor: m, onClick: function (e) {
+            var t = this.editor, n = void 0;
             if (this._active) {
-                // 当前选区在链接里面
-                $linkelem = editor.selection.getSelectionContainerElem();
-                if (!$linkelem) {
-                    return;
-                }
-                // 将该元素都包含在选取之内，以便后面整体替换
-                editor.selection.createRangeByElem($linkelem);
-                editor.selection.restoreSelection();
-                // 显示 panel
-                this._createPanel($linkelem.text(), $linkelem.attr('href'));
-            } else {
-                // 当前选区不在链接里面
-                if (editor.selection.isSelectionEmpty()) {
-                    // 选区是空的，未选中内容
-                    this._createPanel('', '');
-                } else {
-                    // 选中内容了
-                    this._createPanel(editor.selection.getSelectionText(), '');
-                }
-            }
-        },
-
-        // 创建 panel
-        _createPanel: function _createPanel(text, link) {
-            var _this = this;
-
-            // panel 中需要用到的id
-            var inputLinkId = getRandom('input-link');
-            var inputTextId = getRandom('input-text');
-            var btnOkId = getRandom('btn-ok');
-            var btnDelId = getRandom('btn-del');
-
-            // 是否显示“删除链接”
-            var delBtnDisplay = this._active ? 'inline-block' : 'none';
-
-            // 初始化并显示 panel
-            var panel = new Panel(this, {
-                width: 300,
-                // panel 中可包含多个 tab
-                tabs: [{
-                    // tab 的标题
-                    title: '链接',
-                    // 模板
-                    tpl: '<div>\n                            <input id="' + inputTextId + '" type="text" class="block" value="' + text + '" placeholder="\u94FE\u63A5\u6587\u5B57"/></td>\n                            <input id="' + inputLinkId + '" type="text" class="block" value="' + link + '" placeholder="http://..."/></td>\n                            <div class="w-e-button-container">\n                                <button id="' + btnOkId + '" class="right">\u63D2\u5165</button>\n                                <button id="' + btnDelId + '" class="gray right" style="display:' + delBtnDisplay + '">\u5220\u9664\u94FE\u63A5</button>\n                            </div>\n                        </div>',
-                    // 事件绑定
-                    events: [
-                        // 插入链接
-                        {
-                            selector: '#' + btnOkId,
-                            type: 'click',
-                            fn: function fn() {
-                                // 执行插入链接
-                                var $link = $('#' + inputLinkId);
-                                var $text = $('#' + inputTextId);
-                                var link = $link.val();
-                                var text = $text.val();
-                                _this._insertLink(text, link);
-
-                                // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                                return true;
-                            }
-                        },
-                        // 删除链接
-                        {
-                            selector: '#' + btnDelId,
-                            type: 'click',
-                            fn: function fn() {
-                                // 执行删除链接
-                                _this._delLink();
-
-                                // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                                return true;
-                            }
-                        }]
-                } // tab end
-                ] // tabs end
-            });
-
-            // 显示 panel
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        // 删除当前链接
-        _delLink: function _delLink() {
-            if (!this._active) {
-                return;
-            }
-            var editor = this.editor;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
-            }
-            var selectionText = editor.selection.getSelectionText();
-            editor.cmd.do('insertHTML', '<span>' + selectionText + '</span>');
-        },
-
-        // 插入链接
-        _insertLink: function _insertLink(text, link) {
-            if (!text || !link) {
-                return;
-            }
-            var editor = this.editor;
-            editor.cmd.do('insertHTML', '<a href="' + link + '" target="_blank">' + text + '</a>');
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
-            }
-            if ($selectionELem.getNodeName() === 'A') {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     italic-menu
-     */
-// 构造函数
-    function Italic(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-italic"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Italic.prototype = {
-        constructor: Italic,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            // 点击菜单将触发这里
-
-            var editor = this.editor;
-            var isSeleEmpty = editor.selection.isSelectionEmpty();
-
-            if (isSeleEmpty) {
-                // 选区是空的，插入并选中一个“空白”
-                editor.selection.createEmptyRange();
-            }
-
-            // 执行 italic 命令
-            editor.cmd.do('italic');
-
-            if (isSeleEmpty) {
-                // 需要将选取折叠起来
-                editor.selection.collapseRange();
-                editor.selection.restoreSelection();
-            }
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            if (editor.cmd.queryCommandState('italic')) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     redo-menu
-     */
-// 构造函数
-    function Redo(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-redo"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Redo.prototype = {
-        constructor: Redo,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            // 点击菜单将触发这里
-
-            var editor = this.editor;
-
-            // 执行 redo 命令
-            editor.cmd.do('redo');
-        }
-    };
-
-    /*
-     strikeThrough-menu
-     */
-// 构造函数
-    function StrikeThrough(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-strikethrough"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    StrikeThrough.prototype = {
-        constructor: StrikeThrough,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            // 点击菜单将触发这里
-
-            var editor = this.editor;
-            var isSeleEmpty = editor.selection.isSelectionEmpty();
-
-            if (isSeleEmpty) {
-                // 选区是空的，插入并选中一个“空白”
-                editor.selection.createEmptyRange();
-            }
-
-            // 执行 strikeThrough 命令
-            editor.cmd.do('strikeThrough');
-
-            if (isSeleEmpty) {
-                // 需要将选取折叠起来
-                editor.selection.collapseRange();
-                editor.selection.restoreSelection();
-            }
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            if (editor.cmd.queryCommandState('strikeThrough')) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     underline-menu
-     */
-// 构造函数
-    function Underline(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-underline"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Underline.prototype = {
-        constructor: Underline,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            // 点击菜单将触发这里
-
-            var editor = this.editor;
-            var isSeleEmpty = editor.selection.isSelectionEmpty();
-
-            if (isSeleEmpty) {
-                // 选区是空的，插入并选中一个“空白”
-                editor.selection.createEmptyRange();
-            }
-
-            // 执行 underline 命令
-            editor.cmd.do('underline');
-
-            if (isSeleEmpty) {
-                // 需要将选取折叠起来
-                editor.selection.collapseRange();
-                editor.selection.restoreSelection();
-            }
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            if (editor.cmd.queryCommandState('underline')) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     undo-menu
-     */
-// 构造函数
-    function Undo(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-undo"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Undo.prototype = {
-        constructor: Undo,
-
-        // 点击事件
-        onClick: function onClick(e) {
-            // 点击菜单将触发这里
-
-            var editor = this.editor;
-
-            // 执行 undo 命令
-            editor.cmd.do('undo');
-        }
-    };
-
-    /*
-     menu - list
-     */
-// 构造函数
-    function List(editor) {
-        var _this = this;
-
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-list2"><i/></div>');
-        this.type = 'droplist';
-
-        // 当前是否 active 状态
-        this._active = false;
-
-        // 初始化 droplist
-        this.droplist = new DropList(this, {
-            width: 120,
-            $title: $('<p>设置列表</p>'),
-            type: 'list', // droplist 以列表形式展示
-            list: [{ $elem: $('<span><i class="w-e-icon-list-numbered"></i> 有序列表</span>'), value: 'insertOrderedList' }, { $elem: $('<span><i class="w-e-icon-list2"></i> 无序列表</span>'), value: 'insertUnorderedList' }],
-            onClick: function onClick(value) {
-                // 注意 this 是指向当前的 List 对象
-                _this._command(value);
-            }
-        });
-    }
-
-// 原型
-    List.prototype = {
-        constructor: List,
-
-        // 执行命令
-        _command: function _command(value) {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-            editor.selection.restoreSelection();
-            if (editor.cmd.queryCommandState(value)) {
-                return;
-            }
-            editor.cmd.do(value);
-
-            // 验证列表是否被包裹在 <p> 之内
-            var $selectionElem = editor.selection.getSelectionContainerElem();
-            if ($selectionElem.getNodeName() === 'LI') {
-                $selectionElem = $selectionElem.parent();
-            }
-            if (/^ol|ul$/i.test($selectionElem.getNodeName()) === false) {
-                return;
-            }
-            if ($selectionElem.equal($textElem)) {
-                // 证明是顶级标签，没有被 <p> 包裹
-                return;
-            }
-            var $parent = $selectionElem.parent();
-            if ($parent.equal($textElem)) {
-                // $parent 是顶级标签，不能删除
-                return;
-            }
-
-            $selectionElem.insertAfter($parent);
-            $parent.remove();
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            if (editor.cmd.queryCommandState('insertUnOrderedList') || editor.cmd.queryCommandState('insertOrderedList')) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     menu - justify
-     */
-// 构造函数
-    function Justify(editor) {
-        var _this = this;
-
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-paragraph-left"><i/></div>');
-        this.type = 'droplist';
-
-        // 当前是否 active 状态
-        this._active = false;
-
-        // 初始化 droplist
-        this.droplist = new DropList(this, {
-            width: 100,
-            $title: $('<p>对齐方式</p>'),
-            type: 'list', // droplist 以列表形式展示
-            list: [{ $elem: $('<span><i class="w-e-icon-paragraph-left"></i> 靠左</span>'), value: 'justifyLeft' }, { $elem: $('<span><i class="w-e-icon-paragraph-center"></i> 居中</span>'), value: 'justifyCenter' }, { $elem: $('<span><i class="w-e-icon-paragraph-right"></i> 靠右</span>'), value: 'justifyRight' }],
-            onClick: function onClick(value) {
-                // 注意 this 是指向当前的 List 对象
-                _this._command(value);
-            }
-        });
-    }
-
-// 原型
-    Justify.prototype = {
-        constructor: Justify,
-
-        // 执行命令
-        _command: function _command(value) {
-            var editor = this.editor;
-            editor.cmd.do(value);
-        }
-    };
-
-    /*
-     menu - backcolor
-     */
-// 构造函数
-    function BackColor(editor) {
-        var _this = this;
-
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-pencil2"><i/></div>');
-        this.type = 'droplist';
-
-        // 当前是否 active 状态
-        this._active = false;
-
-        // 初始化 droplist
-        this.droplist = new DropList(this, {
-            width: 120,
-            $title: $('<p>文字颜色</p>'),
-            type: 'inline-block', // droplist 内容以 block 形式展示
-            list: [{ $elem: $('<i style="color:#000000;" class="w-e-icon-pencil2"></i>'), value: '#000000' }, { $elem: $('<i style="color:#eeece0;" class="w-e-icon-pencil2"></i>'), value: '#eeece0' }, { $elem: $('<i style="color:#1c487f;" class="w-e-icon-pencil2"></i>'), value: '#1c487f' }, { $elem: $('<i style="color:#4d80bf;" class="w-e-icon-pencil2"></i>'), value: '#4d80bf' }, { $elem: $('<i style="color:#c24f4a;" class="w-e-icon-pencil2"></i>'), value: '#c24f4a' }, { $elem: $('<i style="color:#8baa4a;" class="w-e-icon-pencil2"></i>'), value: '#8baa4a' }, { $elem: $('<i style="color:#7b5ba1;" class="w-e-icon-pencil2"></i>'), value: '#7b5ba1' }, { $elem: $('<i style="color:#46acc8;" class="w-e-icon-pencil2"></i>'), value: '#46acc8' }, { $elem: $('<i style="color:#f9963b;" class="w-e-icon-pencil2"></i>'), value: '#f9963b' }, { $elem: $('<i style="color:#ffffff;" class="w-e-icon-pencil2"></i>'), value: '#ffffff' }],
-            onClick: function onClick(value) {
-                // 注意 this 是指向当前的 BackColor 对象
-                _this._command(value);
-            }
-        });
-    }
-
-// 原型
-    BackColor.prototype = {
-        constructor: BackColor,
-
-        // 执行命令
-        _command: function _command(value) {
-            var editor = this.editor;
-            editor.cmd.do('foreColor', value);
-        }
-    };
-
-    /*
-     menu - forecolor
-     */
-// 构造函数
-    function ForeColor$1(editor) {
-        var _this = this;
-
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-paint-brush"><i/></div>');
-        this.type = 'droplist';
-
-        // 当前是否 active 状态
-        this._active = false;
-
-        // 初始化 droplist
-        this.droplist = new DropList(this, {
-            width: 120,
-            $title: $('<p>背景色</p>'),
-            type: 'inline-block', // droplist 内容以 block 形式展示
-            list: [{ $elem: $('<i style="color:#000000;" class="w-e-icon-paint-brush"></i>'), value: '#000000' }, { $elem: $('<i style="color:#eeece0;" class="w-e-icon-paint-brush"></i>'), value: '#eeece0' }, { $elem: $('<i style="color:#1c487f;" class="w-e-icon-paint-brush"></i>'), value: '#1c487f' }, { $elem: $('<i style="color:#4d80bf;" class="w-e-icon-paint-brush"></i>'), value: '#4d80bf' }, { $elem: $('<i style="color:#c24f4a;" class="w-e-icon-paint-brush"></i>'), value: '#c24f4a' }, { $elem: $('<i style="color:#8baa4a;" class="w-e-icon-paint-brush"></i>'), value: '#8baa4a' }, { $elem: $('<i style="color:#7b5ba1;" class="w-e-icon-paint-brush"></i>'), value: '#7b5ba1' }, { $elem: $('<i style="color:#46acc8;" class="w-e-icon-paint-brush"></i>'), value: '#46acc8' }, { $elem: $('<i style="color:#f9963b;" class="w-e-icon-paint-brush"></i>'), value: '#f9963b' }, { $elem: $('<i style="color:#ffffff;" class="w-e-icon-paint-brush"></i>'), value: '#ffffff' }],
-            onClick: function onClick(value) {
-                // 注意 this 是指向当前的 ForeColor 对象
-                _this._command(value);
-            }
-        });
-    }
-
-// 原型
-    ForeColor$1.prototype = {
-        constructor: ForeColor$1,
-
-        // 执行命令
-        _command: function _command(value) {
-            var editor = this.editor;
-            editor.cmd.do('backColor', value);
-        }
-    };
-
-    /*
-     menu - quote
-     */
-// 构造函数
-    function Quote(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-quotes-left"><i/>\n        </div>');
-        this.type = 'click';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Quote.prototype = {
-        constructor: Quote,
-
-        onClick: function onClick(e) {
-            var editor = this.editor;
-            editor.cmd.do('formatBlock', '<BLOCKQUOTE>');
-        },
-
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            var reg = /^BLOCKQUOTE$/i;
-            var cmdValue = editor.cmd.queryCommandValue('formatBlock');
-            if (reg.test(cmdValue)) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     menu - code
-     */
-// 构造函数
-    function Code(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-terminal"><i/>\n        </div>');
-        this.type = 'panel';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Code.prototype = {
-        constructor: Code,
-
-        onClick: function onClick(e) {
-            var editor = this.editor;
-            var $startElem = editor.selection.getSelectionStartElem();
-            var $endElem = editor.selection.getSelectionEndElem();
-            var isSeleEmpty = editor.selection.isSelectionEmpty();
-            var selectionText = editor.selection.getSelectionText();
-            var $code = void 0;
-
-            if (!$startElem.equal($endElem)) {
-                // 跨元素选择，不做处理
-                editor.selection.restoreSelection();
-                return;
-            }
-            if (!isSeleEmpty) {
-                // 选取不是空，用 <code> 包裹即可
-                $code = $('<code>' + selectionText + '</code>');
-                editor.cmd.do('insertElem', $code);
-                editor.selection.createRangeByElem($code, false);
-                editor.selection.restoreSelection();
-                return;
-            }
-
-            // 选取是空，且没有夸元素选择，则插入 <pre><code></code></prev>
-            if (this._active) {
-                // 选中状态，将编辑内容
-                this._createPanel($startElem.html());
-            } else {
-                // 未选中状态，将创建内容
-                this._createPanel();
-            }
-        },
-
-        _createPanel: function _createPanel(value) {
-            var _this = this;
-
-            // value - 要编辑的内容
-            value = value || '';
-            var type = !value ? 'new' : 'edit';
-            var textId = getRandom('texxt');
-            var btnId = getRandom('btn');
-
-            var panel = new Panel(this, {
-                width: 500,
-                // 一个 Panel 包含多个 tab
-                tabs: [{
-                    // 标题
-                    title: '插入代码',
-                    // 模板
-                    tpl: '<div>\n                        <textarea id="' + textId + '" style="height:145px;;">' + value + '</textarea>\n                        <div class="w-e-button-container">\n                            <button id="' + btnId + '" class="right">\u63D2\u5165</button>\n                        </div>\n                    <div>',
-                    // 事件绑定
-                    events: [
-                        // 插入代码
-                        {
-                            selector: '#' + btnId,
-                            type: 'click',
-                            fn: function fn() {
-                                var $text = $('#' + textId);
-                                var text = $text.val() || $text.html();
-                                text = replaceHtmlSymbol(text);
-                                if (type === 'new') {
-                                    // 新插入
-                                    _this._insertCode(text);
-                                } else {
-                                    // 编辑更新
-                                    _this._updateCode(text);
-                                }
-
-                                // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                                return true;
-                            }
-                        }]
-                } // first tab end
-                ] // tabs end
-            }); // new Panel end
-
-            // 显示 panel
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        // 插入代码
-        _insertCode: function _insertCode(value) {
-            var editor = this.editor;
-            editor.cmd.do('insertHTML', '<pre><code>' + value + '</code></pre><p><br></p>');
-        },
-
-        // 更新代码
-        _updateCode: function _updateCode(value) {
-            var editor = this.editor;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
-            }
-            $selectionELem.html(value);
-            editor.selection.restoreSelection();
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
-            }
-            var $parentElem = $selectionELem.parent();
-            if ($selectionELem.getNodeName() === 'CODE' && $parentElem.getNodeName() === 'PRE') {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     menu - emoticon
-     */
-// 构造函数
-    function Emoticon(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu">\n            <i class="w-e-icon-happy"><i/>\n        </div>');
-        this.type = 'panel';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Emoticon.prototype = {
-        constructor: Emoticon,
-
-        onClick: function onClick() {
-            this._createPanel();
-        },
-
-        _createPanel: function _createPanel() {
-            var _this = this;
-
-            // 拼接表情字符串
-            var faceHtml = '';
-            var faceStr = '😀 😃 😄 😁 😆 😅 😂  😊 😇 🙂 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😜 😝 😛 🤑 🤗 🤓 😎 😏 😒 😞 😔 😟 😕 🙁  😣 😖 😫 😩 😤 😠 😡 😶 😐 😑 😯 😦 😧 😮 😲 😵 😳 😱 😨 😰 😢 😥 😭 😓 😪 😴 🙄 🤔 😬 🤐';
-            faceStr.split(/\s/).forEach(function (item) {
-                if (item) {
-                    faceHtml += '<span class="w-e-item">' + item + '</span>';
-                }
-            });
-
-            var handHtml = '';
-            var handStr = '🙌 👏 👋 👍 👎 👊 ✊ ️👌 ✋ 👐 💪 🙏 ️👆 👇 👈 👉 🖕 🖐 🤘 🖖';
-            handStr.split(/\s/).forEach(function (item) {
-                if (item) {
-                    handHtml += '<span class="w-e-item">' + item + '</span>';
-                }
-            });
-
-            var panel = new Panel(this, {
-                width: 300,
-                height: 200,
-                // 一个 Panel 包含多个 tab
-                tabs: [{
-                    // 标题
-                    title: '表情',
-                    // 模板
-                    tpl: '<div class="w-e-emoticon-container">' + faceHtml + '</div>',
-                    // 事件绑定
-                    events: [{
-                        selector: 'span.w-e-item',
-                        type: 'click',
-                        fn: function fn(e) {
-                            var target = e.target;
-                            _this._insert(target.innerHTML);
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
-                        }
-                    }]
-                }, // first tab end
-                    {
-                        // 标题
-                        title: '手势',
-                        // 模板
-                        tpl: '<div class="w-e-emoticon-container">' + handHtml + '</div>',
-                        // 事件绑定
+                if (!(n = t.selection.getSelectionContainerElem())) return;
+                t.selection.createRangeByElem(n), t.selection.restoreSelection(), this._createPanel(n.text(), n.attr("href"))
+            } else t.selection.isSelectionEmpty() ? this._createPanel("", "") : this._createPanel(t.selection.getSelectionText(), "")
+        }, _createPanel: function (e, t) {
+            var n = this, i = c("input-link"), A = c("input-text"), r = c("btn-ok"), a = c("btn-del"),
+                s = this._active ? "inline-block" : "none", l = new f(this, {
+                    width: 300,
+                    tabs: [{
+                        title: "链接",
+                        tpl: '<div>\n                            <input id="' + A + '" type="text" class="block" value="' + e + '" placeholder="链接文字"/></td>\n                            <input id="' + i + '" type="text" class="block" value="' + t + '" placeholder="http://..."/></td>\n                            <div class="w-e-button-container">\n                                <button id="' + r + '" class="right">插入</button>\n                                <button id="' + a + '" class="gray right" style="display:' + s + '">删除链接</button>\n                            </div>\n                        </div>',
                         events: [{
-                            selector: 'span.w-e-item',
-                            type: 'click',
-                            fn: function fn(e) {
-                                var target = e.target;
-                                _this._insert(target.innerHTML);
-                                // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                                return true;
+                            selector: "#" + r, type: "click", fn: function () {
+                                var e = o("#" + i), t = o("#" + A), r = e.val(), c = t.val();
+                                return n._insertLink(c, r), !0
+                            }
+                        }, {
+                            selector: "#" + a, type: "click", fn: function () {
+                                return n._delLink(), !0
                             }
                         }]
-                    } // second tab end
-                ] // tabs end
-            });
-
-            // 显示 panel
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        // 插入表情
-        _insert: function _insert(emoji) {
-            var editor = this.editor;
-            editor.cmd.do('insertHTML', '<span>' + emoji + '</span>');
-        }
-    };
-
-    /*
-     menu - table
-     */
-// 构造函数
-    function Table(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-table2"><i/></div>');
-        this.type = 'panel';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Table.prototype = {
-        constructor: Table,
-
-        onClick: function onClick() {
+                    }]
+                });
+            l.show(), this.panel = l
+        }, _delLink: function () {
             if (this._active) {
-                // 编辑现有表格
-                this._createEditPanel();
-            } else {
-                // 插入新表格
-                this._createInsertPanel();
+                var e = this.editor;
+                if (e.selection.getSelectionContainerElem()) {
+                    var t = e.selection.getSelectionText();
+                    e.cmd.do("insertHTML", "<span>" + t + "</span>")
+                }
             }
-        },
-
-        // 创建插入新表格的 panel
-        _createInsertPanel: function _createInsertPanel() {
-            var _this = this;
-
-            // 用到的 id
-            var btnInsertId = getRandom('btn');
-            var textRowNum = getRandom('row');
-            var textColNum = getRandom('col');
-
-            var panel = new Panel(this, {
+        }, _insertLink: function (e, t) {
+            var n = this.editor, i = n.config, o = i.linkCheck, A = !0;
+            o && "function" == typeof o && (A = o(e, t)), !0 === A ? n.cmd.do("insertHTML", '<a href="' + t + '" target="_blank">' + e + "</a>") : alert(A)
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem, i = t.selection.getSelectionContainerElem();
+            i && ("A" === i.getNodeName() ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active")))
+        }
+    }, g.prototype = {
+        constructor: g, onClick: function (e) {
+            var t = this.editor, n = t.selection.isSelectionEmpty();
+            n && t.selection.createEmptyRange(), t.cmd.do("italic"), n && (t.selection.collapseRange(), t.selection.restoreSelection())
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem;
+            t.cmd.queryCommandState("italic") ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    }, w.prototype = {
+        constructor: w, onClick: function (e) {
+            this.editor.cmd.do("redo")
+        }
+    }, v.prototype = {
+        constructor: v, onClick: function (e) {
+            var t = this.editor, n = t.selection.isSelectionEmpty();
+            n && t.selection.createEmptyRange(), t.cmd.do("strikeThrough"), n && (t.selection.collapseRange(), t.selection.restoreSelection())
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem;
+            t.cmd.queryCommandState("strikeThrough") ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    }, E.prototype = {
+        constructor: E, onClick: function (e) {
+            var t = this.editor, n = t.selection.isSelectionEmpty();
+            n && t.selection.createEmptyRange(), t.cmd.do("underline"), n && (t.selection.collapseRange(), t.selection.restoreSelection())
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem;
+            t.cmd.queryCommandState("underline") ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    }, b.prototype = {
+        constructor: b, onClick: function (e) {
+            this.editor.cmd.do("undo")
+        }
+    }, B.prototype = {
+        constructor: B, _command: function (e) {
+            var t = this.editor, n = t.$textElem;
+            if (t.selection.restoreSelection(), !t.cmd.queryCommandState(e)) {
+                t.cmd.do(e);
+                var i = t.selection.getSelectionContainerElem();
+                if ("LI" === i.getNodeName() && (i = i.parent()), !1 !== /^ol|ul$/i.test(i.getNodeName()) && !i.equal(n)) {
+                    var o = i.parent();
+                    o.equal(n) || (i.insertAfter(o), o.remove())
+                }
+            }
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem;
+            t.cmd.queryCommandState("insertUnOrderedList") || t.cmd.queryCommandState("insertOrderedList") ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    }, y.prototype = {
+        constructor: y, _command: function (e) {
+            this.editor.cmd.do(e)
+        }
+    }, C.prototype = {
+        constructor: C, _command: function (e) {
+            this.editor.cmd.do("foreColor", e)
+        }
+    }, x.prototype = {
+        constructor: x, _command: function (e) {
+            this.editor.cmd.do("backColor", e)
+        }
+    }, I.prototype = {
+        constructor: I, onClick: function (e) {
+            var t = this.editor, n = t.selection.getSelectionContainerElem(), i = n.getNodeName();
+            if (!J.isIE()) return void("BLOCKQUOTE" === i ? t.cmd.do("formatBlock", "<P>") : t.cmd.do("formatBlock", "<BLOCKQUOTE>"));
+            var A = void 0, r = void 0;
+            if ("P" === i) return A = n.text(), r = o("<blockquote>" + A + "</blockquote>"), r.insertAfter(n), void n.remove();
+            "BLOCKQUOTE" === i && (A = n.text(), r = o("<p>" + A + "</p>"), r.insertAfter(n), n.remove())
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem, i = /^BLOCKQUOTE$/i, o = t.cmd.queryCommandValue("formatBlock");
+            i.test(o) ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    }, Q.prototype = {
+        constructor: Q, onClick: function (e) {
+            var t = this.editor, n = t.selection.getSelectionStartElem(), i = t.selection.getSelectionEndElem(),
+                A = t.selection.isSelectionEmpty(), r = t.selection.getSelectionText(), c = void 0;
+            return n.equal(i) ? A ? void(this._active ? this._createPanel(n.html()) : this._createPanel()) : (c = o("<code>" + r + "</code>"), t.cmd.do("insertElem", c), t.selection.createRangeByElem(c, !1), void t.selection.restoreSelection()) : void t.selection.restoreSelection()
+        }, _createPanel: function (e) {
+            var t = this;
+            e = e || "";
+            var n = e ? "edit" : "new", i = c("texxt"), A = c("btn"), r = new f(this, {
+                width: 500,
+                tabs: [{
+                    title: "插入代码",
+                    tpl: '<div>\n                        <textarea id="' + i + '" style="height:145px;;">' + e + '</textarea>\n                        <div class="w-e-button-container">\n                            <button id="' + A + '" class="right">插入</button>\n                        </div>\n                    <div>',
+                    events: [{
+                        selector: "#" + A, type: "click", fn: function () {
+                            var e = o("#" + i), A = e.val() || e.html();
+                            return A = a(A), "new" === n ? t._insertCode(A) : t._updateCode(A), !0
+                        }
+                    }]
+                }]
+            });
+            r.show(), this.panel = r
+        }, _insertCode: function (e) {
+            this.editor.cmd.do("insertHTML", "<pre><code>" + e + "</code></pre><p><br></p>")
+        }, _updateCode: function (e) {
+            var t = this.editor, n = t.selection.getSelectionContainerElem();
+            n && (n.html(e), t.selection.restoreSelection())
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem, i = t.selection.getSelectionContainerElem();
+            if (i) {
+                var o = i.parent();
+                "CODE" === i.getNodeName() && "PRE" === o.getNodeName() ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+            }
+        }
+    }, M.prototype = {
+        constructor: M, onClick: function () {
+            this._createPanel()
+        }, _createPanel: function () {
+            var e = this, t = this.editor, n = t.config, i = n.emotions || [], A = [];
+            i.forEach(function (t) {
+                var n = t.type, i = t.content || [], r = "";
+                "emoji" === n && i.forEach(function (e) {
+                    e && (r += '<span class="w-e-item">' + e + "</span>")
+                }), "image" === n && i.forEach(function (e) {
+                    var t = e.src, n = e.alt;
+                    t && (r += '<span class="w-e-item"><img src="' + t + '" alt="' + n + '" data-w-e="1"/></span>')
+                }), A.push({
+                    title: t.title,
+                    tpl: '<div class="w-e-emoticon-container">' + r + "</div>",
+                    events: [{
+                        selector: "span.w-e-item", type: "click", fn: function (t) {
+                            var n = t.target, i = o(n), A = i.getNodeName(), r = void 0;
+                            return r = "IMG" === A ? i.parent().html() : "<span>" + i.html() + "</span>", e._insert(r), !0
+                        }
+                    }]
+                })
+            });
+            var r = new f(this, {width: 300, height: 200, tabs: A});
+            r.show(), this.panel = r
+        }, _insert: function (e) {
+            this.editor.cmd.do("insertHTML", e)
+        }
+    }, S.prototype = {
+        constructor: S, onClick: function () {
+            this._active ? this._createEditPanel() : this._createInsertPanel()
+        }, _createInsertPanel: function () {
+            var e = this, t = c("btn"), n = c("row"), i = c("col"), A = new f(this, {
                 width: 250,
-                // panel 包含多个 tab
                 tabs: [{
-                    // 标题
-                    title: '插入表格',
-                    // 模板
-                    tpl: '<div>\n                        <p style="text-align:left; padding:5px 0;">\n                            \u521B\u5EFA\n                            <input id="' + textRowNum + '" type="text" value="5" style="width:40px;text-align:center;"/>\n                            \u884C\n                            <input id="' + textColNum + '" type="text" value="5" style="width:40px;text-align:center;"/>\n                            \u5217\u7684\u8868\u683C\n                        </p>\n                        <div class="w-e-button-container">\n                            <button id="' + btnInsertId + '" class="right">\u63D2\u5165</button>\n                        </div>\n                    </div>',
-                    // 事件绑定
+                    title: "插入表格",
+                    tpl: '<div>\n                        <p style="text-align:left; padding:5px 0;">\n                            创建\n                            <input id="' + n + '" type="text" value="5" style="width:40px;text-align:center;"/>\n                            行\n                            <input id="' + i + '" type="text" value="5" style="width:40px;text-align:center;"/>\n                            列的表格\n                        </p>\n                        <div class="w-e-button-container">\n                            <button id="' + t + '" class="right">插入</button>\n                        </div>\n                    </div>',
                     events: [{
-                        // 点击按钮，插入表格
-                        selector: '#' + btnInsertId,
-                        type: 'click',
-                        fn: function fn() {
-                            var rowNum = parseInt($('#' + textRowNum).val());
-                            var colNum = parseInt($('#' + textColNum).val());
-
-                            if (rowNum && colNum && rowNum > 0 && colNum > 0) {
-                                // form 数据有效
-                                _this._insert(rowNum, colNum);
-                            }
-
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + t, type: "click", fn: function () {
+                            var t = parseInt(o("#" + n).val()), A = parseInt(o("#" + i).val());
+                            return t && A && t > 0 && A > 0 && e._insert(t, A), !0
                         }
                     }]
-                } // first tab end
-                ] // tabs end
-            }); // panel end
-
-            // 展示 panel
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        // 插入表格
-        _insert: function _insert(rowNum, colNum) {
-            // 拼接 table 模板
-            var r = void 0,
-                c = void 0;
-            var html = '<table border="0" width="100%" cellpadding="0" cellspacing="0">';
-            for (r = 0; r < rowNum; r++) {
-                html += '<tr>';
-                if (r === 0) {
-                    for (c = 0; c < colNum; c++) {
-                        html += '<th>&nbsp;</th>';
-                    }
-                } else {
-                    for (c = 0; c < colNum; c++) {
-                        html += '<td>&nbsp;</td>';
-                    }
-                }
-                html += '</tr>';
+                }]
+            });
+            A.show(), this.panel = A
+        }, _insert: function (e, t) {
+            var n = void 0, i = void 0, o = '<table border="0" width="100%" cellpadding="0" cellspacing="0">';
+            for (n = 0; n < e; n++) {
+                if (o += "<tr>", 0 === n) for (i = 0; i < t; i++) o += "<th>&nbsp;</th>"; else for (i = 0; i < t; i++) o += "<td>&nbsp;</td>";
+                o += "</tr>"
             }
-            html += '</table><p><br></p>';
-
-            // 执行命令
-            var editor = this.editor;
-            editor.cmd.do('insertHTML', html);
-
-            // 防止 firefox 下出现 resize 的控制点
-            editor.cmd.do('enableObjectResizing', false);
-            editor.cmd.do('enableInlineTableEditing', false);
-        },
-
-        // 创建编辑表格的 panel
-        _createEditPanel: function _createEditPanel() {
-            var _this2 = this;
-
-            // 可用的 id
-            var addRowBtnId = getRandom('add-row');
-            var addColBtnId = getRandom('add-col');
-            var delRowBtnId = getRandom('del-row');
-            var delColBtnId = getRandom('del-col');
-            var delTableBtnId = getRandom('del-table');
-
-            // 创建 panel 对象
-            var panel = new Panel(this, {
+            o += "</table><p><br></p>";
+            var A = this.editor;
+            A.cmd.do("insertHTML", o), A.cmd.do("enableObjectResizing", !1), A.cmd.do("enableInlineTableEditing", !1)
+        }, _createEditPanel: function () {
+            var e = this, t = c("add-row"), n = c("add-col"), i = c("del-row"), o = c("del-col"), A = c("del-table");
+            new f(this, {
                 width: 320,
-                // panel 包含多个 tab
                 tabs: [{
-                    // 标题
-                    title: '编辑表格',
-                    // 模板
-                    tpl: '<div>\n                        <div class="w-e-button-container" style="border-bottom:1px solid #f1f1f1;padding-bottom:5px;margin-bottom:5px;">\n                            <button id="' + addRowBtnId + '" class="left">\u589E\u52A0\u884C</button>\n                            <button id="' + delRowBtnId + '" class="red left">\u5220\u9664\u884C</button>\n                            <button id="' + addColBtnId + '" class="left">\u589E\u52A0\u5217</button>\n                            <button id="' + delColBtnId + '" class="red left">\u5220\u9664\u5217</button>\n                        </div>\n                        <div class="w-e-button-container">\n                            <button id="' + delTableBtnId + '" class="gray left">\u5220\u9664\u8868\u683C</button>\n                        </dv>\n                    </div>',
-                    // 事件绑定
+                    title: "编辑表格",
+                    tpl: '<div>\n                        <div class="w-e-button-container" style="border-bottom:1px solid #f1f1f1;padding-bottom:5px;margin-bottom:5px;">\n                            <button id="' + t + '" class="left">增加行</button>\n                            <button id="' + i + '" class="red left">删除行</button>\n                            <button id="' + n + '" class="left">增加列</button>\n                            <button id="' + o + '" class="red left">删除列</button>\n                        </div>\n                        <div class="w-e-button-container">\n                            <button id="' + A + '" class="gray left">删除表格</button>\n                        </dv>\n                    </div>',
                     events: [{
-                        // 增加行
-                        selector: '#' + addRowBtnId,
-                        type: 'click',
-                        fn: function fn() {
-                            _this2._addRow();
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + t, type: "click", fn: function () {
+                            return e._addRow(), !0
                         }
                     }, {
-                        // 增加列
-                        selector: '#' + addColBtnId,
-                        type: 'click',
-                        fn: function fn() {
-                            _this2._addCol();
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + n, type: "click", fn: function () {
+                            return e._addCol(), !0
                         }
                     }, {
-                        // 删除行
-                        selector: '#' + delRowBtnId,
-                        type: 'click',
-                        fn: function fn() {
-                            _this2._delRow();
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + i, type: "click", fn: function () {
+                            return e._delRow(), !0
                         }
                     }, {
-                        // 删除列
-                        selector: '#' + delColBtnId,
-                        type: 'click',
-                        fn: function fn() {
-                            _this2._delCol();
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + o, type: "click", fn: function () {
+                            return e._delCol(), !0
                         }
                     }, {
-                        // 删除表格
-                        selector: '#' + delTableBtnId,
-                        type: 'click',
-                        fn: function fn() {
-                            _this2._delTable();
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + A, type: "click", fn: function () {
+                            return e._delTable(), !0
                         }
                     }]
                 }]
-            });
-            // 显示 panel
-            panel.show();
-        },
-
-        // 获取选中的单元格的位置信息
-        _getLocationData: function _getLocationData() {
-            var result = {};
-            var editor = this.editor;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
-            }
-            var nodeName = $selectionELem.getNodeName();
-            if (nodeName !== 'TD' && nodeName !== 'TH') {
-                return;
-            }
-
-            // 获取 td index
-            var $tr = $selectionELem.parent();
-            var $tds = $tr.children();
-            var tdLength = $tds.length;
-            $tds.forEach(function (td, index) {
-                if (td === $selectionELem[0]) {
-                    // 记录并跳出循环
-                    result.td = {
-                        index: index,
-                        elem: td,
-                        length: tdLength
-                    };
-                    return false;
+            }).show()
+        }, _getLocationData: function () {
+            var e = {}, t = this.editor, n = t.selection.getSelectionContainerElem();
+            if (n) {
+                var i = n.getNodeName();
+                if ("TD" === i || "TH" === i) {
+                    var o = n.parent(), A = o.children(), r = A.length;
+                    A.forEach(function (t, i) {
+                        if (t === n[0]) return e.td = {index: i, elem: t, length: r}, !1
+                    });
+                    var c = o.parent(), a = c.children(), s = a.length;
+                    return a.forEach(function (t, n) {
+                        if (t === o[0]) return e.tr = {index: n, elem: t, length: s}, !1
+                    }), e
                 }
-            });
-
-            // 获取 tr index
-            var $tbody = $tr.parent();
-            var $trs = $tbody.children();
-            var trLength = $trs.length;
-            $trs.forEach(function (tr, index) {
-                if (tr === $tr[0]) {
-                    // 记录并跳出循环
-                    result.tr = {
-                        index: index,
-                        elem: tr,
-                        length: trLength
-                    };
-                    return false;
-                }
-            });
-
-            // 返回结果
-            return result;
-        },
-
-        // 增加行
-        _addRow: function _addRow() {
-            // 获取当前单元格的位置信息
-            var locationData = this._getLocationData();
-            if (!locationData) {
-                return;
             }
-            var trData = locationData.tr;
-            var $currentTr = $(trData.elem);
-            var tdData = locationData.td;
-            var tdLength = tdData.length;
-
-            // 拼接即将插入的字符串
-            var newTr = document.createElement('tr');
-            var tpl = '',
-                i = void 0;
-            for (i = 0; i < tdLength; i++) {
-                tpl += '<td>&nbsp;</td>';
+        }, _addRow: function () {
+            var e = this._getLocationData();
+            if (e) {
+                var t = e.tr, n = o(t.elem), i = e.td, A = i.length, r = document.createElement("tr"), c = "",
+                    a = void 0;
+                for (a = 0; a < A; a++) c += "<td>&nbsp;</td>";
+                r.innerHTML = c, o(r).insertAfter(n)
             }
-            newTr.innerHTML = tpl;
-            // 插入
-            $(newTr).insertAfter($currentTr);
-        },
-
-        // 增加列
-        _addCol: function _addCol() {
-            // 获取当前单元格的位置信息
-            var locationData = this._getLocationData();
-            if (!locationData) {
-                return;
+        }, _addCol: function () {
+            var e = this._getLocationData();
+            if (e) {
+                var t = e.tr, n = e.td, i = n.index;
+                o(t.elem).parent().children().forEach(function (e) {
+                    var t = o(e), n = t.children(), A = n.get(i), r = A.getNodeName().toLowerCase();
+                    o(document.createElement(r)).insertAfter(A)
+                })
             }
-            var trData = locationData.tr;
-            var tdData = locationData.td;
-            var tdIndex = tdData.index;
-            var $currentTr = $(trData.elem);
-            var $trParent = $currentTr.parent();
-            var $trs = $trParent.children();
-
-            // 遍历所有行
-            $trs.forEach(function (tr) {
-                var $tr = $(tr);
-                var $tds = $tr.children();
-                var $currentTd = $tds.get(tdIndex);
-                var name = $currentTd.getNodeName().toLowerCase();
-
-                // new 一个 td，并插入
-                var newTd = document.createElement(name);
-                $(newTd).insertAfter($currentTd);
-            });
-        },
-
-        // 删除行
-        _delRow: function _delRow() {
-            // 获取当前单元格的位置信息
-            var locationData = this._getLocationData();
-            if (!locationData) {
-                return;
+        }, _delRow: function () {
+            var e = this._getLocationData();
+            if (e) {
+                o(e.tr.elem).remove()
             }
-            var trData = locationData.tr;
-            var $currentTr = $(trData.elem);
-            $currentTr.remove();
-        },
-
-        // 删除列
-        _delCol: function _delCol() {
-            // 获取当前单元格的位置信息
-            var locationData = this._getLocationData();
-            if (!locationData) {
-                return;
+        }, _delCol: function () {
+            var e = this._getLocationData();
+            if (e) {
+                var t = e.tr, n = e.td, i = n.index;
+                o(t.elem).parent().children().forEach(function (e) {
+                    o(e).children().get(i).remove()
+                })
             }
-            var trData = locationData.tr;
-            var tdData = locationData.td;
-            var tdIndex = tdData.index;
-            var $currentTr = $(trData.elem);
-            var $trParent = $currentTr.parent();
-            var $trs = $trParent.children();
-
-            // 遍历所有行
-            $trs.forEach(function (tr) {
-                var $tr = $(tr);
-                var $tds = $tr.children();
-                var $currentTd = $tds.get(tdIndex);
-                // 删除
-                $currentTd.remove();
-            });
-        },
-
-        // 删除表格
-        _delTable: function _delTable() {
-            var editor = this.editor;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
+        }, _delTable: function () {
+            var e = this.editor, t = e.selection.getSelectionContainerElem();
+            if (t) {
+                var n = t.parentUntil("table");
+                n && n.remove()
             }
-            var $table = $selectionELem.parentUntil('table');
-            if (!$table) {
-                return;
-            }
-            $table.remove();
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            var $selectionELem = editor.selection.getSelectionContainerElem();
-            if (!$selectionELem) {
-                return;
-            }
-            var nodeName = $selectionELem.getNodeName();
-            if (nodeName === 'TD' || nodeName === 'TH') {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem, i = t.selection.getSelectionContainerElem();
+            if (i) {
+                var o = i.getNodeName();
+                "TD" === o || "TH" === o ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
             }
         }
-    };
-
-    /*
-     menu - video
-     */
-// 构造函数
-    function Video(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-play"><i/></div>');
-        this.type = 'panel';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Video.prototype = {
-        constructor: Video,
-
-        onClick: function onClick() {
-            this._createPanel();
-        },
-
-        _createPanel: function _createPanel() {
-            var _this = this;
-
-            // 创建 id
-            var textValId = getRandom('text-val');
-            var btnId = getRandom('btn');
-
-            // 创建 panel
-            var panel = new Panel(this, {
+    }, k.prototype = {
+        constructor: k, onClick: function () {
+            this._createPanel()
+        }, _createPanel: function () {
+            var e = this, t = c("text-val"), n = c("btn"), i = new f(this, {
                 width: 350,
-                // 一个 panel 多个 tab
                 tabs: [{
-                    // 标题
-                    title: '插入视频',
-                    // 模板
-                    tpl: '<div>\n                        <input id="' + textValId + '" type="text" class="block" placeholder="\u683C\u5F0F\u5982\uFF1A<iframe src=... ></iframe>"/>\n                        <div class="w-e-button-container">\n                            <button id="' + btnId + '" class="right">\u63D2\u5165</button>\n                        </div>\n                    </div>',
-                    // 事件绑定
+                    title: "插入视频",
+                    tpl: '<div>\n                        <input id="' + t + '" type="text" class="block" placeholder="格式如：<iframe src=... ></iframe>"/>\n                        <div class="w-e-button-container">\n                            <button id="' + n + '" class="right">插入</button>\n                        </div>\n                    </div>',
                     events: [{
-                        selector: '#' + btnId,
-                        type: 'click',
-                        fn: function fn() {
-                            var $text = $('#' + textValId);
-                            var val = $text.val().trim();
-
-                            // 测试用视频地址
-                            // <iframe height=498 width=510 src='http://player.youku.com/embed/XMjcwMzc3MzM3Mg==' frameborder=0 'allowfullscreen'></iframe>
-
-                            if (val) {
-                                // 插入视频
-                                _this._insert(val);
-                            }
-
-                            // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                            return true;
+                        selector: "#" + n, type: "click", fn: function () {
+                            var n = o("#" + t), i = n.val().trim();
+                            return i && e._insert(i), !0
                         }
                     }]
-                } // first tab end
-                ] // tabs end
-            }); // panel end
-
-            // 显示 panel
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        // 插入视频
-        _insert: function _insert(val) {
-            var editor = this.editor;
-            editor.cmd.do('insertHTML', val + '<p><br></p>');
-        }
-    };
-
-    /*
-     menu - img
-     */
-// 构造函数
-    function Image(editor) {
-        this.editor = editor;
-        this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-image"><i/></div>');
-        this.type = 'panel';
-
-        // 当前是否 active 状态
-        this._active = false;
-    }
-
-// 原型
-    Image.prototype = {
-        constructor: Image,
-
-        onClick: function onClick() {
-            if (this._active) {
-                this._createEditPanel();
-            } else {
-                this._createInsertPanel();
-            }
-        },
-
-        _createEditPanel: function _createEditPanel() {
-            var editor = this.editor;
-
-            // id
-            var width30 = getRandom('width-30');
-            var width50 = getRandom('width-50');
-            var width100 = getRandom('width-100');
-            var delBtn = getRandom('del-btn');
-
-            // tab 配置
-            var tabsConfig = [{
-                title: '编辑图片',
-                tpl: '<div>\n                    <div class="w-e-button-container" style="border-bottom:1px solid #f1f1f1;padding-bottom:5px;margin-bottom:5px;">\n                        <span style="float:left;font-size:14px;margin:4px 5px 0 5px;color:#333;">\u6700\u5927\u5BBD\u5EA6\uFF1A</span>\n                        <button id="' + width30 + '" class="left">30%</button>\n                        <button id="' + width50 + '" class="left">50%</button>\n                        <button id="' + width100 + '" class="left">100%</button>\n                    </div>\n                    <div class="w-e-button-container">\n                        <button id="' + delBtn + '" class="gray left">\u5220\u9664\u56FE\u7247</button>\n                    </dv>\n                </div>',
-                events: [{
-                    selector: '#' + width30,
-                    type: 'click',
-                    fn: function fn() {
-                        var $img = editor._selectedImg;
-                        if ($img) {
-                            $img.css('max-width', '30%');
-                        }
-                        // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                        return true;
-                    }
-                }, {
-                    selector: '#' + width50,
-                    type: 'click',
-                    fn: function fn() {
-                        var $img = editor._selectedImg;
-                        if ($img) {
-                            $img.css('max-width', '50%');
-                        }
-                        // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                        return true;
-                    }
-                }, {
-                    selector: '#' + width100,
-                    type: 'click',
-                    fn: function fn() {
-                        var $img = editor._selectedImg;
-                        if ($img) {
-                            $img.css('max-width', '100%');
-                        }
-                        // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                        return true;
-                    }
-                }, {
-                    selector: '#' + delBtn,
-                    type: 'click',
-                    fn: function fn() {
-                        var $img = editor._selectedImg;
-                        if ($img) {
-                            $img.remove();
-                        }
-                        // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
-                        return true;
-                    }
                 }]
-            }];
-
-            // 创建 panel 并显示
-            var panel = new Panel(this, {
-                width: 300,
-                tabs: tabsConfig
             });
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        _createInsertPanel: function _createInsertPanel() {
-            var editor = this.editor;
-            var uploadImg = editor.uploadImg;
-            var config = editor.config;
-
-            // id
-            var upTriggerId = getRandom('up-trigger');
-            var upFileId = getRandom('up-file');
-            var linkUrlId = getRandom('link-url');
-            var linkBtnId = getRandom('link-btn');
-
-            // tabs 的配置
-            var tabsConfig = [{
-                title: '上传图片',
-                tpl: '<div class="w-e-up-img-container">\n                    <div id="' + upTriggerId + '" class="w-e-up-btn">\n                        <i class="w-e-icon-upload2"></i>\n                    </div>\n                    <div style="display:none;">\n                        <input id="' + upFileId + '" type="file" multiple="multiple" accept="image/jpg,image/jpeg,image/png,image/gif,image/bmp"/>\n                    </div>\n                </div>',
+            i.show(), this.panel = i
+        }, _insert: function (e) {
+            this.editor.cmd.do("insertHTML", e + "<p><br></p>")
+        }
+    }, D.prototype = {
+        constructor: D, onClick: function () {
+            this.editor.config.qiniu || (this._active ? this._createEditPanel() : this._createInsertPanel())
+        }, _createEditPanel: function () {
+            var e = this.editor, t = c("width-30"), n = c("width-50"), i = c("width-100"), o = c("del-btn"), A = [{
+                title: "编辑图片",
+                tpl: '<div>\n                    <div class="w-e-button-container" style="border-bottom:1px solid #f1f1f1;padding-bottom:5px;margin-bottom:5px;">\n                        <span style="float:left;font-size:14px;margin:4px 5px 0 5px;color:#333;">最大宽度：</span>\n                        <button id="' + t + '" class="left">30%</button>\n                        <button id="' + n + '" class="left">50%</button>\n                        <button id="' + i + '" class="left">100%</button>\n                    </div>\n                    <div class="w-e-button-container">\n                        <button id="' + o + '" class="gray left">删除图片</button>\n                    </dv>\n                </div>',
                 events: [{
-                    // 触发选择图片
-                    selector: '#' + upTriggerId,
-                    type: 'click',
-                    fn: function fn() {
-                        var $file = $('#' + upFileId);
-                        var fileElem = $file[0];
-                        if (fileElem) {
-                            fileElem.click();
-                        } else {
-                            // 返回 true 可关闭 panel
-                            return true;
-                        }
+                    selector: "#" + t, type: "click", fn: function () {
+                        var t = e._selectedImg;
+                        return t && t.css("max-width", "30%"), !0
                     }
                 }, {
-                    // 选择图片完毕
-                    selector: '#' + upFileId,
-                    type: 'change',
-                    fn: function fn() {
-                        var $file = $('#' + upFileId);
-                        var fileElem = $file[0];
-                        if (!fileElem) {
-                            // 返回 true 可关闭 panel
-                            return true;
-                        }
-
-                        // 获取选中的 file 对象列表
-                        var fileList = fileElem.files;
-                        if (fileList.length) {
-                            uploadImg.uploadImg(fileList);
-                        }
-
-                        // 返回 true 可关闭 panel
-                        return true;
+                    selector: "#" + n, type: "click", fn: function () {
+                        var t = e._selectedImg;
+                        return t && t.css("max-width", "50%"), !0
+                    }
+                }, {
+                    selector: "#" + i, type: "click", fn: function () {
+                        var t = e._selectedImg;
+                        return t && t.css("max-width", "100%"), !0
+                    }
+                }, {
+                    selector: "#" + o, type: "click", fn: function () {
+                        var t = e._selectedImg;
+                        return t && t.remove(), !0
                     }
                 }]
-            }, // first tab end
-                {
-                    title: '网络图片',
-                    tpl: '<div>\n                    <input id="' + linkUrlId + '" type="text" class="block" placeholder="\u56FE\u7247\u94FE\u63A5"/></td>\n                    <div class="w-e-button-container">\n                        <button id="' + linkBtnId + '" class="right">\u63D2\u5165</button>\n                    </div>\n                </div>',
+            }], r = new f(this, {width: 300, tabs: A});
+            r.show(), this.panel = r
+        }, _createInsertPanel: function () {
+            var e = this.editor, t = e.uploadImg, n = e.config, i = c("up-trigger"), A = c("up-file"),
+                r = c("link-url"), a = c("link-btn"), s = [{
+                    title: "上传图片",
+                    tpl: '<div class="w-e-up-img-container">\n                    <div id="' + i + '" class="w-e-up-btn">\n                        <i class="w-e-icon-upload2"></i>\n                    </div>\n                    <div style="display:none;">\n                        <input id="' + A + '" type="file" multiple="multiple" accept="image/jpg,image/jpeg,image/png,image/gif,image/bmp"/>\n                    </div>\n                </div>',
                     events: [{
-                        selector: '#' + linkBtnId,
-                        type: 'click',
-                        fn: function fn() {
-                            var $linkUrl = $('#' + linkUrlId);
-                            var url = $linkUrl.val().trim();
-
-                            if (url) {
-                                uploadImg.insertLinkImg(url);
-                            }
-
-                            // 返回 true 表示函数执行结束之后关闭 panel
-                            return true;
+                        selector: "#" + i, type: "click", fn: function () {
+                            var e = o("#" + A), t = e[0];
+                            if (!t) return !0;
+                            t.click()
+                        }
+                    }, {
+                        selector: "#" + A, type: "change", fn: function () {
+                            var e = o("#" + A), n = e[0];
+                            if (!n) return !0;
+                            var i = n.files;
+                            return i.length && t.uploadImg(i), !0
                         }
                     }]
-                } // second tab end
-            ]; // tabs end
-
-            // 判断 tabs 的显示
-            var tabsConfigResult = [];
-            if ((config.uploadImgShowBase64 || config.uploadImgServer) && window.FileReader) {
-                // 显示“上传图片”
-                tabsConfigResult.push(tabsConfig[0]);
-            }
-            if (config.showLinkImg) {
-                // 显示“网络图片”
-                tabsConfigResult.push(tabsConfig[1]);
-            }
-
-            // 创建 panel 并显示
-            var panel = new Panel(this, {
-                width: 300,
-                tabs: tabsConfigResult
-            });
-            panel.show();
-
-            // 记录属性
-            this.panel = panel;
-        },
-
-        // 试图改变 active 状态
-        tryChangeActive: function tryChangeActive(e) {
-            var editor = this.editor;
-            var $elem = this.$elem;
-            if (editor._selectedImg) {
-                this._active = true;
-                $elem.addClass('w-e-active');
-            } else {
-                this._active = false;
-                $elem.removeClass('w-e-active');
-            }
-        }
-    };
-
-    /*
-     所有菜单的汇总
-     */
-
-// 存储菜单的构造函数
-    var MenuConstructors = {};
-
-    MenuConstructors.bold = Bold;
-
-    MenuConstructors.head = Head;
-
-    MenuConstructors.link = Link;
-
-    MenuConstructors.italic = Italic;
-
-    MenuConstructors.redo = Redo;
-
-    MenuConstructors.strikeThrough = StrikeThrough;
-
-    MenuConstructors.underline = Underline;
-
-    MenuConstructors.undo = Undo;
-
-    MenuConstructors.list = List;
-
-    MenuConstructors.justify = Justify;
-
-    MenuConstructors.foreColor = BackColor;
-
-    MenuConstructors.backColor = ForeColor$1;
-
-    MenuConstructors.quote = Quote;
-
-    MenuConstructors.code = Code;
-
-    MenuConstructors.emoticon = Emoticon;
-
-    MenuConstructors.table = Table;
-
-    MenuConstructors.video = Video;
-
-    MenuConstructors.image = Image;
-
-    /*
-     菜单集合
-     */
-// 构造函数
-    function Menus(editor) {
-        this.editor = editor;
-        this.menus = {};
-    }
-
-// 修改原型
-    Menus.prototype = {
-        constructor: Menus,
-
-        // 初始化菜单
-        init: function init() {
-            var _this = this;
-
-            var editor = this.editor;
-            var config = editor.config || {};
-            var configMenus = config.menus || []; // 获取配置中的菜单
-
-            // 根据配置信息，创建菜单
-            configMenus.forEach(function (menuKey) {
-                var MenuConstructor = MenuConstructors[menuKey];
-                if (MenuConstructor && typeof MenuConstructor === 'function') {
-                    // 创建单个菜单
-                    _this.menus[menuKey] = new MenuConstructor(editor);
-                }
-            });
-
-            // 添加到菜单栏
-            this._addToToolbar();
-
-            // 绑定事件
-            this._bindEvent();
-        },
-
-        // 添加到菜单栏
-        _addToToolbar: function _addToToolbar() {
-            var editor = this.editor;
-            var $toolbarElem = editor.$toolbarElem;
-            var menus = this.menus;
-            objForEach(menus, function (key, menu) {
-                var $elem = menu.$elem;
-                if ($elem) {
-                    $toolbarElem.append($elem);
-                }
-            });
-        },
-
-        // 绑定菜单 click mouseenter 事件
-        _bindEvent: function _bindEvent() {
-            var menus = this.menus;
-            var editor = this.editor;
-            objForEach(menus, function (key, menu) {
-                var type = menu.type;
-                if (!type) {
-                    return;
-                }
-                var $elem = menu.$elem;
-                var droplist = menu.droplist;
-                var panel = menu.panel;
-
-                // 点击类型，例如 bold
-                if (type === 'click' && menu.onClick) {
-                    $elem.on('click', function (e) {
-                        if (editor.selection.getRange() == null) {
-                            return;
+                }, {
+                    title: "网络图片",
+                    tpl: '<div>\n                    <input id="' + r + '" type="text" class="block" placeholder="图片链接"/></td>\n                    <div class="w-e-button-container">\n                        <button id="' + a + '" class="right">插入</button>\n                    </div>\n                </div>',
+                    events: [{
+                        selector: "#" + a, type: "click", fn: function () {
+                            var e = o("#" + r), n = e.val().trim();
+                            return n && t.insertLinkImg(n), !0
                         }
-                        menu.onClick(e);
-                    });
+                    }]
+                }], l = [];
+            (n.uploadImgShowBase64 || n.uploadImgServer || n.customUploadImg) && window.FileReader && l.push(s[0]), n.showLinkImg && l.push(s[1]);
+            var d = new f(this, {width: 300, tabs: l});
+            d.show(), this.panel = d
+        }, tryChangeActive: function (e) {
+            var t = this.editor, n = this.$elem;
+            t._selectedImg ? (this._active = !0, n.addClass("w-e-active")) : (this._active = !1, n.removeClass("w-e-active"))
+        }
+    };
+    var q = {};
+    q.bold = l, q.head = u, q.fontSize = h, q.fontName = p, q.link = m, q.italic = g, q.redo = w, q.strikeThrough = v, q.underline = E, q.undo = b, q.list = B, q.justify = y, q.foreColor = C, q.backColor = x, q.quote = I, q.code = Q, q.emoticon = M, q.table = S, q.video = k, q.image = D, _.prototype = {
+        constructor: _,
+        init: function () {
+            var e = this, t = this.editor;
+            ((t.config || {}).menus || []).forEach(function (n) {
+                var i = q[n];
+                i && "function" == typeof i && (e.menus[n] = new i(t))
+            }), this._addToToolbar(), this._bindEvent()
+        },
+        _addToToolbar: function () {
+            var e = this.editor, t = e.$toolbarElem, n = this.menus, i = e.config, o = i.zIndex + 1;
+            A(n, function (e, n) {
+                var i = n.$elem;
+                i && (i.css("z-index", o), t.append(i))
+            })
+        },
+        _bindEvent: function () {
+            var e = this.menus, t = this.editor;
+            A(e, function (e, n) {
+                var i = n.type;
+                if (i) {
+                    var o = n.$elem, A = n.droplist;
+                    n.panel;
+                    "click" === i && n.onClick && o.on("click", function (e) {
+                        null != t.selection.getRange() && n.onClick(e)
+                    }), "droplist" === i && A && o.on("mouseenter", function (e) {
+                        null != t.selection.getRange() && (A.showTimeoutId = setTimeout(function () {
+                            A.show()
+                        }, 200))
+                    }).on("mouseleave", function (e) {
+                        A.hideTimeoutId = setTimeout(function () {
+                            A.hide()
+                        }, 0)
+                    }), "panel" === i && n.onClick && o.on("click", function (e) {
+                        e.stopPropagation(), null != t.selection.getRange() && n.onClick(e)
+                    })
                 }
+            })
+        },
+        changeActive: function () {
+            A(this.menus, function (e, t) {
+                t.tryChangeActive && setTimeout(function () {
+                    t.tryChangeActive()
+                }, 100)
+            })
+        }
+    }, U.prototype = {
+        constructor: U, init: function () {
+            this._bindEvent()
+        }, clear: function () {
+            this.html("<p><br></p>")
+        }, html: function (e) {
+            var t = this.editor, n = t.$textElem, i = void 0;
+            if (null == e) return i = n.html(), i = i.replace(/\u200b/gm, ""), i;
+            n.html(e), t.initSelection()
+        }, getJSON: function () {
+            return R(this.editor.$textElem)
+        }, text: function (e) {
+            var t = this.editor, n = t.$textElem, i = void 0;
+            if (null == e) return i = n.text(), i = i.replace(/\u200b/gm, ""), i;
+            n.text("<p>" + e + "</p>"), t.initSelection()
+        }, append: function (e) {
+            var t = this.editor;
+            t.$textElem.append(o(e)), t.initSelection()
+        }, _bindEvent: function () {
+            this._saveRangeRealTime(), this._enterKeyHandle(), this._clearHandle(), this._pasteHandle(), this._tabHandle(), this._imgHandle(), this._dragHandle()
+        }, _saveRangeRealTime: function () {
+            function e(e) {
+                t.selection.saveRange(), t.menus.changeActive()
+            }
 
-                // 下拉框，例如 head
-                if (type === 'droplist' && droplist) {
-                    $elem.on('mouseenter', function (e) {
-                        if (editor.selection.getRange() == null) {
-                            return;
+            var t = this.editor, n = t.$textElem;
+            n.on("keyup", e), n.on("mousedown", function (t) {
+                n.on("mouseleave", e)
+            }), n.on("mouseup", function (t) {
+                e(), n.off("mouseleave", e)
+            })
+        }, _enterKeyHandle: function () {
+            function e(e) {
+                var t = o("<p><br></p>");
+                t.insertBefore(e), i.selection.createRangeByElem(t, !0), i.selection.restoreSelection(), e.remove()
+            }
+
+            function t(t) {
+                var n = i.selection.getSelectionContainerElem(), o = n.parent();
+                if ("<code><br></code>" === o.html()) return void e(n);
+                if (o.equal(A)) {
+                    "P" !== n.getNodeName() && (n.text() || e(n))
+                }
+            }
+
+            function n(e) {
+                var t = i.selection.getSelectionContainerElem();
+                if (t) {
+                    var n = t.parent(), A = t.getNodeName(), r = n.getNodeName();
+                    if ("CODE" === A && "PRE" === r && i.cmd.queryCommandSupported("insertHTML")) {
+                        if (!0 === i._willBreakCode) {
+                            var c = o("<p><br></p>");
+                            return c.insertAfter(n), i.selection.createRangeByElem(c, !0), i.selection.restoreSelection(), i._willBreakCode = !1, void e.preventDefault()
                         }
-                        // 显示
-                        droplist.showTimeoutId = setTimeout(function () {
-                            droplist.show();
-                        }, 200);
-                    }).on('mouseleave', function (e) {
-                        // 隐藏
-                        droplist.hideTimeoutId = setTimeout(function () {
-                            droplist.hide();
-                        }, 0);
-                    });
+                        var a = i.selection.getRange().startOffset;
+                        i.cmd.do("insertHTML", "\n"), i.selection.saveRange(), i.selection.getRange().startOffset === a && i.cmd.do("insertHTML", "\n");
+                        var s = t.html().length;
+                        i.selection.getRange().startOffset + 1 === s && (i._willBreakCode = !0), e.preventDefault()
+                    }
                 }
+            }
 
-                // 弹框类型，例如 link
-                if (type === 'panel' && menu.onClick) {
-                    $elem.on('click', function (e) {
-                        e.stopPropagation();
-                        if (editor.selection.getRange() == null) {
-                            return;
+            var i = this.editor, A = i.$textElem;
+            A.on("keyup", function (e) {
+                13 === e.keyCode && t(e)
+            }), A.on("keydown", function (e) {
+                if (13 !== e.keyCode) return void(i._willBreakCode = !1);
+                n(e)
+            })
+        }, _clearHandle: function () {
+            var e = this.editor, t = e.$textElem;
+            t.on("keydown", function (e) {
+                if (8 === e.keyCode) {
+                    return "<p><br></p>" === t.html().toLowerCase().trim() ? void e.preventDefault() : void 0
+                }
+            }), t.on("keyup", function (n) {
+                if (8 === n.keyCode) {
+                    var i = void 0, A = t.html().toLowerCase().trim();
+                    A && "<br>" !== A || (i = o("<p><br/></p>"), t.html(""), t.append(i), e.selection.createRangeByElem(i, !1, !0), e.selection.restoreSelection())
+                }
+            })
+        }, _pasteHandle: function () {
+            function e() {
+                var e = Date.now(), t = !1;
+                return e - a >= 100 && (t = !0), a = e, t
+            }
+
+            function t() {
+                a = 0
+            }
+
+            var n = this.editor, i = n.config, o = i.pasteFilterStyle, A = i.pasteTextHandle, r = i.pasteIgnoreImg,
+                c = n.$textElem, a = 0;
+            c.on("paste", function (i) {
+                if (!J.isIE() && (i.preventDefault(), e())) {
+                    var c = F(i, o, r), a = N(i);
+                    a = a.replace(/\n/gm, "<br>");
+                    var l = n.selection.getSelectionContainerElem();
+                    if (l) {
+                        var d = l.getNodeName();
+                        if ("CODE" === d || "PRE" === d) return A && s(A) && (a = "" + (A(a) || "")), void n.cmd.do("insertHTML", "<p>" + a + "</p>");
+                        if (!c) return void t();
+                        try {
+                            A && s(A) && (c = "" + (A(c) || "")), n.cmd.do("insertHTML", c)
+                        } catch (e) {
+                            A && s(A) && (a = "" + (A(a) || "")), n.cmd.do("insertHTML", "<p>" + a + "</p>")
                         }
-                        // 在自定义事件中显示 panel
-                        menu.onClick(e);
-                    });
-                }
-            });
-        },
-
-        // 尝试修改菜单状态
-        changeActive: function changeActive() {
-            var menus = this.menus;
-            objForEach(menus, function (key, menu) {
-                if (menu.tryChangeActive) {
-                    setTimeout(function () {
-                        menu.tryChangeActive();
-                    }, 100);
-                }
-            });
-        }
-    };
-
-    /*
-     粘贴信息的处理
-     */
-
-// 获取粘贴的纯文本
-    function getPasteText(e) {
-        var clipboardData = e.clipboardData || e.originalEvent && e.originalEvent.clipboardData;
-        var pasteText = void 0;
-        if (clipboardData == null) {
-            pasteText = window.clipboardData && window.clipboardData.getData('text');
-        } else {
-            pasteText = clipboardData.getData('text/plain');
-        }
-
-        return replaceHtmlSymbol(pasteText);
-    }
-
-// 获取粘贴的html
-    function getPasteHtml(e) {
-        var clipboardData = e.clipboardData || e.originalEvent && e.originalEvent.clipboardData;
-        var pasteText = void 0,
-            pasteHtml = void 0;
-        if (clipboardData == null) {
-            pasteText = window.clipboardData && window.clipboardData.getData('text');
-        } else {
-            pasteText = clipboardData.getData('text/plain');
-            pasteHtml = clipboardData.getData('text/html');
-        }
-        if (!pasteHtml && pasteText) {
-            pasteHtml = '<p>' + replaceHtmlSymbol(pasteText) + '</p>';
-        }
-        if (!pasteHtml) {
-            return;
-        }
-
-        // 过滤word中状态过来的无用字符
-        var docSplitHtml = pasteHtml.split('</html>');
-        if (docSplitHtml.length === 2) {
-            pasteHtml = docSplitHtml[0];
-        }
-
-        // 过滤无用标签
-        pasteHtml = pasteHtml.replace(/<(meta|script|link).+?>/igm, '');
-
-        // 过滤样式
-        pasteHtml = pasteHtml.replace(/\s?(class|style)=('|").+?('|")/igm, '');
-
-        return pasteHtml;
-    }
-
-// 获取粘贴的图片文件
-    function getPasteImgs(e) {
-        var result = [];
-        var txt = getPasteText(e);
-        if (txt) {
-            // 有文字，就忽略图片
-            return result;
-        }
-
-        var clipboardData = e.clipboardData || e.originalEvent && e.originalEvent.clipboardData || {};
-        var items = clipboardData.items;
-        if (!items) {
-            return result;
-        }
-
-        objForEach(items, function (key, value) {
-            var type = value.type;
-            if (/image/i.test(type)) {
-                result.push(value.getAsFile());
-            }
-        });
-
-        return result;
-    }
-
-    /*
-     编辑区域
-     */
-
-// 构造函数
-    function Text(editor) {
-        this.editor = editor;
-    }
-
-// 修改原型
-    Text.prototype = {
-        constructor: Text,
-
-        // 初始化
-        init: function init() {
-            // 绑定事件
-            this._bindEvent();
-        },
-
-        // 清空内容
-        clear: function clear() {
-            this.html('<p><br></p>');
-        },
-
-        // 获取 设置 html
-        html: function html(val) {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-            if (val == null) {
-                return $textElem.html();
-            } else {
-                $textElem.html(val);
-
-                // 初始化选取，将光标定位到内容尾部
-                editor.initSelection();
-            }
-        },
-
-        // 获取 设置 text
-        text: function text(val) {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-            if (val == null) {
-                return $textElem.text();
-            } else {
-                $textElem.text('<p>' + val + '</p>');
-
-                // 初始化选取，将光标定位到内容尾部
-                editor.initSelection();
-            }
-        },
-
-        // 追加内容
-        append: function append(html) {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-            $textElem.append($(html));
-
-            // 初始化选取，将光标定位到内容尾部
-            editor.initSelection();
-        },
-
-        // 绑定事件
-        _bindEvent: function _bindEvent() {
-            // 实时保存选取
-            this._saveRangeRealTime();
-
-            // 按回车建时的特殊处理
-            this._enterKeyHandle();
-
-            // 清空时保留 <p><br></p>
-            this._clearHandle();
-
-            // 粘贴事件（粘贴文字，粘贴图片）
-            this._pasteHandle();
-
-            // tab 特殊处理
-            this._tabHandle();
-
-            // img 点击
-            this._imgHandle();
-        },
-
-        // 实时保存选取
-        _saveRangeRealTime: function _saveRangeRealTime() {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-
-            // 保存当前的选区
-            function saveRange(e) {
-                // 随时保存选区
-                editor.selection.saveRange();
-                // 更新按钮 ative 状态
-                editor.menus.changeActive();
-            }
-            // 按键后保存
-            $textElem.on('keyup', saveRange);
-            $textElem.on('mousedown', function (e) {
-                // mousedown 状态下，鼠标滑动到编辑区域外面，也需要保存选区
-                $textElem.on('mouseleave', saveRange);
-            });
-            $textElem.on('mouseup', function (e) {
-                saveRange();
-                // 在编辑器区域之内完成点击，取消鼠标滑动到编辑区外面的事件
-                $textElem.off('mouseleave', saveRange);
-            });
-        },
-
-        // 按回车键时的特殊处理
-        _enterKeyHandle: function _enterKeyHandle() {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-
-            // 将回车之后生成的非 <p> 的顶级标签，改为 <p>
-            function pHandle(e) {
-                var $selectionElem = editor.selection.getSelectionContainerElem();
-                var $parentElem = $selectionElem.parent();
-                if (!$parentElem.equal($textElem)) {
-                    // 不是顶级标签
-                    return;
-                }
-                var nodeName = $selectionElem.getNodeName();
-                if (nodeName === 'P') {
-                    // 当前的标签是 P ，不用做处理
-                    return;
-                }
-
-                if ($selectionElem.text()) {
-                    // 有内容，不做处理
-                    return;
-                }
-
-                // 插入 <p> ，并将选取定位到 <p>，删除当前标签
-                var $p = $('<p><br></p>');
-                $p.insertBefore($selectionElem);
-                editor.selection.createRangeByElem($p, true);
-                editor.selection.restoreSelection();
-                $selectionElem.remove();
-            }
-
-            $textElem.on('keyup', function (e) {
-                if (e.keyCode !== 13) {
-                    // 不是回车键
-                    return;
-                }
-                // 将回车之后生成的非 <p> 的顶级标签，改为 <p>
-                pHandle(e);
-            });
-
-            // <pre><code></code></pre> 回车时 特殊处理
-            function codeHandle(e) {
-                var $selectionElem = editor.selection.getSelectionContainerElem();
-                if (!$selectionElem) {
-                    return;
-                }
-                var $parentElem = $selectionElem.parent();
-                var selectionNodeName = $selectionElem.getNodeName();
-                var parentNodeName = $parentElem.getNodeName();
-
-                if (selectionNodeName !== 'CODE' || parentNodeName !== 'PRE') {
-                    // 不符合要求 忽略
-                    return;
-                }
-
-                if (!editor.cmd.queryCommandSupported('insertHTML')) {
-                    // 必须原生支持 insertHTML 命令
-                    return;
-                }
-
-                var _startOffset = editor.selection.getRange().startOffset;
-                editor.cmd.do('insertHTML', '\n');
-                editor.selection.saveRange();
-                if (editor.selection.getRange().startOffset === _startOffset) {
-                    // 没起作用，再来一遍
-                    editor.cmd.do('insertHTML', '\n');
-                }
-
-                // 阻止默认行为
-                e.preventDefault();
-            }
-
-            $textElem.on('keydown', function (e) {
-                if (e.keyCode !== 13) {
-                    // 不是回车键
-                    return;
-                }
-                // <pre><code></code></pre> 回车时 特殊处理
-                codeHandle(e);
-            });
-        },
-
-        // 清空时保留 <p><br></p>
-        _clearHandle: function _clearHandle() {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-
-            $textElem.on('keydown', function (e) {
-                if (e.keyCode !== 8) {
-                    return;
-                }
-                var txtHtml = $textElem.html().toLowerCase().trim();
-                if (txtHtml === '<p><br></p>') {
-                    // 最后剩下一个空行，就不再删除了
-                    e.preventDefault();
-                    return;
-                }
-            });
-
-            $textElem.on('keyup', function (e) {
-                if (e.keyCode !== 8) {
-                    return;
-                }
-                var $p = void 0;
-                var txtHtml = $textElem.html().toLowerCase().trim();
-
-                // firefox 时用 txtHtml === '<br>' 判断，其他用 !txtHtml 判断
-                if (!txtHtml || txtHtml === '<br>') {
-                    // 内容空了
-                    $p = $('<p><br/></p>');
-                    $textElem.html(''); // 一定要先清空，否则在 firefox 下有问题
-                    $textElem.append($p);
-                    editor.selection.createRangeByElem($p, false, true);
-                    editor.selection.restoreSelection();
-                }
-            });
-        },
-
-        // 粘贴事件（粘贴文字 粘贴图片）
-        _pasteHandle: function _pasteHandle() {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-
-            // 粘贴文字
-            $textElem.on('paste', function (e) {
-                if (UA.isIE()) {
-                    // IE 下放弃下面的判断
-                    return;
-                }
-
-                // 阻止默认行为，使用 execCommand 的粘贴命令
-                e.preventDefault();
-
-                // 获取粘贴的文字
-                var pasteHtml = getPasteHtml(e);
-                var pasteText = getPasteText(e);
-                pasteText = pasteText.replace(/\n/gm, '<br>');
-
-                var $selectionElem = editor.selection.getSelectionContainerElem();
-                if (!$selectionElem) {
-                    return;
-                }
-                var nodeName = $selectionElem.getNodeName();
-
-                // code 中粘贴忽略
-                if (nodeName === 'CODE' || nodeName === 'PRE') {
-                    return;
-                }
-
-                // 表格中忽略，可能会出现异常问题
-                if (nodeName === 'TD' || nodeName === 'TH') {
-                    return;
-                }
-
-                if (nodeName === 'DIV' || $textElem.html() === '<p><br></p>') {
-                    // 是 div，可粘贴过滤样式的文字和链接
-                    if (!pasteHtml) {
-                        return;
-                    }
-                    try {
-                        // firefox 中，获取的 pasteHtml 可能是没有 <ul> 包裹的 <li>
-                        // 因此执行 insertHTML 会报错
-                        editor.cmd.do('insertHTML', pasteHtml);
-                    } catch (ex) {
-                        // 此时使用 pasteText 来兼容一下
-                        editor.cmd.do('insertHTML', '<p>' + pasteText + '</p>');
-                    }
-                } else {
-                    // 不是 div，证明在已有内容的元素中粘贴，只粘贴纯文本
-                    if (!pasteText) {
-                        return;
-                    }
-                    editor.cmd.do('insertHTML', '<p>' + pasteText + '</p>');
-                }
-            });
-
-            // 粘贴图片
-            $textElem.on('paste', function (e) {
-                e.preventDefault();
-
-                // 获取粘贴的图片
-                var pasteFiles = getPasteImgs(e);
-                if (!pasteFiles || !pasteFiles.length) {
-                    return;
-                }
-
-                // 获取当前的元素
-                var $selectionElem = editor.selection.getSelectionContainerElem();
-                if (!$selectionElem) {
-                    return;
-                }
-                var nodeName = $selectionElem.getNodeName();
-
-                // code 中粘贴忽略
-                if (nodeName === 'CODE' || nodeName === 'PRE') {
-                    return;
-                }
-
-                // 上传图片
-                var uploadImg = editor.uploadImg;
-                uploadImg.uploadImg(pasteFiles);
-            });
-        },
-
-        // tab 特殊处理
-        _tabHandle: function _tabHandle() {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-
-            $textElem.on('keydown', function (e) {
-                if (e.keyCode !== 9) {
-                    return;
-                }
-                if (!editor.cmd.queryCommandSupported('insertHTML')) {
-                    // 必须原生支持 insertHTML 命令
-                    return;
-                }
-                var $selectionElem = editor.selection.getSelectionContainerElem();
-                if (!$selectionElem) {
-                    return;
-                }
-                var $parentElem = $selectionElem.parent();
-                var selectionNodeName = $selectionElem.getNodeName();
-                var parentNodeName = $parentElem.getNodeName();
-
-                if (selectionNodeName === 'CODE' && parentNodeName === 'PRE') {
-                    // <pre><code> 里面
-                    editor.cmd.do('insertHTML', '    ');
-                } else {
-                    // 普通文字
-                    editor.cmd.do('insertHTML', '&nbsp;&nbsp;&nbsp;&nbsp;');
-                }
-
-                e.preventDefault();
-            });
-        },
-
-        // img 点击
-        _imgHandle: function _imgHandle() {
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-            var selectedClass = 'w-e-selected';
-
-            // 为图片增加 selected 样式
-            $textElem.on('click', 'img', function (e) {
-                var img = this;
-                var $img = $(img);
-
-                // 去掉所有图片的 selected 样式
-                $textElem.find('img').removeClass(selectedClass);
-
-                // 为点击的图片增加样式，并记录当前图片
-                $img.addClass(selectedClass);
-                editor._selectedImg = $img;
-
-                // 修改选取
-                editor.selection.createRangeByElem($img);
-            });
-
-            // 去掉图片的 selected 样式
-            $textElem.on('click  keyup', function (e) {
-                if (e.target.matches('img')) {
-                    // 点击的是图片，忽略
-                    return;
-                }
-                // 取消掉 selected 样式，并删除记录
-                $textElem.find('img').removeClass(selectedClass);
-                editor._selectedImg = null;
-            });
-        }
-    };
-
-    /*
-     命令，封装 document.execCommand
-     */
-
-// 构造函数
-    function Command(editor) {
-        this.editor = editor;
-    }
-
-// 修改原型
-    Command.prototype = {
-        constructor: Command,
-
-        // 执行命令
-        do: function _do(name, value) {
-            var editor = this.editor;
-
-            // 如果无选区，忽略
-            if (!editor.selection.getRange()) {
-                return;
-            }
-
-            // 恢复选取
-            editor.selection.restoreSelection();
-
-            // 执行
-            var _name = '_' + name;
-            if (this[_name]) {
-                // 有自定义事件
-                this[_name](value);
-            } else {
-                // 默认 command
-                this._execCommand(name, value);
-            }
-
-            // 修改菜单状态
-            editor.menus.changeActive();
-
-            // 最后，恢复选取保证光标在原来的位置闪烁
-            editor.selection.saveRange();
-            editor.selection.restoreSelection();
-
-            // 触发 onchange
-            editor.change && editor.change();
-        },
-
-        // 自定义 insertHTML 事件
-        _insertHTML: function _insertHTML(html) {
-            var editor = this.editor;
-            var range = editor.selection.getRange();
-
-            // 保证传入的参数是 html 代码
-            var test = /^<.+>$/.test(html);
-            if (!test && !UA.isWebkit()) {
-                // webkit 可以插入非 html 格式的文字
-                throw new Error('执行 insertHTML 命令时传入的参数必须是 html 格式');
-            }
-
-            if (this.queryCommandSupported('insertHTML')) {
-                // W3C
-                this._execCommand('insertHTML', html);
-            } else if (range.insertNode) {
-                // IE
-                range.deleteContents();
-                range.insertNode($(html)[0]);
-            } else if (range.pasteHTML) {
-                // IE <= 10
-                range.pasteHTML(html);
-            }
-        },
-
-        // 插入 elem
-        _insertElem: function _insertElem($elem) {
-            var editor = this.editor;
-            var range = editor.selection.getRange();
-
-            if (range.insertNode) {
-                range.deleteContents();
-                range.insertNode($elem[0]);
-            }
-        },
-
-        // 封装 execCommand
-        _execCommand: function _execCommand(name, value) {
-            document.execCommand(name, false, value);
-        },
-
-        // 封装 document.queryCommandValue
-        queryCommandValue: function queryCommandValue(name) {
-            return document.queryCommandValue(name);
-        },
-
-        // 封装 document.queryCommandState
-        queryCommandState: function queryCommandState(name) {
-            return document.queryCommandState(name);
-        },
-
-        // 封装 document.queryCommandSupported
-        queryCommandSupported: function queryCommandSupported(name) {
-            return document.queryCommandSupported(name);
-        }
-    };
-
-    /*
-     selection range API
-     */
-
-// 构造函数
-    function API(editor) {
-        this.editor = editor;
-        this._currentRange = null;
-    }
-
-// 修改原型
-    API.prototype = {
-        constructor: API,
-
-        // 获取 range 对象
-        getRange: function getRange() {
-            return this._currentRange;
-        },
-
-        // 保存选区
-        saveRange: function saveRange(_range) {
-            if (_range) {
-                // 保存已有选区
-                this._currentRange = _range;
-                return;
-            }
-
-            // 获取当前的选区
-            var selection = window.getSelection();
-            if (selection.rangeCount === 0) {
-                return;
-            }
-            var range = selection.getRangeAt(0);
-
-            // 判断选区内容是否在编辑内容之内
-            var $containerElem = this.getSelectionContainerElem(range);
-            if (!$containerElem) {
-                return;
-            }
-            var editor = this.editor;
-            var $textElem = editor.$textElem;
-            if ($textElem.isContain($containerElem)) {
-                // 是编辑内容之内的
-                this._currentRange = range;
-            }
-        },
-
-        // 折叠选区
-        collapseRange: function collapseRange(toStart) {
-            if (toStart == null) {
-                // 默认为 false
-                toStart = false;
-            }
-            var range = this._currentRange;
-            if (range) {
-                range.collapse(toStart);
-            }
-        },
-
-        // 选中区域的文字
-        getSelectionText: function getSelectionText() {
-            var range = this._currentRange;
-            if (range) {
-                return this._currentRange.toString();
-            } else {
-                return '';
-            }
-        },
-
-        // 选区的 $Elem
-        getSelectionContainerElem: function getSelectionContainerElem(range) {
-            range = range || this._currentRange;
-            var elem = void 0;
-            if (range) {
-                elem = range.commonAncestorContainer;
-                return $(elem.nodeType === 1 ? elem : elem.parentNode);
-            }
-        },
-        getSelectionStartElem: function getSelectionStartElem(range) {
-            range = range || this._currentRange;
-            var elem = void 0;
-            if (range) {
-                elem = range.startContainer;
-                return $(elem.nodeType === 1 ? elem : elem.parentNode);
-            }
-        },
-        getSelectionEndElem: function getSelectionEndElem(range) {
-            range = range || this._currentRange;
-            var elem = void 0;
-            if (range) {
-                elem = range.endContainer;
-                return $(elem.nodeType === 1 ? elem : elem.parentNode);
-            }
-        },
-
-        // 选区是否为空
-        isSelectionEmpty: function isSelectionEmpty() {
-            var range = this._currentRange;
-            if (range && range.startContainer) {
-                if (range.startContainer === range.endContainer) {
-                    if (range.startOffset === range.endOffset) {
-                        return true;
                     }
                 }
-            }
-            return false;
-        },
-
-        // 恢复选区
-        restoreSelection: function restoreSelection() {
-            var selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(this._currentRange);
-        },
-
-        // 创建一个空白（即 &#8203 字符）选区
-        createEmptyRange: function createEmptyRange() {
-            var editor = this.editor;
-            var range = this.getRange();
-            var $elem = void 0;
-
-            if (!range) {
-                // 当前无 range
-                return;
-            }
-            if (!this.isSelectionEmpty()) {
-                // 当前选区必须没有内容才可以
-                return;
-            }
-
-            // 目前只支持 webkit 内核
-            if (UA.isWebkit()) {
-                // 插入 &#8203
-                editor.cmd.do('insertHTML', '&#8203;');
-                // 修改 offset 位置
-                range.setEnd(range.endContainer, range.endOffset + 1);
-                // 存储
-                this.saveRange(range);
-            } else {
-                $elem = $('<strong>&#8203;</strong>');
-                editor.cmd.do('insertElem', $elem);
-                this.createRangeByElem($elem, true);
-            }
-        },
-
-        // 根据 $Elem 设置选区
-        createRangeByElem: function createRangeByElem($elem, toStart, isContent) {
-            // $elem - 经过封装的 elem
-            // toStart - true 开始位置，false 结束位置
-            // isContent - 是否选中Elem的内容
-            if (!$elem.length) {
-                return;
-            }
-
-            var elem = $elem[0];
-            var range = document.createRange();
-
-            if (isContent) {
-                range.selectNodeContents(elem);
-            } else {
-                range.selectNode(elem);
-            }
-
-            if (typeof toStart === 'boolean') {
-                range.collapse(toStart);
-            }
-
-            // 存储 range
-            this.saveRange(range);
-        }
-    };
-
-    /*
-     上传进度条
-     */
-
-    function Progress(editor) {
-        this.editor = editor;
-        this._time = 0;
-        this._isShow = false;
-        this._isRender = false;
-        this._timeoutId = 0;
-        this.$textContainer = editor.$textContainerElem;
-        this.$bar = $('<div class="w-e-progress"></div>');
-    }
-
-    Progress.prototype = {
-        constructor: Progress,
-
-        show: function show(progress) {
-            var _this = this;
-
-            // 状态处理
-            if (this._isShow) {
-                return;
-            }
-            this._isShow = true;
-
-            // 渲染
-            var $bar = this.$bar;
-            if (!this._isRender) {
-                var $textContainer = this.$textContainer;
-                $textContainer.append($bar);
-            } else {
-                this._isRender = true;
-            }
-
-            // 改变进度（节流，100ms 渲染一次）
-            if (Date.now() - this._time > 100) {
-                if (progress <= 1) {
-                    $bar.css('width', progress * 100 + '%');
-                    this._time = Date.now();
-                }
-            }
-
-            // 隐藏
-            var timeoutId = this._timeoutId;
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-            timeoutId = setTimeout(function () {
-                _this._hide();
-            }, 500);
-        },
-
-        _hide: function _hide() {
-            var $bar = this.$bar;
-            $bar.remove();
-
-            // 修改状态
-            this._time = 0;
-            this._isShow = false;
-            this._isRender = false;
-        }
-    };
-
-    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-        return typeof obj;
-    } : function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-
-    /*
-     上传图片
-     */
-
-// 构造函数
-    function UploadImg(editor) {
-        this.editor = editor;
-    }
-
-// 原型
-    UploadImg.prototype = {
-        constructor: UploadImg,
-
-        // 根据 debug 弹出不同的信息
-        _alert: function _alert(alertInfo, debugInfo) {
-            var editor = this.editor;
-            var debug = editor.config.debug;
-
-            if (debug) {
-                throw new Error('wangEditor: ' + (debugInfo || alertInfo));
-            } else {
-                alert(alertInfo);
-            }
-        },
-
-        // 根据链接插入图片
-        insertLinkImg: function insertLinkImg(link) {
-            var _this2 = this;
-
-            if (!link) {
-                return;
-            }
-            var editor = this.editor;
-
-            var img = document.createElement('img');
-            img.onload = function () {
-                img = null;
-                editor.cmd.do('insertHTML', '<img src="' + link + '" style="max-width:100%;"/>');
-            };
-            img.onerror = function () {
-                img = null;
-                // 无法成功下载图片
-                _this2._alert('插入图片错误', 'wangEditor: \u63D2\u5165\u56FE\u7247\u51FA\u9519\uFF0C\u56FE\u7247\u94FE\u63A5\u662F "' + link + '"\uFF0C\u4E0B\u8F7D\u8BE5\u94FE\u63A5\u5931\u8D25');
-                return;
-            };
-            img.onabort = function () {
-                img = null;
-            };
-            img.src = link;
-        },
-
-        // 上传图片
-        uploadImg: function uploadImg(files) {
-            var _this3 = this;
-
-            if (!files || !files.length) {
-                return;
-            }
-
-            // ------------------------------ 获取配置信息 ------------------------------
-            var editor = this.editor;
-            var config = editor.config;
-            var maxSize = config.uploadImgMaxSize;
-            var maxSizeM = maxSize / 1000 / 1000;
-            var maxLength = config.uploadImgMaxLength || 10000;
-            var uploadImgServer = config.uploadImgServer;
-            var uploadImgShowBase64 = config.uploadImgShowBase64;
-            var uploadFileName = config.uploadFileName || '';
-            var uploadImgParams = config.uploadImgParams || {};
-            var uploadImgHeaders = config.uploadImgHeaders || {};
-            var hooks = config.uploadImgHooks || {};
-            var timeout = config.uploadImgTimeout || 3000;
-            var withCredentials = config.withCredentials;
-            if (withCredentials == null) {
-                withCredentials = false;
-            }
-
-            // ------------------------------ 验证文件信息 ------------------------------
-            var resultFiles = [];
-            var errInfo = [];
-            arrForEach(files, function (file) {
-                var name = file.name;
-                var size = file.size;
-                if (/\.(jpg|jpeg|png|bmp|gif)$/i.test(name) === false) {
-                    // 后缀名不合法，不是图片
-                    errInfo.push('\u3010' + name + '\u3011\u4E0D\u662F\u56FE\u7247');
-                    return;
-                }
-                if (maxSize < size) {
-                    // 上传图片过大
-                    errInfo.push('\u3010' + name + '\u3011\u5927\u4E8E ' + maxSizeM + 'M');
-                    return;
-                }
-
-                // 验证通过的加入结果列表
-                resultFiles.push(file);
-            });
-            // 抛出验证信息
-            if (errInfo.length) {
-                this._alert('图片验证未通过: \n' + errInfo.join('\n'));
-                return;
-            }
-            if (resultFiles.length > maxLength) {
-                this._alert('一次最多上传' + maxLength + '张图片');
-                return;
-            }
-
-            // 添加图片数据
-            var formdata = new FormData();
-            arrForEach(resultFiles, function (file) {
-                var name = uploadFileName || file.name;
-                formdata.append(name, file);
-            });
-
-            // ------------------------------ 上传图片 ------------------------------
-            if (uploadImgServer && typeof uploadImgServer === 'string') {
-                // 添加参数
-                var uploadImgServerArr = uploadImgServer.split('#');
-                uploadImgServer = uploadImgServerArr[0];
-                var uploadImgServerHash = uploadImgServerArr[1] || '';
-                objForEach(uploadImgParams, function (key, val) {
-                    val = encodeURIComponent(val);
-
-                    // 第一，将参数拼接到 url 中
-                    if (uploadImgServer.indexOf('?') > 0) {
-                        uploadImgServer += '&';
-                    } else {
-                        uploadImgServer += '?';
-                    }
-                    uploadImgServer = uploadImgServer + key + '=' + val;
-
-                    // 第二，将参数添加到 formdata 中
-                    formdata.append(key, val);
-                });
-                if (uploadImgServerHash) {
-                    uploadImgServer += '#' + uploadImgServerHash;
-                }
-
-                // 定义 xhr
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', uploadImgServer);
-
-                // 设置超时
-                xhr.timeout = timeout;
-                xhr.ontimeout = function () {
-                    // hook - timeout
-                    if (hooks.timeout && typeof hooks.timeout === 'function') {
-                        hooks.timeout(xhr, editor);
-                    }
-
-                    _this3._alert('上传图片超时');
-                };
-
-                // 监控 progress
-                if (xhr.upload) {
-                    xhr.upload.onprogress = function (e) {
-                        var percent = void 0;
-                        // 进度条
-                        var progressBar = new Progress(editor);
-                        if (e.lengthComputable) {
-                            percent = e.loaded / e.total;
-                            progressBar.show(percent);
-                        }
-                    };
-                }
-
-                // 返回数据
-                xhr.onreadystatechange = function () {
-                    var result = void 0;
-                    if (xhr.readyState === 4) {
-                        if (xhr.status < 200 || xhr.status >= 300) {
-                            // hook - error
-                            if (hooks.error && typeof hooks.error === 'function') {
-                                hooks.error(xhr, editor);
+            }), c.on("paste", function (t) {
+                if (!J.isIE() && (t.preventDefault(), e())) {
+                    var i = T(t);
+                    if (i && i.length) {
+                        var o = n.selection.getSelectionContainerElem();
+                        if (o) {
+                            var A = o.getNodeName();
+                            if ("CODE" !== A && "PRE" !== A) {
+                                n.uploadImg.uploadImg(i)
                             }
-
-                            // xhr 返回状态错误
-                            _this3._alert('上传图片发生错误', '\u4E0A\u4F20\u56FE\u7247\u53D1\u751F\u9519\u8BEF\uFF0C\u670D\u52A1\u5668\u8FD4\u56DE\u72B6\u6001\u662F ' + xhr.status);
-                            return;
                         }
-
-                        result = xhr.responseText;
-                        if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== 'object') {
-                            try {
-                                result = JSON.parse(result);
-                            } catch (ex) {
-                                // hook - fail
-                                if (hooks.fail && typeof hooks.fail === 'function') {
-                                    hooks.fail(xhr, editor, result);
+                    }
+                }
+            })
+        }, _tabHandle: function () {
+            var e = this.editor;
+            e.$textElem.on("keydown", function (t) {
+                if (9 === t.keyCode && e.cmd.queryCommandSupported("insertHTML")) {
+                    var n = e.selection.getSelectionContainerElem();
+                    if (n) {
+                        var i = n.parent(), o = n.getNodeName(), A = i.getNodeName();
+                        "CODE" === o && "PRE" === A ? e.cmd.do("insertHTML", "    ") : e.cmd.do("insertHTML", "&nbsp;&nbsp;&nbsp;&nbsp;"), t.preventDefault()
+                    }
+                }
+            })
+        }, _imgHandle: function () {
+            var e = this.editor, t = e.$textElem;
+            t.on("click", "img", function (t) {
+                var n = this, i = o(n);
+                "1" !== i.attr("data-w-e") && (e._selectedImg = i, e.selection.createRangeByElem(i), e.selection.restoreSelection())
+            }), t.on("click  keyup", function (t) {
+                t.target.matches("img") || (e._selectedImg = null)
+            })
+        }, _dragHandle: function () {
+            var e = this.editor;
+            o(document).on("dragleave drop dragenter dragover", function (e) {
+                e.preventDefault()
+            }), e.$textElem.on("drop", function (t) {
+                t.preventDefault();
+                var n = t.dataTransfer && t.dataTransfer.files;
+                n && n.length && e.uploadImg.uploadImg(n)
+            })
+        }
+    }, Y.prototype = {
+        constructor: Y, do: function (e, t) {
+            var n = this.editor;
+            if (n._useStyleWithCSS || (document.execCommand("styleWithCSS", null, !0), n._useStyleWithCSS = !0), n.selection.getRange()) {
+                n.selection.restoreSelection();
+                var i = "_" + e;
+                this[i] ? this[i](t) : this._execCommand(e, t), n.menus.changeActive(), n.selection.saveRange(), n.selection.restoreSelection(), n.change && n.change()
+            }
+        }, _insertHTML: function (e) {
+            var t = this.editor, n = t.selection.getRange();
+            this.queryCommandSupported("insertHTML") ? this._execCommand("insertHTML", e) : n.insertNode ? (n.deleteContents(), n.insertNode(o(e)[0])) : n.pasteHTML && n.pasteHTML(e)
+        }, _insertElem: function (e) {
+            var t = this.editor, n = t.selection.getRange();
+            n.insertNode && (n.deleteContents(), n.insertNode(e[0]))
+        }, _execCommand: function (e, t) {
+            document.execCommand(e, !1, t)
+        }, queryCommandValue: function (e) {
+            return document.queryCommandValue(e)
+        }, queryCommandState: function (e) {
+            return document.queryCommandState(e)
+        }, queryCommandSupported: function (e) {
+            return document.queryCommandSupported(e)
+        }
+    }, P.prototype = {
+        constructor: P, getRange: function () {
+            return this._currentRange
+        }, saveRange: function (e) {
+            if (e) return void(this._currentRange = e);
+            var t = window.getSelection();
+            if (0 !== t.rangeCount) {
+                var n = t.getRangeAt(0), i = this.getSelectionContainerElem(n);
+                if (i && "false" !== i.attr("contenteditable") && !i.parentUntil("[contenteditable=false]")) {
+                    this.editor.$textElem.isContain(i) && (this._currentRange = n)
+                }
+            }
+        }, collapseRange: function (e) {
+            null == e && (e = !1);
+            var t = this._currentRange;
+            t && t.collapse(e)
+        }, getSelectionText: function () {
+            return this._currentRange ? this._currentRange.toString() : ""
+        }, getSelectionContainerElem: function (e) {
+            e = e || this._currentRange;
+            var t = void 0;
+            if (e) return t = e.commonAncestorContainer, o(1 === t.nodeType ? t : t.parentNode)
+        }, getSelectionStartElem: function (e) {
+            e = e || this._currentRange;
+            var t = void 0;
+            if (e) return t = e.startContainer, o(1 === t.nodeType ? t : t.parentNode)
+        }, getSelectionEndElem: function (e) {
+            e = e || this._currentRange;
+            var t = void 0;
+            if (e) return t = e.endContainer, o(1 === t.nodeType ? t : t.parentNode)
+        }, isSelectionEmpty: function () {
+            var e = this._currentRange;
+            return !(!e || !e.startContainer || e.startContainer !== e.endContainer || e.startOffset !== e.endOffset)
+        }, restoreSelection: function () {
+            var e = window.getSelection();
+            e.removeAllRanges(), e.addRange(this._currentRange)
+        }, createEmptyRange: function () {
+            var e = this.editor, t = this.getRange(), n = void 0;
+            if (t && this.isSelectionEmpty()) try {
+                J.isWebkit() ? (e.cmd.do("insertHTML", "&#8203;"), t.setEnd(t.endContainer, t.endOffset + 1), this.saveRange(t)) : (n = o("<strong>&#8203;</strong>"), e.cmd.do("insertElem", n), this.createRangeByElem(n, !0))
+            } catch (e) {
+            }
+        }, createRangeByElem: function (e, t, n) {
+            if (e.length) {
+                var i = e[0], o = document.createRange();
+                n ? o.selectNodeContents(i) : o.selectNode(i), "boolean" == typeof t && o.collapse(t), this.saveRange(o)
+            }
+        }
+    }, H.prototype = {
+        constructor: H, show: function (e) {
+            var t = this;
+            if (!this._isShow) {
+                this._isShow = !0;
+                var n = this.$bar;
+                if (this._isRender) this._isRender = !0; else {
+                    this.$textContainer.append(n)
+                }
+                Date.now() - this._time > 100 && e <= 1 && (n.css("width", 100 * e + "%"), this._time = Date.now());
+                var i = this._timeoutId;
+                i && clearTimeout(i), i = setTimeout(function () {
+                    t._hide()
+                }, 500)
+            }
+        }, _hide: function () {
+            this.$bar.remove(), this._time = 0, this._isShow = !1, this._isRender = !1
+        }
+    };
+    var X = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
+        return typeof e
+    } : function (e) {
+        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e
+    };
+    L.prototype = {
+        constructor: L, _alert: function (e, t) {
+            var n = this.editor, i = n.config.debug, o = n.config.customAlert;
+            if (i) throw new Error("wangEditor: " + (t || e));
+            o && "function" == typeof o ? o(e) : alert(e)
+        }, insertLinkImg: function (e) {
+            var t = this;
+            if (e) {
+                var n = this.editor, i = n.config, o = i.linkImgCheck, A = void 0;
+                if (o && "function" == typeof o && "string" == typeof(A = o(e))) return void alert(A);
+                n.cmd.do("insertHTML", '<img src="' + e + '" style="max-width:100%;"/>');
+                var r = document.createElement("img");
+                r.onload = function () {
+                    var t = i.linkImgCallback;
+                    t && "function" == typeof t && t(e), r = null
+                }, r.onerror = function () {
+                    r = null, t._alert("插入图片错误", 'wangEditor: 插入图片出错，图片链接是 "' + e + '"，下载该链接失败')
+                }, r.onabort = function () {
+                    r = null
+                }, r.src = e
+            }
+        }, uploadImg: function (e) {
+            var t = this;
+            if (e && e.length) {
+                var n = this.editor, i = n.config, o = i.uploadImgServer, c = i.uploadImgShowBase64,
+                    a = i.uploadImgMaxSize, s = a / 1024 / 1024, l = i.uploadImgMaxLength || 1e4,
+                    d = i.uploadFileName || "", u = i.uploadImgParams || {}, h = i.uploadImgParamsWithUrl,
+                    p = i.uploadImgHeaders || {}, f = i.uploadImgHooks || {}, m = i.uploadImgTimeout || 3e3,
+                    g = i.withCredentials;
+                null == g && (g = !1);
+                var w = i.customUploadImg;
+                if (w || o || c) {
+                    var v = [], E = [];
+                    if (r(e, function (e) {
+                        var t = e.name, n = e.size;
+                        if (t && n) return !1 === /\.(jpg|jpeg|png|bmp|gif|webp)$/i.test(t) ? void E.push("【" + t + "】不是图片") : a < n ? void E.push("【" + t + "】大于 " + s + "M") : void v.push(e)
+                    }), E.length) return void this._alert("图片验证未通过: \n" + E.join("\n"));
+                    if (v.length > l) return void this._alert("一次最多上传" + l + "张图片");
+                    if (w && "function" == typeof w) return void w(v, this.insertLinkImg.bind(this));
+                    var b = new FormData;
+                    if (r(v, function (e) {
+                        var t = d || e.name;
+                        b.append(t, e)
+                    }), o && "string" == typeof o) {
+                        var B = o.split("#");
+                        o = B[0];
+                        var y = B[1] || "";
+                        A(u, function (e, t) {
+                            h && (o.indexOf("?") > 0 ? o += "&" : o += "?", o = o + e + "=" + t), b.append(e, t)
+                        }), y && (o += "#" + y);
+                        var C = new XMLHttpRequest;
+                        if (C.open("POST", o), C.timeout = m, C.ontimeout = function () {
+                            f.timeout && "function" == typeof f.timeout && f.timeout(C, n), t._alert("上传图片超时")
+                        }, C.upload && (C.upload.onprogress = function (e) {
+                            var t = void 0, i = new H(n);
+                            e.lengthComputable && (t = e.loaded / e.total, i.show(t))
+                        }), C.onreadystatechange = function () {
+                            var e = void 0;
+                            if (4 === C.readyState) {
+                                if (C.status < 200 || C.status >= 300) return f.error && "function" == typeof f.error && f.error(C, n), void t._alert("上传图片发生错误", "上传图片发生错误，服务器返回状态是 " + C.status);
+                                if (e = C.responseText, "object" !== (void 0 === e ? "undefined" : X(e))) try {
+                                    e = JSON.parse(e)
+                                } catch (i) {
+                                    return f.fail && "function" == typeof f.fail && f.fail(C, n, e), void t._alert("上传图片失败", "上传图片返回结果错误，返回结果是: " + e)
                                 }
-
-                                _this3._alert('上传图片失败', '上传图片返回结果错误，返回结果是: ' + result);
-                                return;
+                                if (f.customInsert || "0" == e.errno) {
+                                    if (f.customInsert && "function" == typeof f.customInsert) f.customInsert(t.insertLinkImg.bind(t), e, n); else {
+                                        (e.data || []).forEach(function (e) {
+                                            t.insertLinkImg(e)
+                                        })
+                                    }
+                                    f.success && "function" == typeof f.success && f.success(C, n, e)
+                                } else f.fail && "function" == typeof f.fail && f.fail(C, n, e), t._alert("上传图片失败", "上传图片返回结果错误，返回结果 errno=" + e.errno)
                             }
+                        }, f.before && "function" == typeof f.before) {
+                            var x = f.before(C, n, v);
+                            if (x && "object" === (void 0 === x ? "undefined" : X(x)) && x.prevent) return void this._alert(x.msg)
                         }
-                        if (!hooks.customInsert && result.errno != '0') {
-                            // hook - fail
-                            if (hooks.fail && typeof hooks.fail === 'function') {
-                                hooks.fail(xhr, editor, result);
-                            }
-
-                            // 数据错误
-                            _this3._alert('上传图片失败', '上传图片返回结果错误，返回结果 errno=' + result.errno);
-                        } else {
-                            if (hooks.customInsert && typeof hooks.customInsert === 'function') {
-                                // 使用者自定义插入方法
-                                hooks.customInsert(_this3.insertLinkImg.bind(_this3), result, editor);
-                            } else {
-                                // 将图片插入编辑器
-                                var data = result.data || [];
-                                data.forEach(function (link) {
-                                    _this3.insertLinkImg(link);
-                                });
-                            }
-
-                            // hook - success
-                            if (hooks.success && typeof hooks.success === 'function') {
-                                hooks.success(xhr, editor, result);
-                            }
-                        }
+                        return A(p, function (e, t) {
+                            C.setRequestHeader(e, t)
+                        }), C.withCredentials = g, void C.send(b)
                     }
-                };
-
-                // hook - before
-                if (hooks.before && typeof hooks.before === 'function') {
-                    hooks.before(xhr, editor, resultFiles);
+                    c && r(e, function (e) {
+                        var n = t, i = new FileReader;
+                        i.readAsDataURL(e), i.onload = function () {
+                            n.insertLinkImg(this.result)
+                        }
+                    })
                 }
-
-                // 自定义 headers
-                objForEach(uploadImgHeaders, function (key, val) {
-                    xhr.setRequestHeader(key, val);
-                });
-
-                // 跨域传 cookie
-                xhr.withCredentials = withCredentials;
-
-                // 发送请求
-                xhr.send(formdata);
-
-                // 注意，要 return 。不去操作接下来的 base64 显示方式
-                return;
-            }
-
-            // 显示 base64 格式
-            if (uploadImgShowBase64) {
-                arrForEach(files, function (file) {
-                    var _this = _this3;
-                    var reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = function () {
-                        _this.insertLinkImg(this.result);
-                    };
-                });
             }
         }
     };
-
-    /*
-     编辑器构造函数
-     */
-
-// id，累加
-    var editorId = 1;
-
-// 构造函数
-    function Editor(toolbarSelector, textSelector) {
-        if (toolbarSelector == null) {
-            // 没有传入任何参数，报错
-            throw new Error('错误：初始化编辑器时候未传入任何参数，请查阅文档');
-        }
-        // id，用以区分单个页面不同的编辑器对象
-        this.id = 'wangEditor-' + editorId++;
-
-        this.toolbarSelector = toolbarSelector;
-        this.textSelector = textSelector;
-
-        // 自定义配置
-        this.customConfig = {};
-    }
-
-// 修改原型
-    Editor.prototype = {
-        constructor: Editor,
-
-        // 初始化配置
-        _initConfig: function _initConfig() {
-            // _config 是默认配置，this.customConfig 是用户自定义配置，将它们 merge 之后再赋值
-            var target = {};
-            this.config = Object.assign(target, config, this.customConfig);
-        },
-
-        // 初始化 DOM
-        _initDom: function _initDom() {
-            var _this = this;
-
-            var toolbarSelector = this.toolbarSelector;
-            var $toolbarSelector = $(toolbarSelector);
-            var textSelector = this.textSelector;
-
-            var config$$1 = this.config;
-            var zIndex = config$$1.zIndex || '10000';
-
-            // 定义变量
-            var $toolbarElem = void 0,
-                $textContainerElem = void 0,
-                $textElem = void 0,
-                $children = void 0;
-
-            if (textSelector == null) {
-                // 只传入一个参数，即是容器的选择器或元素，toolbar 和 text 的元素自行创建
-                $toolbarElem = $('<div></div>');
-                $textContainerElem = $('<div></div>');
-
-                // 将编辑器区域原有的内容，暂存起来
-                $children = $toolbarSelector.children();
-
-                // 添加到 DOM 结构中
-                $toolbarSelector.append($toolbarElem).append($textContainerElem);
-
-                // 自行创建的，需要配置默认的样式
-                $toolbarElem.css('background-color', '#f1f1f1').css('border', '1px solid #ccc');
-                $textContainerElem.css('border', '1px solid #ccc').css('border-top', 'none').css('height', '150px');
-            } else {
-                // toolbar 和 text 的选择器都有值，记录属性
-                $toolbarElem = $toolbarSelector;
-                $textContainerElem = $(textSelector);
-                // 将编辑器区域原有的内容，暂存起来
-                $children = $textContainerElem.children();
+    var W = 1;
+    j.prototype = {
+        constructor: j, _initConfig: function () {
+            var e = {};
+            this.config = Object.assign(e, z, this.customConfig);
+            var t = this.config.lang || {}, n = [];
+            A(t, function (e, t) {
+                n.push({reg: new RegExp(e, "img"), val: t})
+            }), this.config.langArgs = n
+        }, _initDom: function () {
+            var e = this, t = this.toolbarSelector, n = o(t), i = this.textSelector, A = this.config, r = A.zIndex,
+                a = void 0, s = void 0, l = void 0, d = void 0;
+            null == i ? (a = o("<div></div>"), s = o("<div></div>"), d = n.children(), n.append(a).append(s), a.css("background-color", "#f1f1f1").css("border", "1px solid #ccc"), s.css("border", "1px solid #ccc").css("border-top", "none").css("height", "300px")) : (a = n, s = o(i), d = s.children()), l = o("<div></div>"), l.attr("contenteditable", "true").css("width", "100%").css("height", "100%"), d && d.length ? l.append(d) : l.append(o("<p><br></p>")), s.append(l), a.addClass("w-e-toolbar"), s.addClass("w-e-text-container"), s.css("z-index", r), l.addClass("w-e-text");
+            var u = c("toolbar-elem");
+            a.attr("id", u);
+            var h = c("text-elem");
+            l.attr("id", h), this.$toolbarElem = a, this.$textContainerElem = s, this.$textElem = l, this.toolbarElemId = u, this.textElemId = h;
+            var p = !0;
+            s.on("compositionstart", function () {
+                p = !1
+            }), s.on("compositionend", function () {
+                p = !0
+            }), s.on("click keyup", function () {
+                p && e.change && e.change()
+            }), a.on("click", function () {
+                this.change && this.change()
+            }), (A.onfocus || A.onblur) && (this.isFocus = !1, o(document).on("click", function (t) {
+                var n = l.isContain(o(t.target)), i = a.isContain(o(t.target)), A = a[0] == t.target;
+                if (n) e.isFocus || e.onfocus && e.onfocus(), e.isFocus = !0; else {
+                    if (i && !A) return;
+                    e.isFocus && e.onblur && e.onblur(), e.isFocus = !1
+                }
+            }))
+        }, _initCommand: function () {
+            this.cmd = new Y(this)
+        }, _initSelectionAPI: function () {
+            this.selection = new P(this)
+        }, _initUploadImg: function () {
+            this.uploadImg = new L(this)
+        }, _initMenus: function () {
+            this.menus = new _(this), this.menus.init()
+        }, _initText: function () {
+            this.txt = new U(this), this.txt.init()
+        }, initSelection: function (e) {
+            var t = this.$textElem, n = t.children();
+            if (!n.length) return t.append(o("<p><br></p>")), void this.initSelection();
+            var i = n.last();
+            if (e) {
+                var A = i.html().toLowerCase(), r = i.getNodeName();
+                if ("<br>" !== A && "<br/>" !== A || "P" !== r) return t.append(o("<p><br></p>")), void this.initSelection()
             }
-
-            // 编辑区域
-            $textElem = $('<div></div>');
-            $textElem.attr('contenteditable', 'true').css('width', '100%').css('height', '100%');
-
-            // 初始化编辑区域内容
-            if ($children && $children.length) {
-                $textElem.append($children);
-            } else {
-                $textElem.append($('<p><br></p>'));
-            }
-
-            // 编辑区域加入DOM
-            $textContainerElem.append($textElem);
-
-            // 设置通用的 class
-            $toolbarElem.addClass('w-e-toolbar');
-            $textContainerElem.addClass('w-e-text-container');
-            $textContainerElem.css('z-index', zIndex);
-            $textElem.addClass('w-e-text');
-
-            // 记录属性
-            this.$toolbarElem = $toolbarElem;
-            this.$textContainerElem = $textContainerElem;
-            this.$textElem = $textElem;
-
-            // 绑定 onchange
-            $textContainerElem.on('click keyup', function () {
-                _this.change && _this.change();
+            this.selection.createRangeByElem(i, !1, !0), this.selection.restoreSelection()
+        }, _bindEvent: function () {
+            var e = 0, t = this.txt.html(), n = this.config, i = n.onchangeTimeout;
+            (!(i = parseInt(i, 10)) || i <= 0) && (i = 200);
+            var o = n.onchange;
+            o && "function" == typeof o && (this.change = function () {
+                var n = this.txt.html();
+                n.length === t.length && n === t || (e && clearTimeout(e), e = setTimeout(function () {
+                    o(n), t = n
+                }, i))
             });
-            $toolbarElem.on('click', function () {
-                this.change && this.change();
+            var A = n.onblur;
+            A && "function" == typeof A && (this.onblur = function () {
+                var e = this.txt.html();
+                A(e)
             });
-        },
-
-        // 封装 command
-        _initCommand: function _initCommand() {
-            this.cmd = new Command(this);
-        },
-
-        // 封装 selection range API
-        _initSelectionAPI: function _initSelectionAPI() {
-            this.selection = new API(this);
-        },
-
-        // 添加图片上传
-        _initUploadImg: function _initUploadImg() {
-            this.uploadImg = new UploadImg(this);
-        },
-
-        // 初始化菜单
-        _initMenus: function _initMenus() {
-            this.menus = new Menus(this);
-            this.menus.init();
-        },
-
-        // 添加 text 区域
-        _initText: function _initText() {
-            this.txt = new Text(this);
-            this.txt.init();
-        },
-
-        // 初始化选区，将光标定位到内容尾部
-        initSelection: function initSelection() {
-            var $textElem = this.$textElem;
-            var $children = $textElem.children();
-            if (!$children.length) {
-                // 如果编辑器区域无内容，添加一个空行，重新设置选区
-                $textElem.append($('<p><br></p>'));
-                this.initSelection();
-                return;
-            }
-
-            var $last = $children.last();
-            var html = $last.html().toLowerCase();
-            var nodeName = $last.getNodeName();
-            if (html !== '<br>' && html !== '<br\/>' || nodeName !== 'P') {
-                // 最后一个元素不是 <p><br></p>，添加一个空行，重新设置选区
-                $textElem.append($('<p><br></p>'));
-                this.initSelection();
-                return;
-            }
-
-            this.selection.createRangeByElem($last, true);
-            this.selection.restoreSelection();
-        },
-
-        // 绑定事件
-        _bindEvent: function _bindEvent() {
-            // -------- 绑定 onchange 事件 --------
-            var onChangeTimeoutId = 0;
-            var beforeChangeHtml = this.txt.html();
-            var config$$1 = this.config;
-            var onchange = config$$1.onchange;
-            if (onchange && typeof onchange === 'function') {
-                // 触发 change 的有三个场景：
-                // 1. $textContainerElem.on('click keyup')
-                // 2. $toolbarElem.on('click')
-                // 3. editor.cmd.do()
-                this.change = function () {
-                    // 判断是否有变化
-                    var currentHtml = this.txt.html();
-                    if (currentHtml.length === beforeChangeHtml.length) {
-                        return;
-                    }
-
-                    // 执行，使用节流
-                    if (onChangeTimeoutId) {
-                        clearTimeout(onChangeTimeoutId);
-                    }
-                    onChangeTimeoutId = setTimeout(function () {
-                        // 触发配置的 onchange 函数
-                        onchange(currentHtml);
-                        beforeChangeHtml = currentHtml;
-                    }, 200);
-                };
-            }
-        },
-
-        // 创建编辑器
-        create: function create() {
-            // 初始化配置信息
-            this._initConfig();
-
-            // 初始化 DOM
-            this._initDom();
-
-            // 封装 command API
-            this._initCommand();
-
-            // 封装 selection range API
-            this._initSelectionAPI();
-
-            // 添加 text
-            this._initText();
-
-            // 初始化菜单
-            this._initMenus();
-
-            // 添加 图片上传
-            this._initUploadImg();
-
-            // 初始化选区，将光标定位到内容尾部
-            this.initSelection();
-
-            // 绑定事件
-            this._bindEvent();
+            var r = n.onfocus;
+            r && "function" == typeof r && (this.onfocus = function () {
+                r()
+            })
+        }, create: function () {
+            this._initConfig(), this._initDom(), this._initCommand(), this._initSelectionAPI(), this._initText(), this._initMenus(), this._initUploadImg(), this.initSelection(!0), this._bindEvent()
+        }, _offAllEvent: function () {
+            o.offAll()
         }
     };
-
-// 检验是否浏览器环境
     try {
-        document;
-    } catch (ex) {
-        throw new Error('请在浏览器环境下运行');
+        document
+    } catch (e) {
+        throw new Error("请在浏览器环境下运行")
     }
-
-// polyfill
-    polyfill();
-
-// 这里的 `inlinecss` 将被替换成 css 代码的内容，详情可去 ./gulpfile.js 中搜索 `inlinecss` 关键字
-    var inlinecss = '.w-e-toolbar,.w-e-text-container,.w-e-menu-panel {  padding: 0;  margin: 0;  box-sizing: border-box;}.w-e-toolbar *,.w-e-text-container *,.w-e-menu-panel * {  padding: 0;  margin: 0;  box-sizing: border-box;}.w-e-clear-fix:after {  content: "";  display: table;  clear: both;}.w-e-toolbar .w-e-droplist {  position: absolute;  left: 0;  top: 0;  background-color: #fff;  border: 1px solid #f1f1f1;  border-right-color: #ccc;  border-bottom-color: #ccc;}.w-e-toolbar .w-e-droplist .w-e-dp-title {  text-align: center;  color: #999;  line-height: 2;  border-bottom: 1px solid #f1f1f1;  font-size: 13px;}.w-e-toolbar .w-e-droplist ul.w-e-list {  list-style: none;  line-height: 1;}.w-e-toolbar .w-e-droplist ul.w-e-list li.w-e-item {  color: #333;  padding: 5px 0;}.w-e-toolbar .w-e-droplist ul.w-e-list li.w-e-item:hover {  background-color: #f1f1f1;}.w-e-toolbar .w-e-droplist ul.w-e-block {  list-style: none;  text-align: left;  padding: 5px;}.w-e-toolbar .w-e-droplist ul.w-e-block li.w-e-item {  display: inline-block;  *display: inline;  *zoom: 1;  padding: 3px 5px;}.w-e-toolbar .w-e-droplist ul.w-e-block li.w-e-item:hover {  background-color: #f1f1f1;}@font-face {  font-family: \'icomoon\';  src: url(data:application/x-font-woff;charset=utf-8;base64,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) format(\'truetype\');  font-weight: normal;  font-style: normal;}[class^="w-e-icon-"],[class*=" w-e-icon-"] {  /* use !important to prevent issues with browser extensions that change fonts */  font-family: \'icomoon\' !important;  speak: none;  font-style: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  line-height: 1;  /* Better Font Rendering =========== */  -webkit-font-smoothing: antialiased;  -moz-osx-font-smoothing: grayscale;}.w-e-icon-close:before {  content: "\\f00d";}.w-e-icon-upload2:before {  content: "\\e9c6";}.w-e-icon-trash-o:before {  content: "\\f014";}.w-e-icon-header:before {  content: "\\f1dc";}.w-e-icon-pencil2:before {  content: "\\e906";}.w-e-icon-paint-brush:before {  content: "\\f1fc";}.w-e-icon-image:before {  content: "\\e90d";}.w-e-icon-play:before {  content: "\\e912";}.w-e-icon-location:before {  content: "\\e947";}.w-e-icon-undo:before {  content: "\\e965";}.w-e-icon-redo:before {  content: "\\e966";}.w-e-icon-quotes-left:before {  content: "\\e977";}.w-e-icon-list-numbered:before {  content: "\\e9b9";}.w-e-icon-list2:before {  content: "\\e9bb";}.w-e-icon-link:before {  content: "\\e9cb";}.w-e-icon-happy:before {  content: "\\e9df";}.w-e-icon-bold:before {  content: "\\ea62";}.w-e-icon-underline:before {  content: "\\ea63";}.w-e-icon-italic:before {  content: "\\ea64";}.w-e-icon-strikethrough:before {  content: "\\ea65";}.w-e-icon-table2:before {  content: "\\ea71";}.w-e-icon-paragraph-left:before {  content: "\\ea77";}.w-e-icon-paragraph-center:before {  content: "\\ea78";}.w-e-icon-paragraph-right:before {  content: "\\ea79";}.w-e-icon-terminal:before {  content: "\\f120";}.w-e-icon-page-break:before {  content: "\\ea68";}.w-e-icon-cancel-circle:before {  content: "\\ea0d";}.w-e-toolbar {  display: -webkit-box;  display: -ms-flexbox;  display: flex;  padding: 0 5px;  /* 单个菜单 */}.w-e-toolbar .w-e-menu {  position: relative;  z-index: 10001;  text-align: center;  padding: 5px 10px;  cursor: pointer;}.w-e-toolbar .w-e-menu i {  color: #999;}.w-e-toolbar .w-e-menu:hover i {  color: #333;}.w-e-toolbar .w-e-active i {  color: #1e88e5;}.w-e-toolbar .w-e-active:hover i {  color: #1e88e5;}.w-e-text-container .w-e-panel-container {  position: absolute;  top: 0;  left: 50%;  border: 1px solid #ccc;  border-top: 0;  box-shadow: 1px 1px 2px #ccc;  color: #333;  background-color: #fff;  /* 为 emotion panel 定制的样式 */  /* 上传图片的 panel 定制样式 */}.w-e-text-container .w-e-panel-container .w-e-panel-close {  position: absolute;  right: 0;  top: 0;  padding: 5px;  margin: 2px 5px 0 0;  cursor: pointer;  color: #999;}.w-e-text-container .w-e-panel-container .w-e-panel-close:hover {  color: #333;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-title {  list-style: none;  display: -webkit-box;  display: -ms-flexbox;  display: flex;  font-size: 14px;  margin: 2px 10px 0 10px;  border-bottom: 1px solid #f1f1f1;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-item {  padding: 3px 5px;  color: #999;  cursor: pointer;  margin: 0 3px;  position: relative;  top: 1px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-active {  color: #333;  border-bottom: 1px solid #333;  cursor: default;  font-weight: 700;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content {  padding: 10px 15px 10px 15px;  font-size: 16px;  /* 输入框的样式 */  /* 按钮的样式 */}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input:focus,.w-e-text-container .w-e-panel-container .w-e-panel-tab-content textarea:focus,.w-e-text-container .w-e-panel-container .w-e-panel-tab-content button:focus {  outline: none;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content textarea {  width: 100%;  border: 1px solid #ccc;  padding: 5px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content textarea:focus {  border-color: #1e88e5;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text] {  border: none;  border-bottom: 1px solid #ccc;  font-size: 14px;  height: 20px;  color: #333;  text-align: left;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text].small {  width: 30px;  text-align: center;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text].block {  display: block;  width: 100%;  margin: 10px 0;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text]:focus {  border-bottom: 2px solid #1e88e5;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button {  font-size: 14px;  color: #1e88e5;  border: none;  padding: 5px 10px;  background-color: #fff;  cursor: pointer;  border-radius: 3px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.left {  float: left;  margin-right: 10px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.right {  float: right;  margin-left: 10px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.gray {  color: #999;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.red {  color: #c24f4a;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button:hover {  background-color: #f1f1f1;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container:after {  content: "";  display: table;  clear: both;}.w-e-text-container .w-e-panel-container .w-e-emoticon-container .w-e-item {  cursor: pointer;  font-size: 18px;  padding: 0 3px;  display: inline-block;  *display: inline;  *zoom: 1;}.w-e-text-container .w-e-panel-container .w-e-up-img-container {  text-align: center;}.w-e-text-container .w-e-panel-container .w-e-up-img-container .w-e-up-btn {  display: inline-block;  *display: inline;  *zoom: 1;  color: #999;  cursor: pointer;  font-size: 60px;  line-height: 1;}.w-e-text-container .w-e-panel-container .w-e-up-img-container .w-e-up-btn:hover {  color: #333;}.w-e-text-container {  position: relative;}.w-e-text-container .w-e-progress {  position: absolute;  background-color: #1e88e5;  bottom: 0;  left: 0;  height: 1px;}.w-e-text {  padding: 0 10px;  overflow-y: scroll;}.w-e-text p,.w-e-text h1,.w-e-text h2,.w-e-text h3,.w-e-text h4,.w-e-text h5,.w-e-text table,.w-e-text pre {  margin: 10px 0;  line-height: 1.5;}.w-e-text ul,.w-e-text ol {  margin: 10px 0 10px 20px;}.w-e-text blockquote {  display: block;  border-left: 8px solid #d0e5f2;  padding: 5px 10px;  margin: 10px 0;  line-height: 1.4;  font-size: 100%;  background-color: #f1f1f1;}.w-e-text code {  display: inline-block;  *display: inline;  *zoom: 1;  background-color: #f1f1f1;  border-radius: 3px;  padding: 3px 5px;  margin: 0 3px;}.w-e-text pre code {  display: block;}.w-e-text table {  border-top: 1px solid #ccc;  border-left: 1px solid #ccc;}.w-e-text table td,.w-e-text table th {  border-bottom: 1px solid #ccc;  border-right: 1px solid #ccc;  padding: 3px 5px;}.w-e-text table th {  border-bottom: 2px solid #ccc;  text-align: center;}.w-e-text:focus {  outline: none;}.w-e-text img {  cursor: pointer;}.w-e-text img:hover {  box-shadow: 0 0 5px #333;}.w-e-text img.w-e-selected {  border: 2px solid #1e88e5;}.w-e-text img.w-e-selected:hover {  box-shadow: none;}';
-
-// 将 css 代码添加到 <style> 中
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = inlinecss;
-    document.getElementsByTagName('HEAD').item(0).appendChild(style);
-
-// 返回
-    var index = window.wangEditor || Editor;
-
-    return index;
-
-})));
+    !function () {
+        "function" != typeof Object.assign && (Object.assign = function (e, t) {
+            if (null == e) throw new TypeError("Cannot convert undefined or null to object");
+            for (var n = Object(e), i = 1; i < arguments.length; i++) {
+                var o = arguments[i];
+                if (null != o) for (var A in o) Object.prototype.hasOwnProperty.call(o, A) && (n[A] = o[A])
+            }
+            return n
+        }), Element.prototype.matches || (Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (e) {
+            for (var t = (this.document || this.ownerDocument).querySelectorAll(e), n = t.length; --n >= 0 && t.item(n) !== this;) ;
+            return n > -1
+        })
+    }();
+    var Z = document.createElement("style");
+    return Z.type = "text/css",
+        Z.innerHTML = '.w-e-toolbar,.w-e-text-container,.w-e-menu-panel {  padding: 0;  margin: 0;  box-sizing: border-box;}.w-e-toolbar *,.w-e-text-container *,.w-e-menu-panel * {  padding: 0;  margin: 0;  box-sizing: border-box;}.w-e-clear-fix:after {  content: "";  display: table;  clear: both;}.w-e-toolbar .w-e-droplist {  position: absolute;  left: 0;  top: 0;  background-color: #fff;  border: 1px solid #f1f1f1;  border-right-color: #ccc;  border-bottom-color: #ccc;}.w-e-toolbar .w-e-droplist .w-e-dp-title {  text-align: center;  color: #999;  line-height: 2;  border-bottom: 1px solid #f1f1f1;  font-size: 13px;}.w-e-toolbar .w-e-droplist ul.w-e-list {  list-style: none;  line-height: 1;}.w-e-toolbar .w-e-droplist ul.w-e-list li.w-e-item {  color: #333;  padding: 5px 0;}.w-e-toolbar .w-e-droplist ul.w-e-list li.w-e-item:hover {  background-color: #f1f1f1;}.w-e-toolbar .w-e-droplist ul.w-e-block {  list-style: none;  text-align: left;  padding: 5px;}.w-e-toolbar .w-e-droplist ul.w-e-block li.w-e-item {  display: inline-block;  *display: inline;  *zoom: 1;  padding: 3px 5px;}.w-e-toolbar .w-e-droplist ul.w-e-block li.w-e-item:hover {  background-color: #f1f1f1;}@font-face {  font-family: \'w-e-icon\';  src: url(data:application/x-font-woff;charset=utf-8;base64,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) format(\'truetype\');  font-weight: normal;  font-style: normal;}[class^="w-e-icon-"],[class*=" w-e-icon-"] {  /* use !important to prevent issues with browser extensions that change fonts */  font-family: \'w-e-icon\' !important;  speak: none;  font-style: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  line-height: 1;  /* Better Font Rendering =========== */  -webkit-font-smoothing: antialiased;  -moz-osx-font-smoothing: grayscale;}.w-e-icon-close:before {  content: "\\f00d";}.w-e-icon-upload2:before {  content: "\\e9c6";}.w-e-icon-trash-o:before {  content: "\\f014";}.w-e-icon-header:before {  content: "\\f1dc";}.w-e-icon-pencil2:before {  content: "\\e906";}.w-e-icon-paint-brush:before {  content: "\\f1fc";}.w-e-icon-image:before {  content: "\\e90d";}.w-e-icon-play:before {  content: "\\e912";}.w-e-icon-location:before {  content: "\\e947";}.w-e-icon-undo:before {  content: "\\e965";}.w-e-icon-redo:before {  content: "\\e966";}.w-e-icon-quotes-left:before {  content: "\\e977";}.w-e-icon-list-numbered:before {  content: "\\e9b9";}.w-e-icon-list2:before {  content: "\\e9bb";}.w-e-icon-link:before {  content: "\\e9cb";}.w-e-icon-happy:before {  content: "\\e9df";}.w-e-icon-bold:before {  content: "\\ea62";}.w-e-icon-underline:before {  content: "\\ea63";}.w-e-icon-italic:before {  content: "\\ea64";}.w-e-icon-strikethrough:before {  content: "\\ea65";}.w-e-icon-table2:before {  content: "\\ea71";}.w-e-icon-paragraph-left:before {  content: "\\ea77";}.w-e-icon-paragraph-center:before {  content: "\\ea78";}.w-e-icon-paragraph-right:before {  content: "\\ea79";}.w-e-icon-terminal:before {  content: "\\f120";}.w-e-icon-page-break:before {  content: "\\ea68";}.w-e-icon-cancel-circle:before {  content: "\\ea0d";}.w-e-icon-font:before {  content: "\\ea5c";}.w-e-icon-text-heigh:before {  content: "\\ea5f";}.w-e-toolbar {  display: -webkit-box;  display: -ms-flexbox;  display: flex;  padding: 0 5px;  /* flex-wrap: wrap; */  /* 单个菜单 */}.w-e-toolbar .w-e-menu {  position: relative;  text-align: center;  padding: 5px 10px;  cursor: pointer;}.w-e-toolbar .w-e-menu i {  color: #999;}.w-e-toolbar .w-e-menu:hover i {  color: #333;}.w-e-toolbar .w-e-active i {  color: #1e88e5;}.w-e-toolbar .w-e-active:hover i {  color: #1e88e5;}.w-e-text-container .w-e-panel-container {  position: absolute;  top: 0;  left: 50%;  border: 1px solid #ccc;  border-top: 0;  box-shadow: 1px 1px 2px #ccc;  color: #333;  background-color: #fff;  /* 为 emotion panel 定制的样式 */  /* 上传图片的 panel 定制样式 */}.w-e-text-container .w-e-panel-container .w-e-panel-close {  position: absolute;  right: 0;  top: 0;  padding: 5px;  margin: 2px 5px 0 0;  cursor: pointer;  color: #999;}.w-e-text-container .w-e-panel-container .w-e-panel-close:hover {  color: #333;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-title {  list-style: none;  display: -webkit-box;  display: -ms-flexbox;  display: flex;  font-size: 14px;  margin: 2px 10px 0 10px;  border-bottom: 1px solid #f1f1f1;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-item {  padding: 3px 5px;  color: #999;  cursor: pointer;  margin: 0 3px;  position: relative;  top: 1px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-active {  color: #333;  border-bottom: 1px solid #333;  cursor: default;  font-weight: 700;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content {  padding: 10px 15px 10px 15px;  font-size: 16px;  /* 输入框的样式 */  /* 按钮的样式 */}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input:focus,.w-e-text-container .w-e-panel-container .w-e-panel-tab-content textarea:focus,.w-e-text-container .w-e-panel-container .w-e-panel-tab-content button:focus {  outline: none;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content textarea {  width: 100%;  border: 1px solid #ccc;  padding: 5px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content textarea:focus {  border-color: #1e88e5;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text] {  border: none;  border-bottom: 1px solid #ccc;  font-size: 14px;  height: 20px;  color: #333;  text-align: left;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text].small {  width: 30px;  text-align: center;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text].block {  display: block;  width: 100%;  margin: 10px 0;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content input[type=text]:focus {  border-bottom: 2px solid #1e88e5;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button {  font-size: 14px;  color: #1e88e5;  border: none;  padding: 5px 10px;  background-color: #fff;  cursor: pointer;  border-radius: 3px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.left {  float: left;  margin-right: 10px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.right {  float: right;  margin-left: 10px;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.gray {  color: #999;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button.red {  color: #c24f4a;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container button:hover {  background-color: #f1f1f1;}.w-e-text-container .w-e-panel-container .w-e-panel-tab-content .w-e-button-container:after {  content: "";  display: table;  clear: both;}.w-e-text-container .w-e-panel-container .w-e-emoticon-container .w-e-item {  cursor: pointer;  font-size: 18px;  padding: 0 3px;  display: inline-block;  *display: inline;  *zoom: 1;}.w-e-text-container .w-e-panel-container .w-e-up-img-container {  text-align: center;}.w-e-text-container .w-e-panel-container .w-e-up-img-container .w-e-up-btn {  display: inline-block;  *display: inline;  *zoom: 1;  color: #999;  cursor: pointer;  font-size: 60px;  line-height: 1;}.w-e-text-container .w-e-panel-container .w-e-up-img-container .w-e-up-btn:hover {  color: #333;}.w-e-text-container {  position: relative;}.w-e-text-container .w-e-progress {  position: absolute;  background-color: #1e88e5;  bottom: 0;  left: 0;  height: 1px;}.w-e-text {  padding: 0 10px;  overflow-y: scroll;}.w-e-text p,.w-e-text h1,.w-e-text h2,.w-e-text h3,.w-e-text h4,.w-e-text h5,.w-e-text table,.w-e-text pre {  margin: 10px 0;  line-height: 1.5;}.w-e-text ul,.w-e-text ol {  margin: 10px 0 10px 20px;}.w-e-text blockquote {  display: block;  border-left: 8px solid #d0e5f2;  padding: 5px 10px;  margin: 10px 0;  line-height: 1.4;  font-size: 100%;  background-color: #f1f1f1;}.w-e-text code {  display: inline-block;  *display: inline;  *zoom: 1;  background-color: #f1f1f1;  border-radius: 3px;  padding: 3px 5px;  margin: 0 3px;}.w-e-text pre code {  display: block;}.w-e-text table {  border-top: 1px solid #ccc;  border-left: 1px solid #ccc;}.w-e-text table td,.w-e-text table th {  border-bottom: 1px solid #ccc;  border-right: 1px solid #ccc;  padding: 3px 5px;}.w-e-text table th {  border-bottom: 2px solid #ccc;  text-align: center;}.w-e-text:focus {  outline: none;}.w-e-text img {  cursor: pointer;}.w-e-text img:hover {  box-shadow: 0 0 5px #333;}', document.getElementsByTagName("HEAD").item(0).appendChild(Z), window.wangEditor || j
+});
+//# sourceMappingURL=wangEditor.min.js.map

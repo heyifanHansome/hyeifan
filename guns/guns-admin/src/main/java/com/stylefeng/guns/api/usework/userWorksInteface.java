@@ -21,10 +21,8 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -40,10 +38,12 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Created by Heyifan Cotter on 2018/10/17.
+ * Created by Heyifan Cotter on 2018/10/17. 用户发布作品接口
  */
+
+
 @RequestMapping("userWorksApi")
-@RestController
+@Controller
 public class userWorksInteface {
     @Autowired
     private ITagService tagService;
@@ -62,6 +62,7 @@ public class userWorksInteface {
 
     @Autowired
     private IUserFabulousService userFabulousService;
+
 
     /**
      * 发布作品
@@ -173,7 +174,7 @@ public class userWorksInteface {
             Image src_biao = ImageIO.read(inStream);
             int wideth_biao = src_biao.getWidth(null);
             int height_biao = src_biao.getHeight(null);
-            g.drawImage(src_biao, 25,642 + 52 + 213, 152, 151, null);
+            g.drawImage(src_biao, 25, 642 + 52 + 213, 152, 151, null);
             //水印文件结束
             conn.disconnect();
 
@@ -285,4 +286,25 @@ public class userWorksInteface {
         }
 
     }
+
+
+    @RequestMapping("qrCode")
+    @ResponseBody
+    String getQrCode() {
+        String text = "http://192.168.1.28:8080/userWorksApi/staticHtml?userId=123";
+        try {
+            return QRCodeUtil.encode(text, new ClassPathResource("static/apk/log/log.png").getFile().getAbsolutePath(), "F:\\images\\", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return text;
+    }
+    @RequestMapping("staticHtml")
+    String staticHtml(Integer userId ){
+               System.out.println(userId);
+        return  "newsDetail.html";
+    }
+
+
+
 }

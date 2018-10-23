@@ -9,12 +9,12 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.ResultMsg;
-import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.dao.PictureMapper;
 import com.stylefeng.guns.modular.system.model.Picture;
 import com.stylefeng.guns.modular.system.model.Setting;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -37,26 +38,28 @@ import java.util.*;
 @Controller
 @RequestMapping("img")
 public class ImgUploadController {
-@Autowired
-private SettingConfiguration settingConfiguration;
+    @Autowired
+    public SettingConfiguration settingConfiguration;
     @Autowired
     public PictureMapper pictureMapper;
     @Autowired
     public IPictureService pictureService;
 
     private OSSClient ossClient;
-
-//    private String endpoint = FSS.ALI_OSS_ENDPOINT;
-//    // accessKey
-//    private String accessKeyId = FSS.ALI_OSS_ACCESS_ID;
-//    private String accessKeySecret = FSS.ALI_OSS_ACCESS_KEY;;
-//    //空间
-//    private String bucketName = FSS.ALI_OSS_BUCKET;
+    //    private String endpoint = FSS.ALI_OSS_ENDPOINT;
+    //    // accessKey
+    //    private String accessKeyId = FSS.ALI_OSS_ACCESS_ID;
+    //    private String accessKeySecret = FSS.ALI_OSS_ACCESS_KEY;;
+    //    //空间
+    //    private String bucketName = FSS.ALI_OSS_BUCKET;
     //文件存储目录
     private String filedir = "data/";
 
     private String frist = "https://cheshi654321.oss-cn-beijing.aliyuncs.com/";
 
+    private Setting returnsetting() {
+        return settingConfiguration.getSetting();
+    }
 
 
     /**
@@ -71,21 +74,19 @@ private SettingConfiguration settingConfiguration;
 
         ResultMsg resultMsg = new ResultMsg();
         String id = (String) request.getParameter("key");//获取图片id
-        Setting setting=settingConfiguration.getSetting();
+        Setting setting = settingConfiguration.getSetting();
         OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
-        int index   = id.indexOf("/data");
-       String newString =  id.substring(index+1);
+        int index = id.indexOf("/data");
+        String newString = id.substring(index + 1);
         ossClient.deleteObject(setting.getAliOssBucket(), newString);
 
         ossClient.shutdown();
 
         EntityWrapper<Picture> entityWrapper = new EntityWrapper();
-        entityWrapper.like("oss_object_name", id );
+        entityWrapper.like("oss_object_name", id);
 
 
-
-
-        List<Picture> pictures =pictureService.selectList(entityWrapper);
+        List<Picture> pictures = pictureService.selectList(entityWrapper);
 
 
 //
@@ -114,7 +115,6 @@ private SettingConfiguration settingConfiguration;
     @PostMapping(value = "/imgUploadMul")
     @ResponseBody
     public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
-        OSSClientUtil ossClientUtil=new OSSClientUtil();
         Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
         MultipartFile multipartFile = null;
         for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
@@ -127,11 +127,11 @@ private SettingConfiguration settingConfiguration;
         String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
         Random random = new Random();
         String name = random.nextInt(10000) + System.currentTimeMillis() + substring;
-        Map<String,Object>result=new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         try {
             InputStream inputStream = multipartFile.getInputStream();
-            result=this.uploadFile2OSS(inputStream, name,goodsTypeId);
+            result = this.uploadFile2OSS(inputStream, name, goodsTypeId);
         } catch (Exception e) {
             throw new RuntimeException("图片上传失败");
         }
@@ -145,7 +145,6 @@ private SettingConfiguration settingConfiguration;
     }
 
 
-
     /**
      * 上传到OSS服务器  如果同名文件会覆盖服务器上的
      *
@@ -153,8 +152,8 @@ private SettingConfiguration settingConfiguration;
      * @param fileName 文件名称 包括后缀名
      * @return 出错返回"" ,唯一MD5数字签名
      */
-    public Map<String,Object> uploadFile2OSS(InputStream instream, String fileName,String goodsTypeId) {
-        Map<String,Object>result=new HashMap<>();
+    public Map<String, Object> uploadFile2OSS(InputStream instream, String fileName, String goodsTypeId) {
+        Map<String, Object> result = new HashMap<>();
         try {
             //创建上传Object的Metadata
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -163,20 +162,21 @@ private SettingConfiguration settingConfiguration;
             objectMetadata.setHeader("Pragma", "no-cache");
             objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
+            Setting setting = settingConfiguration.getSetting();
             //上传文件
             //ObjectName为filedir + fileName,这个想办法传回去,让数据库记录起来,在删除记录的时候,还需要把ObjectName传给阿里云,删除服务器上资源
-            Setting setting=settingConfiguration.getSetting();
+//            Setting setting = settingConfiguration.getSetting();
             ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
 //            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
             PutObjectResult putResult = ossClient.putObject(setting.getAliOssBucket(), filedir + fileName, instream, objectMetadata);
 
             Picture picture = new Picture();
             picture.setBaseId(goodsTypeId);
-            picture.setOssObjectName(frist+filedir + fileName);
+            picture.setOssObjectName(frist + filedir + fileName);
             pictureService.insert(picture);
 
         } catch (IOException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
                 if (instream != null) {
@@ -191,6 +191,42 @@ private SettingConfiguration settingConfiguration;
     }
 
 
+    /**
+     * 上传到OSS服务器  如果同名文件会覆盖服务器上的
+     *
+     * @param instream 文件流
+     * @param fileName 文件名称 包括后缀名
+     * @return 出错返回"" ,唯一MD5数字签名
+     */
+    public String wangeditUpload(InputStream instream, String fileName) {
+        try {
+            //创建上传Object的Metadata
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(instream.available());
+            objectMetadata.setCacheControl("no-cache");
+            objectMetadata.setHeader("Pragma", "no-cache");
+            objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
+            objectMetadata.setContentDisposition("inline;filename=" + fileName);
+
+            ossClient = new OSSClient(returnsetting().getAliOssEndpoint(), returnsetting().getAliOssAccessId(), returnsetting().getAliOssAccessKey());
+//            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+            PutObjectResult putResult = ossClient.putObject(returnsetting().getAliOssBucket(), filedir + fileName, instream, objectMetadata);
+
+            return frist + filedir + fileName;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (instream != null) {
+                    instream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return frist + filedir + fileName;
+    }
 
 
     /**
@@ -237,5 +273,63 @@ private SettingConfiguration settingConfiguration;
         return "image/jpeg";
     }
 
+    /**
+     * wangedit 富文本上传图片到oss上去
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("wangEditImageUpLoad")
+    @ResponseBody
+    public JSONObject wangEditImageUpLoad(HttpServletRequest request) {
+        JSONObject object = new JSONObject();
+        Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
+        MultipartFile multipartFile = null;
+        for (Iterator<String> i = map.keySet().iterator(); i.hasNext(); ) {
+            Object obj = i.next();
+            multipartFile = (MultipartFile) map.get(obj);
+        }
+        String originalFilename = multipartFile.getOriginalFilename();
+        String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+        Random random = new Random();
+        String name = random.nextInt(10000) + System.currentTimeMillis() + substring;
+        JSONObject resultObject;
+        try {
+            InputStream inputStream = multipartFile.getInputStream();
+            ImgUploadController imgUploadController = new ImgUploadController();
+//            result = imgUploadController.wangeditUpload(inputStream, name);
+            //创建上传Object的Metadata
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(inputStream.available());
+            objectMetadata.setCacheControl("no-cache");
+            objectMetadata.setHeader("Pragma", "no-cache");
+            objectMetadata.setContentType(getcontentType(name.substring(name.lastIndexOf("."))));
+            objectMetadata.setContentDisposition("inline;filename=" + name);
+            Setting setting = settingConfiguration.getSetting();
+            ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+//            ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+            PutObjectResult putResult = ossClient.putObject(setting.getAliOssBucket(), filedir + name, inputStream, objectMetadata);
+            String urlPicture = frist + filedir + name;
+
+            object.put("err","0");
+            object.put("url",urlPicture);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return object;
+    }
+
+
+    @RequestMapping("test")
+    @ResponseBody
+    JSONObject test() {
+        String json = "{\n" +
+                "\t\"err\": \"0\",\n" +
+                "\t\"url\": \"https://cheshi654321.oss-cn-beijing.aliyuncs.com/data/1539162076372.png\"\n" +
+                "\n" +
+                "}";
+        return JSONObject.fromObject(json);
+    }
 
 }

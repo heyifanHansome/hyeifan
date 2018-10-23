@@ -20,7 +20,6 @@ import java.util.Date;
 public class User extends Model<User> {
 
     private static final long serialVersionUID = 1L;
-
     /**
      * 主键id
      */

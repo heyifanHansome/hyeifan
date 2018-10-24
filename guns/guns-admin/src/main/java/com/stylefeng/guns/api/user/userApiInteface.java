@@ -357,6 +357,17 @@ public class userApiInteface {
         }
     }
 
+    @RequestMapping(value = "indexPartStatic",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMsg indexPartStatic(){
+        try{
+            Map<String,Object>result=new HashMap<>();
 
+            return ResultMsg.success("查询成功",null,result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  ResultMsg.fail("系统错误",e.toString(),null);
+        }
+    }
 
 }

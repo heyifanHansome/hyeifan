@@ -14,46 +14,39 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 城市管理表city
+ * 首页顶部厨师分组推荐
  * </p>
  *
  * @author stylefeng
- * @since 2018-09-20
+ * @since 2018-10-24
  */
-@TableName("sys_city")
 @Getter
 @Setter
 @ToString
-public class City extends Model<City> {
+@TableName("sys_index_up_group_user")
+public class IndexUpGroupUser extends Model<IndexUpGroupUser> {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 自增主键
-     */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
-     * 城市分类ID
+     * 城市ID(0:全国)
      */
-    @TableField("type_id")
-    private Integer typeId;
+    @TableField("city_id")
+    private String cityId;
     /**
-     * 城市名
+     * 用户ID(用逗号隔开,顺序很重要)
      */
-    private String name;
+    @TableField("user_api_id")
+    private String userApiId;
     /**
-     * 创建时间
+     * 提交时间
      */
-    @TableField("create_time")
-    private Date createTime;
-    /**
-     * 更新时间
-     */
-    @TableField("update_time")
-    private Date updateTime;
-    private String lngx;
-    private String laty;
+    @TableField("submit_time")
+    private Date submitTime;
+
+
 
     @Override
     protected Serializable pkVal() {

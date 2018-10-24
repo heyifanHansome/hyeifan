@@ -14,11 +14,12 @@ var JumpPage = {
 JumpPage.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '背景图', field: 'picture', visible: true, align: 'center', valign: 'middle'},
-            {title: '阿里云OSS删除的key', field: 'objectName', visible: true, align: 'center', valign: 'middle'},
-            {title: '排序值', field: 'orders', visible: true, align: 'center', valign: 'middle'},
-            {title: '跳转页面代号(详情见接口文档)', field: 'code', visible: true, align: 'center', valign: 'middle'}
+            // {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
+            {title: '背景图', field: 'picture', visible: true, align: 'center', valign: 'middle',class:'img'},
+            // {title: '阿里云OSS删除的key', field: 'objectName', visible: true, align: 'center', valign: 'middle'},
+            {title: '跳转页面', field: 'code', visible: true, align: 'center', valign: 'middle'},
+        {title: '排序值', field: 'orders', visible: true, align: 'center', valign: 'middle'},
+        {title: '是否启用', field: 'enable', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 
@@ -94,6 +95,16 @@ JumpPage.search = function () {
 };
 
 $(function () {
+    $.ajaxSetup({
+        complete:function () {
+            $('.img').each(function (i) {
+                if($(this).text().startsWith("http")){
+                    var imgUrl=$(this).text();
+                    $(this).empty().append('<img src="'+imgUrl+'" style="width: 100%;" />');
+                }
+            });
+        }
+    });
     var defaultColunms = JumpPage.initColumn();
     var table = new BSTable(JumpPage.id, "/jumpPage/list", defaultColunms);
     table.setPaginationType("client");

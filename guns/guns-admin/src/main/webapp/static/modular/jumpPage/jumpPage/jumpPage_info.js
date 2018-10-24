@@ -47,8 +47,10 @@ JumpPageInfoDlg.collectData = function() {
     this
     .set('id')
     .set('picture')
-    .set('objectName')
-    .set('orders')
+        .set('object_name')
+        .set('old_object_name')
+        .set('enable')
+        .set('orders')
     .set('code');
 }
 
@@ -59,10 +61,13 @@ JumpPageInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/jumpPage/add", function(data){
-        Feng.success("添加成功!");
+        if(data.code==200){
+            Feng.success("添加成功!");
+        }else{
+            Feng.error(data.message);
+        }
         window.parent.JumpPage.table.refresh();
         JumpPageInfoDlg.close();
     },function(data){
@@ -82,7 +87,11 @@ JumpPageInfoDlg.editSubmit = function() {
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/jumpPage/update", function(data){
-        Feng.success("修改成功!");
+        if(data.code==200){
+            Feng.success("修改成功!");
+        }else{
+            Feng.error(data.message);
+        }
         window.parent.JumpPage.table.refresh();
         JumpPageInfoDlg.close();
     },function(data){
@@ -93,5 +102,8 @@ JumpPageInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-
+// 初始化缩略图上传
+    var fileServerPathUp = new $WebUpload("picture","/tool/uploadFile");
+    fileServerPathUp.setUploadBarId("progressBar");
+    fileServerPathUp.init("/tool/uploadFile");
 });

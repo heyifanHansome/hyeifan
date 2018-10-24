@@ -5,14 +5,12 @@
             <input type="hidden" id="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                    <#select id="typeId" name="选择城市分类"   value="${item.typeId}" underline="true">
-                    </#select>
-                            <#input id="name" name="城市名" value="${item.name}"  />
+                    <#select id="typeId" name="选择城市分类"   value="${item.typeId}" underline="true"/>
+                    <#input id="lngx" name="lngx轴" underline="true" readonly="readonly" value="${item.lngx}"/>
                 </div>
-
                 <div class="col-sm-6">
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" readonly="readonly" underline="true"/>
-                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly"  />
+                    <#input id="name" name="城市名" value="${item.name}"  />
+                    <#input id="laty" name="laty轴" underline="true" readonly="readonly" value="${item.laty}"/>
                 </div>
             </div>
 

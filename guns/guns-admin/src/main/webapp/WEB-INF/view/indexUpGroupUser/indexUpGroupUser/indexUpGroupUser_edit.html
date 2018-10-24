@@ -1,4 +1,5 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/js/Sortable.js"></script>
 <script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
 <link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
@@ -7,13 +8,13 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <input id="id" name="报名表id" value="${item.id}" type="hidden"/>
-                    <input id="activityId_" name="被报名的活动ID" value="${item.activityId}" type="hidden"/>
-                    <input id="userApiId_" name="报名用户ID,逗号分隔" value="${item.userApiId}" type="hidden"/>
-                    <#select id="activityId" name="活动"/>
+                    <input id="id" value="${item.id}" type="hidden"/>
+                    <input id="cityId_" name="城市ID(0:全国)" value="${item.cityId}" type="hidden"/>
+                    <input id="userApiId_" name="用户ID(用逗号隔开,顺序很重要)" value="${item.userApiId}" type="hidden"/>
+                    <#select id="cityId" name="城市"/>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">
-                            用户
+                            厨师
                         </label>
                         <div class="col-sm-9">
                             <select id="userApiId"></select>
@@ -22,18 +23,20 @@
                     </div>
                     <div id="userApis">
                     </div>
+                    <div style="clear: both;"></div>
+                    <p style="display: inline-table;color: red;">↑拖动排序</p>
                 </div>
             </div>
 
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
-                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ActivityApplyInfoDlg.editSubmit()"/>
-                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="ActivityApplyInfoDlg.close()"/>
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="IndexUpGroupUserInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="IndexUpGroupUserInfoDlg.close()"/>
                 </div>
             </div>
         </div>
 
     </div>
 </div>
-<script src="${ctxPath}/static/modular/systemActivityApply/activityApply/activityApply_info.js"></script>
+<script src="${ctxPath}/static/modular/indexUpGroupUser/indexUpGroupUser/indexUpGroupUser_info.js"></script>
 @}

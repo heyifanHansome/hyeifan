@@ -1,15 +1,15 @@
 /**
- * 初始化活动报名管理详情对话框
+ * 初始化厨师推荐分组管理详情对话框
  */
-var ActivityApplyInfoDlg = {
-    activityApplyInfoData : {}
+var IndexUpGroupUserInfoDlg = {
+    indexUpGroupUserInfoData : {}
 };
 
 /**
  * 清除数据
  */
-ActivityApplyInfoDlg.clearData = function() {
-    this.activityApplyInfoData = {};
+IndexUpGroupUserInfoDlg.clearData = function() {
+    this.indexUpGroupUserInfoData = {};
 }
 
 /**
@@ -18,8 +18,8 @@ ActivityApplyInfoDlg.clearData = function() {
  * @param key 数据的名称
  * @param val 数据的具体值
  */
-ActivityApplyInfoDlg.set = function(key, val) {
-    this.activityApplyInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
+IndexUpGroupUserInfoDlg.set = function(key, val) {
+    this.indexUpGroupUserInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
     return this;
 }
 
@@ -29,97 +29,99 @@ ActivityApplyInfoDlg.set = function(key, val) {
  * @param key 数据的名称
  * @param val 数据的具体值
  */
-ActivityApplyInfoDlg.get = function(key) {
+IndexUpGroupUserInfoDlg.get = function(key) {
     return $("#" + key).val();
 }
 
 /**
  * 关闭此对话框
  */
-ActivityApplyInfoDlg.close = function() {
-    parent.layer.close(window.parent.ActivityApply.layerIndex);
+IndexUpGroupUserInfoDlg.close = function() {
+    parent.layer.close(window.parent.IndexUpGroupUser.layerIndex);
 }
 
 /**
  * 收集数据
  */
-ActivityApplyInfoDlg.collectData = function() {
+IndexUpGroupUserInfoDlg.collectData = function() {
     var userApiIds=[];
     $('#userApis').children().each(function () {
         userApiIds.push($(this).find('input:eq(0)').val())
     });
-    this.activityApplyInfoData['userApiId'] = userApiIds.join(',');
+    this.indexUpGroupUserInfoData['userApiId'] = userApiIds.join(',');
     this
     .set('id')
-    .set('activityId');
+    .set('cityId');
 }
 
 /**
  * 提交添加
  */
-ActivityApplyInfoDlg.addSubmit = function() {
+IndexUpGroupUserInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
 
     //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/activityApply/add", function(data){
+    var ajax = new $ax(Feng.ctxPath + "/indexUpGroupUser/add", function(data){
         if(data.code==200){
             Feng.success("添加成功!");
         }else{
             Feng.error(data.message);
         }
-        window.parent.ActivityApply.table.refresh();
-        ActivityApplyInfoDlg.close();
+        window.parent.IndexUpGroupUser.table.refresh();
+        IndexUpGroupUserInfoDlg.close();
     },function(data){
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
-    ajax.set(this.activityApplyInfoData);
+    ajax.set(this.indexUpGroupUserInfoData);
     ajax.start();
 }
 
 /**
  * 提交修改
  */
-ActivityApplyInfoDlg.editSubmit = function() {
+IndexUpGroupUserInfoDlg.editSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    // return false;
     //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/activityApply/update", function(data){
+    var ajax = new $ax(Feng.ctxPath + "/indexUpGroupUser/update", function(data){
         if(data.code==200){
             Feng.success("修改成功!");
         }else{
             Feng.error(data.message);
         }
-        window.parent.ActivityApply.table.refresh();
-        ActivityApplyInfoDlg.close();
+        window.parent.IndexUpGroupUser.table.refresh();
+        IndexUpGroupUserInfoDlg.close();
     },function(data){
         Feng.error("修改失败!" + data.responseJSON.message + "!");
     });
-    ajax.set(this.activityApplyInfoData);
+    ajax.set(this.indexUpGroupUserInfoData);
     ajax.start();
 }
 
 $(function() {
-    $.post(Feng.ctxPath + "/activityApply/activityList", function (data) {
+    $.post(Feng.ctxPath + "/indexUpGroupUser/cityList", function (data) {
+        $("#cityId").append('<option value="0" '+('0'==$('#cityId_').val()?'selected="selected"':'')+'>全国</option>')
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
-            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#activityId_').val()?'selected="selected"':'')+'>' + jsonObj.title + '</option>')
-            $("#activityId").append(option);
+            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#cityId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+            $("#cityId").append(option);
         }
-        $('#activityId').searchableSelect();
+        $('#cityId').searchableSelect();
     });
-    $.post(Feng.ctxPath + "/activityApply/userList", function (data) {
+    $.post(Feng.ctxPath + "/indexUpGroupUser/userList", function (data) {
         var userApiIds=$('#userApiId_').val().split(",");
+        var userDivs=[];
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             if($.inArray(jsonObj.id.toString(),userApiIds)<0){
                 var option=$('<option value="' + jsonObj.id + '" avatar="'+(jsonObj.avatar!=undefined?jsonObj.avatar:'')+'" phone="'+(jsonObj.phone!=undefined?jsonObj.phone:'')+'" name="'+(jsonObj.name!=undefined?jsonObj.name:'')+'">' + (jsonObj.name!=undefined?jsonObj.name:'')+(jsonObj.phone!=undefined?('|'+jsonObj.phone):'')+'</option>')
                 $("#userApiId").append(option);
             }else{
-                $('#userApis').append('<div style="float: left;border: 1px solid #acc3ff;border-radius: 10px;overflow: hidden;width: 160px;margin: 0 10px 10px 0;position: relative;height: 71px;">' +
+                userDivs.push($('<div style="float: left;border: 1px solid #acc3ff;border-radius: 10px;overflow: hidden;width: 160px;margin: 0 10px 10px 0;position: relative;height: 71px;">' +
                     '                            <img src="'+(jsonObj.avatar!=undefined?jsonObj.avatar:'')+'" style="float: left;width: 69px;height: 69px;">' +
                     '                            <div style="top: 20px;position: relative;float: left;margin-left: 5px;">' +
                     '                                <p style="margin: 0;white-space: nowrap;">' + (jsonObj.name!=undefined?jsonObj.name:'') + '</p>' +
@@ -127,10 +129,18 @@ $(function() {
                     '                            </div>' +
                     '                            <a onclick="backUser($(this).parent(),\''+jsonObj.id+'\',\''+(jsonObj.avatar!=undefined?jsonObj.avatar:'')+'\',\''+(jsonObj.phone!=undefined?jsonObj.phone:'')+'\',\''+(jsonObj.name!=undefined?jsonObj.name:'')+'\')" style="font-size: 25px;position: absolute;right: 5px;top: -5px;">×</a>' +
                     '                            <input value="' + jsonObj.id + '" type="hidden"/>' +
-                    '                        </div>');
+                    '                        </div>'));
             }
         }
         $('#userApiId').searchableSelect();
+        for (var j=0;j<userApiIds.length;j++){
+            for (var k=0;k<userDivs.length;k++){
+                if($(userDivs[k]).find('input:eq(0)').val()==userApiIds[j]){
+                    $('#userApis').append($(userDivs[k]));
+                }
+            }
+        }
+        var sortable = new Sortable(document.getElementById("userApis"), {animation: 150});
     });
 });
 function backUser(htmlObj,id,avatar,phone,name) {

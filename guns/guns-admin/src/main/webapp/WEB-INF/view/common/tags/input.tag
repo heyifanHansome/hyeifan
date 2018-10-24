@@ -21,7 +21,10 @@
                     type="text"
                @}
                @if(isNotEmpty(readonly)){
-                    readonly="${readonly}"
+               readonly="${readonly}"
+               @}
+               @if(isNotEmpty(placeholder)){
+               placeholder="${placeholder}"
                @}
                @if(isNotEmpty(placeholder)){
                placeholder="${placeholder}"

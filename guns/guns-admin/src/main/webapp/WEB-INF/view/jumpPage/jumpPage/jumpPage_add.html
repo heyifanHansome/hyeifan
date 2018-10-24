@@ -4,15 +4,38 @@
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="" underline="true"/>
-                            <#input id="picture" name="背景图" underline="true"/>
-                            <#input id="objectName" name="阿里云OSS删除的key"/>
-                </div>
-
-                <div class="col-sm-6">
-                            <#input id="orders" name="排序值" underline="true"/>
-                            <#input id="code" name="跳转页面代号(详情见接口文档)" underline="true"/>
+                <div class="col-sm-12">
+                    <input id="id" type="hidden"/>
+                    <input id="old_object_name" type="hidden"/>
+                    <#avatar id="picture" name="背景图" />
+                    <input id="object_name" name="阿里云OSS删除时用到的key" type="hidden"/>
+                    <#input id="orders" name="排序值" underline="true"  placeholder="降序排列,数值越小越靠前"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            跳转页面
+                        </label>
+                        <div class="col-sm-9">
+                            <select id="code">
+                                <option value="0">星厨俱乐部</option>
+                                <option value="1">拜师学艺</option>
+                                <option value="2">厨友圈</option>
+                                <option value="3">赛事活动</option>
+                                <option value="4">宴席预定</option>
+                                <option value="5">星厨招聘</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            是否启用
+                        </label>
+                        <div class="col-sm-9">
+                            <select id="enable">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 

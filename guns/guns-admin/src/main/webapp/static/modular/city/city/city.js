@@ -14,14 +14,14 @@ var City = {
 City.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '城市分类', field: 'typeId', visible: false, align: 'center', valign: 'middle'},
+            // {title: '自增主键', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            // {title: '城市分类', field: 'typeId', visible: false, align: 'center', valign: 'middle'},
             {title: '城市名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'create_time', visible: false, align: 'center', valign: 'middle'},
-            {title: '更新时间', field: 'update_time', visible: false, align: 'center', valign: 'middle'},
-            {title: '城市分类', field: 'cityTypeName', visible: true, align: 'center', valign: 'middle'},
-            // {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'},
-            // {title: '更新时间', field: 'update_time', visible: true, align: 'center', valign: 'middle'},
+            // {title: '创建时间', field: 'create_time', visible: false, align: 'center', valign: 'middle'},
+            // {title: '更新时间', field: 'update_time', visible: false, align: 'center', valign: 'middle'},
+        {title: '城市分类', field: 'cityTypeName', visible: true, align: 'center', valign: 'middle'},
+        {title: 'lngx轴', field: 'lngx', visible: true, align: 'center', valign: 'middle'},
+        {title: 'laty轴', field: 'laty', visible: true, align: 'center', valign: 'middle'}
 
     ];
 };

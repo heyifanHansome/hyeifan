@@ -1,18 +1,27 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-6 b-r">
-                            <#input id="id" name="报名表id" underline="true"/>
-                            <#input id="activityId" name="被报名的活动ID" underline="true"/>
-                            <#input id="userApiId" name="报名用户ID,逗号分隔"/>
-                </div>
-
-                <div class="col-sm-6">
-                            <#input id="createTime" name="创建时间" underline="true"/>
-                            <#input id="updateTime" name="更新时间" underline="true"/>
+                <div class="col-sm-12">
+                    <input id="id" name="报名表id" type="hidden"/>
+                    <input id="activityId_" name="被报名的活动ID" type="hidden"/>
+                    <input id="userApiId_" name="报名用户ID,逗号分隔" type="hidden"/>
+                    <#select id="activityId" name="活动"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            用户
+                        </label>
+                        <div class="col-sm-9">
+                            <select id="userApiId"></select>
+                            <input type="button" value="+" onclick="addUser($(this).parent().find('select').eq(0).val(),$(this).parent().find('select').eq(0).find('option:selected').attr('avatar'),$(this).parent().find('select').eq(0).find('option:selected').attr('phone'),$(this).parent().find('select').eq(0).find('option:selected').attr('name'));" />
+                        </div>
+                    </div>
+                    <div id="userApis">
+                    </div>
                 </div>
             </div>
 

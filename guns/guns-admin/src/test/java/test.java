@@ -1,10 +1,10 @@
+import com.stylefeng.guns.modular.lijun.util.LocationUtils;
 import org.junit.Test;
 
 public class test {
     @Test
     public void numberFormat(){
-        System.out.println(10/3);
-        String s=Double.valueOf(10/3).toString();
-        System.out.println(s);
+        double a=LocationUtils.getDistance(39.904030,116.407526,26.647661,106.630153);
+        System.err.println(a);
     }
 }

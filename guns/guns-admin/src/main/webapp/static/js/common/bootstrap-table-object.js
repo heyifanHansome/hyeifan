@@ -64,7 +64,7 @@
                         columns: 'glyphicon-list'
                     },
                     iconSize: 'outline'
-                });
+                })
             return this;
         },
         /**

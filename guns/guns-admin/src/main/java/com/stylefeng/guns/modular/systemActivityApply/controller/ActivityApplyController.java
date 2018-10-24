@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.systemActivityApply.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.modular.activity.service.IActivityService;
 import com.stylefeng.guns.modular.lijun.util.JavaBeanUtil;
 import com.stylefeng.guns.modular.lijun.util.Tool;
@@ -91,6 +92,7 @@ public class ActivityApplyController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(ActivityApply activityApply) {
+        if(activityApplyService.selectCount(new EntityWrapper<>(new ActivityApply()).eq("activity_id",activityApply.getActivityId()))>0)return new ErrorTip(500,"添加失败,您选活动已经有报名表存在");
         activityApply.setCreateTime(new Date());
         activityApplyService.insert(activityApply);
         return SUCCESS_TIP;
@@ -112,6 +114,7 @@ public class ActivityApplyController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(ActivityApply activityApply) {
+        if(activityApplyService.selectCount(new EntityWrapper<>(new ActivityApply()).eq("activity_id",activityApply.getActivityId()).ne("id",activityApply.getActivityId()))>0)return new ErrorTip(500,"修改失败,您选活动已经有报名表存在");
         activityApply.setUpdateTime(new Date());
         activityApplyService.updateById(activityApply);
         return SUCCESS_TIP;

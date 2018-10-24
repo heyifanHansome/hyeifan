@@ -47,17 +47,50 @@ CityInfoDlg.collectData = function() {
     this
     .set('id')
     .set('typeId')
-    .set('name')
+        .set('name')
+        .set('lngx')
+        .set('laty')
 }
 
 /**
  * 提交添加
  */
 CityInfoDlg.addSubmit = function() {
-
     this.clearData();
     this.collectData();
-
+    var goon=false,message=""
+    //开始定位
+    $.ajax({
+        url:Feng.ctxPath + "/city/dingwei",
+        async:false,
+        data:{cityName:this.cityInfoData.name},
+        beforeSend: function(){
+            Feng.success("定位获取坐标中...");
+        },
+        success:function (r) {
+            if(r.success=="ok"){
+                message=r.message;
+                goon=true;
+                $('#lngx').val(r.data.geocodes[0].location.split(",")[0]);
+                $('#laty').val(r.data.geocodes[0].location.split(",")[1]);
+            }else{
+                message=r.message;
+            }
+        },
+        error:function (e) {
+            console.log(e);
+            message="服务器出现异常,城市定位失败!";
+        }
+    });
+    if(goon){
+        Feng.success(message);
+    }else{
+        Feng.error(message);return goon;
+    }
+    //填写完坐标再次收集数据
+    this.clearData();
+    this.collectData();
+    if($.trim($('#lngx').val()).length==0||$.trim($('#laty').val()).length==0){Feng.error("未能获取坐标信息");return false;}
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/city/add", function(data){
         Feng.success("添加成功!");
@@ -77,6 +110,39 @@ CityInfoDlg.editSubmit = function() {
 
     this.clearData();
     this.collectData();
+    var goon=false,message=""
+    //开始定位
+    $.ajax({
+        url:Feng.ctxPath + "/city/dingwei",
+        async:false,
+        data:{cityName:this.cityInfoData.name},
+        beforeSend: function(){
+            Feng.success("定位获取坐标中...");
+        },
+        success:function (r) {
+            if(r.success=="ok"){
+                message=r.message;
+                goon=true;
+                $('#lngx').val(r.data.geocodes[0].location.split(",")[0]);
+                $('#laty').val(r.data.geocodes[0].location.split(",")[1]);
+            }else{
+                message=r.message;
+            }
+        },
+        error:function (e) {
+            console.log(e);
+            message="服务器出现异常,城市定位失败!";
+        }
+    });
+    if(goon){
+        Feng.success(message);
+    }else{
+        Feng.error(message);return goon;
+    }
+    //填写完坐标再次收集数据
+    this.clearData();
+    this.collectData();
+    if($.trim($('#lngx').val()).length==0||$.trim($('#laty').val()).length==0){Feng.error("未能获取坐标信息");return false;}
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/city/update", function(data){

@@ -16,9 +16,7 @@ Banner.initColumn = function () {
         {field: 'selectItem', radio: true},
             // {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
             {title: '标题', field: 'title', visible: true, align: 'center', valign: 'middle'},
-        // {title: '封面图片', field: 'picture', visible: true, align: 'center', valign: 'middle'},
-        {title: '封面图片', field: 'picture', templet:'<div><img src="{{ picture}}"></div>',style:'height:48px;width:48px;line-height:48px!important;'},
-        // {title: '封面图片', field: 'picture', templet:'#picture'},
+        {title: '封面图片', field: 'picture',visible: true, align: 'center', valign: 'middle',class:"img"},
             // {title: '阿里云OSS删除时用到的key', field: 'object_name', visible: true, align: 'center', valign: 'middle'},
             // {title: '广告跳转的超链接', field: 'href', visible: true, align: 'center', valign: 'middle'},
             {title: '标签', field: 'tagId', visible: true, align: 'center', valign: 'middle'}
@@ -97,8 +95,19 @@ Banner.search = function () {
 };
 
 $(function () {
+    $.ajaxSetup({
+        complete:function () {
+            $('.img').each(function (i) {
+                if(i>1){
+                    var imgUrl=$(this).text();
+                    $(this).empty().append('<img src="'+imgUrl+'" style="width: 100%;" />');
+                }
+            });
+        }
+    });
     var defaultColunms = Banner.initColumn();
     var table = new BSTable(Banner.id, "/banner/list", defaultColunms);
     table.setPaginationType("client");
     Banner.table = table.init();
+
 });

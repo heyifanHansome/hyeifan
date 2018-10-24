@@ -64,7 +64,11 @@ ActivityApplyInfoDlg.addSubmit = function() {
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/activityApply/add", function(data){
-        Feng.success("添加成功!");
+        if(data.code==200){
+            Feng.success("添加成功!");
+        }else{
+            Feng.error(data.message);
+        }
         window.parent.ActivityApply.table.refresh();
         ActivityApplyInfoDlg.close();
     },function(data){
@@ -84,7 +88,11 @@ ActivityApplyInfoDlg.editSubmit = function() {
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/activityApply/update", function(data){
-        Feng.success("修改成功!");
+        if(data.code==200){
+            Feng.success("修改成功!");
+        }else{
+            Feng.error(data.message);
+        }
         window.parent.ActivityApply.table.refresh();
         ActivityApplyInfoDlg.close();
     },function(data){

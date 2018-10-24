@@ -80,6 +80,10 @@ public class Setting extends Model<Setting> {
      * 云片网(短信)appkey
      */
     private String yp_appkey;
+    /**
+     * 高德地图key
+     */
+    private String gd_key;
     @Override
     protected Serializable pkVal() {
         return this.id;

@@ -16,12 +16,13 @@
         <result column="ali_appsecret" property="ali_appsecret" />
         <result column="ali_sm_appcode" property="ali_sm_appcode" />
         <result column="yp_appkey" property="yp_appkey" />
+        <result column="gd_key" property="gd_key" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, ali_safrv_cert_check_appcode, ali_oss_endpoint, ali_oss_bucket, ali_oss_access_key, ali_oss_access_id, ali_oss_img_path, ali_oss_file_path,
-        ali_appkey, ali_appsecret, ali_sm_appcode, yp_appkey
+        ali_appkey, ali_appsecret, ali_sm_appcode, yp_appkey, gd_key
     </sql>
 
 </mapper>

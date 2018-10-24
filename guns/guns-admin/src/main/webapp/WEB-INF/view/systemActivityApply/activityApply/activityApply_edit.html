@@ -6,7 +6,7 @@
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="col-sm-12 b-r">
+                <div class="col-sm-12">
                     <input id="id" name="报名表id" value="${item.id}" type="hidden"/>
                     <input id="activityId_" name="被报名的活动ID" value="${item.activityId}" type="hidden"/>
                     <input id="userApiId_" name="报名用户ID,逗号分隔" value="${item.userApiId}" type="hidden"/>
@@ -20,11 +20,8 @@
                             <input type="button" value="+" onclick="addUser($(this).parent().find('select').eq(0).val(),$(this).parent().find('select').eq(0).find('option:selected').attr('avatar'),$(this).parent().find('select').eq(0).find('option:selected').attr('phone'),$(this).parent().find('select').eq(0).find('option:selected').attr('name'));" />
                         </div>
                     </div>
-
                     <div id="userApis">
-
                     </div>
-
                 </div>
             </div>
 

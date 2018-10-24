@@ -50,6 +50,7 @@ SettingInfoDlg.collectData = function() {
         .set('ali_appkey')
         .set('ali_appsecret')
         .set('ali_sm_appcode')
+        .set('gd_key')
         .set('yp_appkey');
 }
 

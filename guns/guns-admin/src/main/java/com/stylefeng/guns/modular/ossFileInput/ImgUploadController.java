@@ -114,6 +114,9 @@ private SettingConfiguration settingConfiguration;
     @PostMapping(value = "/imgUploadMul")
     @ResponseBody
     public String imgUploadMul(HttpServletRequest request, HttpServletResponse response, String goodsTypeId) {
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+
         OSSClientUtil ossClientUtil=new OSSClientUtil();
         Map<String, MultipartFile> map = ((MultipartHttpServletRequest) request).getFileMap();
         MultipartFile multipartFile = null;

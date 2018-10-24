@@ -22,6 +22,8 @@
         <result column="video" property="video" />
         <result column="tag_id" property="tagId" />
         <result column="coverphoto" property="coverphoto" />
+        <result column="number_learning" property="numberLearning" />
+        <result column="posters_title" property="postersTitle" />
 
     </resultMap>
 

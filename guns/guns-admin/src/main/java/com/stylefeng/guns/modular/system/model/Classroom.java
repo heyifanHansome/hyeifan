@@ -1,7 +1,9 @@
 package com.stylefeng.guns.modular.system.model;
 
 import com.baomidou.mybatisplus.enums.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
@@ -93,12 +95,12 @@ public class Classroom extends Model<Classroom> {
     @TableField("update_time")
     private Date updateTime;
     /**
-     *视频集合
+     * 视频集合
      */
     private String video;
 
     /**
-     *图片集合
+     * 图片集合
      */
     private String images;
 
@@ -108,6 +110,17 @@ public class Classroom extends Model<Classroom> {
      * 封面图片
      */
     private String coverphoto;
+    /**
+     *在学人数
+     */
+    @TableField("number_learning")
+    private String numberLearning;
+
+    /**
+     * 海报生成标题
+     */
+    @TableField("posters_title")
+    private String postersTitle;
 
     @Override
     protected Serializable pkVal() {

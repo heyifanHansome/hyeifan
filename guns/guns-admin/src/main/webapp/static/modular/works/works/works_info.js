@@ -259,7 +259,7 @@ $(function() {
 
             // result 必须是一个 JSON 格式字符串！！！否则报错
         }
-    }
+    };
     editor.create();
     editor.txt.html($("#practice").val());
     WorksInfoDlg.editor = editor;

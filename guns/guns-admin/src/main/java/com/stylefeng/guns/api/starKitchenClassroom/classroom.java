@@ -16,6 +16,9 @@ import java.util.Map;
 @Controller
 public class classroom {
 
+    /**
+     * @return
+     */
     @RequestMapping("coverPage")
     ResultMsg coverPage() {
         /**
@@ -23,12 +26,33 @@ public class classroom {
          */
         Map<String, Object> heyifanMap = new HashMap<>();
         /**
-         *
+         *广告图片的数组
          */
         Map<String, Object> bannerMap = new HashMap<>();
+        /**
+         * 标签数组封装
+         */
+        Map<String, Object> tagMap = new HashMap<>();
+
+        /**
+         * 推荐视频数组
+         */
         Map<String, Object> recommendMap = new HashMap<>();
 
-        return  ResultMsg.success("","","");
+        /**
+         * 视频集合
+         */
+        Map<String, Object> videoMap = new HashMap<>();
+
+
+        /**
+         * 电子菜谱数组集合
+         */
+        Map<String, Object>  recipesMap = new HashMap<>();
+
+
+
+        return ResultMsg.success("", "", "");
     }
 
 

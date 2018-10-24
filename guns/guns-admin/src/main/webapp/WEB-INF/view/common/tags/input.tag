@@ -23,6 +23,9 @@
                @if(isNotEmpty(readonly)){
                     readonly="${readonly}"
                @}
+               @if(isNotEmpty(placeholder)){
+               placeholder="${placeholder}"
+               @}
                @if(isNotEmpty(clickFun)){
                     onclick="${clickFun}"
                @}

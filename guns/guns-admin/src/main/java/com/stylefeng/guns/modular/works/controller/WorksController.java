@@ -140,7 +140,7 @@ private SettingConfiguration settingConfiguration;
         Integer columnId = null;
         works.setCreateTime(new DateTime());
         EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
-        columnTypeEntityWrapper.eq("name", "活动");
+        columnTypeEntityWrapper.eq("name", "作品");
         List<ColumnType> columnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
         works.setColumnId(columnTypes.get(0).getId());
         worksService.insert(works);
@@ -269,7 +269,6 @@ private SettingConfiguration settingConfiguration;
         EntityWrapper<ColumnType> columnTypeEntityWrapper = new EntityWrapper<>();
         columnTypeEntityWrapper.eq("menu_id",    ColumnTypes.get(0).getId());
         List<ColumnType> parentColumnTypes = columnTypeService.selectList(columnTypeEntityWrapper);
-
 
         return parentColumnTypes;
     }

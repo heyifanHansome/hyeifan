@@ -17,6 +17,7 @@ import io.swagger.annotations.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.stylefeng.guns.modular.lijun.util.Tool.notEmptySQL;
 
 
 /**
@@ -357,11 +360,67 @@ public class userApiInteface {
         }
     }
 
+
+
     @RequestMapping(value = "indexPartStatic",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMsg indexPartStatic(){
+    public ResultMsg indexPartStatic(Double lng_x,Double lat_y){
         try{
             Map<String,Object>result=new HashMap<>();
+            //开始获取推荐厨师
+            //1.拉取厨师分组的所有城市ID,用这些城市ID找出城市集合
+            List<String>cityIds=new ArrayList<>();
+            List<Map<String,Object>>groupUsers=dao.selectBySQL("select * from "+FSS.index_up_group_user+" where city_id<>0 and "+ notEmptySQL("city_id"));
+            for (Map<String, Object> groupUser : groupUsers) {
+                cityIds.add(groupUser.get("city_id").toString());
+            }
+            List<Map<String,Object>>citys=dao.selectBySQL("select * from "+FSS.city+" where id in("+ StringUtils.join(cityIds,",")+") and"+notEmptySQL("lngx","laty"));
+            //2.在城市集合中,用前台传进来的lng_x和lat_y两个坐标找出距离最近的城市,的ID
+            Map<String,Object>city=null;
+            double tempDistanceOne=Double.MAX_VALUE;
+            for (int i = 0; i < citys.size(); i++) {
+                double tempDistanceTwo=LocationUtils.getDistance(lat_y,lng_x,Double.valueOf(citys.get(i).get("laty").toString()),Double.valueOf(citys.get(i).get("lngx").toString()));
+                if(tempDistanceTwo<tempDistanceOne){
+                    tempDistanceOne=tempDistanceTwo;
+                    city=citys.get(i);
+                }
+            }
+            //3.用最近的城市的id找到对应分组的厨师们,再加上城市ID等于0也就是分组为"全国"的厨师们,放到要返回的结果result里去(这里要特别注意顺序一定要符合数据库里用户的ID顺序)
+            LinkedHashSet<String>userIDs=new LinkedHashSet<>();
+            if(city!=null){
+                List<Map<String,Object>>groups=dao.selectBySQL("select * from "+FSS.index_up_group_user+" where city_id='"+city.get("id")+"'");
+                for (Map<String, Object> group : groups) {
+                    if(Tool.mapGetKeyNotEmpty(group,"user_api_id")){
+                        for (String user_api_id : group.get("user_api_id").toString().split(",")) {
+                            userIDs.add(user_api_id);
+                        }
+                    }
+                }
+            }
+            List<Map<String,Object>>groupNationwides=dao.selectBySQL("select * from "+FSS.index_up_group_user+" where city_id='0'");
+            for (Map<String, Object> groupNationwide : groupNationwides) {
+                if(Tool.mapGetKeyNotEmpty(groupNationwide,"user_api_id")){
+                    for (String user_api_id : groupNationwide.get("user_api_id").toString().split(",")) {
+                        userIDs.add(user_api_id);
+                    }
+                }
+            }
+            List<Map<String,Object>>userApis=dao.selectBySQL("select * from "+FSS.user_api+" where id in("+StringUtils.join(userIDs,",")+") order by FIELD(id,"+StringUtils.join(userIDs,",")+")");
+            for (int i = 0; i < userApis.size(); i++) {
+                //去除没必要的字段
+            }
+            result.put("chefs",userApis);
+
+            //开始放入跳转板块
+            List<Map<String,Object>>jumpPages=dao.selectBySQL("select * from "+FSS.jump_page+" order by orders asc");
+            for (int i = 0; i < jumpPages.size(); i++) {
+                //去除没必要的字段
+            }
+            result.put("jumpPages",jumpPages);
+
+            //开始放入加精内容
+            Map<String,Object>news=new HashMap<>();
+
 
             return ResultMsg.success("查询成功",null,result);
         }catch (Exception e){

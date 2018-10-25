@@ -101,6 +101,7 @@ public class Works extends Model<Works> {
     @TableField("tag_id")
     private String tagId;
 
+    private String role;
     @Override
     protected Serializable pkVal() {
         return this.id;

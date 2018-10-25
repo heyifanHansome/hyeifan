@@ -20,11 +20,12 @@
         <result column="video" property="video" />
         <result column="user_id" property="userId" />
         <result column="tag_id" property="tagId" />
+        <result column="role" property="role" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, type, images, main_ingredient, supplementary_material, seasoning, practice, remark, status, create_time, update_time, column_id
+        id, name, type, images, main_ingredient, supplementary_material, seasoning, practice, remark, status, create_time, update_time, column_id, role
     </sql>
 
 

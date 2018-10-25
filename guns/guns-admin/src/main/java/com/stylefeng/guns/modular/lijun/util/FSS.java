@@ -177,6 +177,14 @@ public class FSS {
 	 * 用户会员等级认证管理
 	 */
 	public static final String user_target = "sys_user_target";
+	/**
+	 * 首页顶部厨师分组推荐
+	 */
+	public static final String index_up_group_user = "sys_index_up_group_user";
+	/**
+	 * 首页跳转版块
+	 */
+	public static final String jump_page = "sys_jump_page";
 
 
 

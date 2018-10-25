@@ -157,8 +157,6 @@ private SettingConfiguration settingConfiguration;
                 if("1".equals(object.get("status"))){
                     if(object.containsKey("geocodes")){
                         JSONArray geocodes=JSONArray.fromObject(object.get("geocodes"));
-                        System.err.println(geocodes);
-                        System.err.println(Tool.listIsNull(geocodes));
                         if(!Tool.listIsNull(geocodes)){
                             return ResultMsg.success("定位成功!",null,object);
                         }else{

@@ -35,7 +35,9 @@
                     }
                 </style>
             </div>
-
+            <div class="col-sm-12">
+                <#select name="角色" id="role"/>
+            </div>
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
@@ -55,11 +57,24 @@
                     <div id='threeleftbuttons'>
                     </div>
                 </div>
-
-                <div class="col-sm-6">
-                    <#select id="userId" name="用户名称" underline="true">
-                   </#select>
-                            <#input id="x" name="栏目类型 " value="活动" readonly="readonly" underline="true"/>
+            <div class="col-sm-6">
+                <#select id="userId" name="用户名称" underline="true"/>
+                <script>
+                    $('#role').change(function () {
+                        if($(this).val()=="manager"||$(this).val()=="userapi"){
+                            $.post(Feng.ctxPath+"/works/getUserapiOrManagerByRole",{role:$(this).val()},function (data) {
+                                $("#userId").empty();
+                                for (var i = 0; i < data.length; i++) {
+                                    var jsonObj = data[i];
+                                    $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+                                }
+                                $('#userId').val('${item.userId}');
+                            })
+                        }
+                    });
+                    $('#role').append('<option value="manager">餐厅</option>').append('<option value="userapi">用户</option>').val('${item.role}').change();
+                </script>
+                <#input id="x" name="栏目类型 " value="活动" readonly="readonly" underline="true"/>
                             <!--<#select id="columnId" name="栏目类型" readonly="readonly" underline="true">-->
                             <!--</#select>-->
                             <!--<#input id="practice" name="做法 " value="${item.practice}" underline="true"/>-->
@@ -158,7 +173,7 @@ var heyifan;
         });
 
 
-             $('#userId').val(${item.userId});
+
              $('#status').val(${item.status});
              $('#columnId').val(${item.columnId})
 

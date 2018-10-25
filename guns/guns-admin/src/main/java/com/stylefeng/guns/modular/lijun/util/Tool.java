@@ -270,4 +270,17 @@ public class Tool {
 		Logger logger = LoggerFactory.getLogger("wxpay java sdk");
 		return logger;
 	}
+
+	/**
+	 * 输入参数,返回一个String,用于判断数据库字段类型为字符串的字段值,为数字的不要用这个方法:</br>
+	 * xx is not null and xx<>'' 多个中间用 and 连接
+	 * @param arg 需要排除空值和null的字段名
+	 * @return
+	 */
+	public static String notEmptySQL(String ...arg){
+		for (int i = 0; i < arg.length; i++) {
+			arg[i]=(" "+arg[i]+" is not null and "+arg[i]+"<>'' ");
+		}
+		return org.apache.commons.lang3.StringUtils.join(arg," and ");
+	}
 }

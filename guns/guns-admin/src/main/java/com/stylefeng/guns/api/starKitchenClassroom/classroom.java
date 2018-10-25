@@ -49,13 +49,14 @@ public class classroom {
             /**
              *广告图片的数组
              */
-            Map<String, Object> bannerMap = new HashMap<>();
+
             List<Map<String,Object>> bannerTempList = new ArrayList<>();
             EntityWrapper<Banner> bannerEntityWrapper = new EntityWrapper<>();
-            bannerEntityWrapper.where("classroom_id is  not  null ");
+            bannerEntityWrapper.where("item_id is  not  null ");
             List<Banner> banners = bannerService.selectList(bannerEntityWrapper);
             if (banners.size() > 0)  {
                 for (Banner banner : banners) {
+                    Map<String, Object> bannerMap = new HashMap<>();
                     bannerMap.put("videoId", banner.getItem_id());
                     bannerMap.put("picture", banner.getPicture());
                     bannerTempList.add(bannerMap);
@@ -65,13 +66,14 @@ public class classroom {
             /**
              * 标签数组封装
              */
-            Map<String, Object> tagMap = new HashMap<>();
+
             List<Map<String,Object>> tagTempList = new ArrayList<>();
             EntityWrapper<Tag> tagEntityWrapper = new EntityWrapper<>();
             tagEntityWrapper.where("column_id={0} or column_id={1}", 25, 27);
             List<Tag> tags = tagService.selectList(tagEntityWrapper);
             if (tags.size() > 0) {
                 for (Tag tag : tags) {
+                    Map<String, Object> tagMap = new HashMap<>();
                     tagMap.put("name", tag.getName());
                     tagMap.put("picture", tag.getPicture());
                     tagTempList.add(tagMap);
@@ -82,7 +84,7 @@ public class classroom {
             /**
              * 推荐视频数组
              */
-            Map<String, Object> recommendMap = new HashMap<>();
+
             List<Map<String,Object>> recommendTempList = new ArrayList<>();
             EntityWrapper<Classroom> classroomEntityWrapper = new EntityWrapper<>();
             classroomEntityWrapper.where("column_id={0}" ,27).and("coverphoto is not null ").orderDesc(Collections.singleton("create_time"));
@@ -90,6 +92,7 @@ public class classroom {
             if (classroomList.size() > 0) {
 
                 for (Classroom classroom : classroomList) {
+                    Map<String, Object> recommendMap = new HashMap<>();
                     recommendMap.put("coverPhoto", classroom.getCoverphoto());
                     recommendMap.put("shorTitle", classroom.getShorTitle());
                     recommendMap.put("videoId", classroom.getId());
@@ -101,13 +104,14 @@ public class classroom {
             /**
              * 视频集合
              */
-            Map<String, Object> videoMap = new HashMap<>();
+
             List<Map<String,Object>> videoTempList = new ArrayList<>();
             EntityWrapper<Classroom> classroomEntityWrapperList = new EntityWrapper<>();
             classroomEntityWrapperList.orderDesc(Collections.singleton("create_time"));
             List<Classroom> videoMapList = classroomService.selectList(classroomEntityWrapperList);
             if (videoMapList.size() > 0) {
                 for (Classroom classroom : videoMapList) {
+                    Map<String, Object> videoMap = new HashMap<>();
                     videoMap.put("thumb", classroom.getThumb());
                     videoMap.put("title", classroom.getTitle());
                     videoMap.put("id", classroom.getId());
@@ -129,13 +133,14 @@ public class classroom {
             /**
              * 电子菜谱数组集合
              */
-            Map<String, Object> recipesMap = new HashMap<>();
+
             List<Map<String,Object>> recipsTempList = new ArrayList<>();
             EntityWrapper<Classroom> recipesEntity = new EntityWrapper<>();
             recipesEntity.where("column_id={0}", 25);
             List<Classroom> recipesMapList = classroomService.selectList(recipesEntity);
             if (recipesMapList.size() > 0) {
                 for (Classroom classroom : recipesMapList) {
+                    Map<String, Object> recipesMap = new HashMap<>();
                     recipesMap.put("title", classroom.getTitle());
                     recipesMap.put("thmb", classroom.getThumb());
                     recipesMap.put("descritpion", classroom.getDescription());

@@ -126,6 +126,13 @@ public class Classroom extends Model<Classroom> {
     private String userDescription;
 
 
+    @TableField("sort")
+    private String sort;
+
+    @TableField("shor_title")
+    private String shorTitle;
+
+
     @Override
     protected Serializable pkVal() {
         return this.id;

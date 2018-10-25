@@ -25,6 +25,9 @@
         <result column="number_learning" property="numberLearning" />
         <result column="posters_title" property="postersTitle" />
         <result column="user_description" property="userDescription" />
+        <result column="sort" property="sort" />
+        <result column="shor_title" property="shorTitle" />
+
     </resultMap>
 
     <!-- 通用查询结果列 -->

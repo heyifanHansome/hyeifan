@@ -10,6 +10,7 @@
         <result column="object_name" property="object_name" />
         <result column="href" property="href" />
         <result column="tag_id" property="tagId" />
+        <result column="classroom_id" property="classroomId" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

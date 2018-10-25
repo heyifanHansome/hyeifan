@@ -51,6 +51,8 @@ public class Banner extends Model<Banner> {
     @TableField("tag_id")
     private String tagId;
 
+    @TableField("classroom_id")
+    private String classroomId;
 
 
     @Override

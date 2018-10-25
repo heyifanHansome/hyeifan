@@ -111,7 +111,7 @@ public class Classroom extends Model<Classroom> {
      */
     private String coverphoto;
     /**
-     *在学人数
+     * 在学人数
      */
     @TableField("number_learning")
     private String numberLearning;
@@ -121,6 +121,10 @@ public class Classroom extends Model<Classroom> {
      */
     @TableField("posters_title")
     private String postersTitle;
+
+    @TableField("user_description")
+    private String userDescription;
+
 
     @Override
     protected Serializable pkVal() {

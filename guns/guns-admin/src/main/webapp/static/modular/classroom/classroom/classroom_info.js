@@ -62,7 +62,9 @@ ClassroomInfoDlg.close = function () {
  * 收集数据
  */
 ClassroomInfoDlg.collectData = function () {
+    debugger;
     this.classroomInfoData['content'] = ClassroomInfoDlg.editor.txt.html();
+    this.classroomInfoData['userDescription'] = ClassroomInfoDlg.heyifanEdit.txt.html();
     this
         .set('id')
         .set('columnId')
@@ -181,55 +183,61 @@ $(function () {
     avatarUp.init("/tool/uploadFile");
 
 
-    //初始化编辑器
+    //初始化图文编辑器
 
     var E = window.wangEditor;
     var editor = new E('#editor');
-
     editor.customConfig.uploadImgServer = '/img/wangEditImageUpLoad'  // 上传图片到服务器
     editor.customConfig.uploadImgTimeout = 300000
     editor.customConfig.uploadImgHooks = {
         before: function (xhr, editor, files) {
-            // 图片上传之前触发
-            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
-
-            // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
-            // return {
-            //     prevent: true,
-            //     msg: '放弃上传'
-            // }
         },
         success: function (xhr, editor, result) {
         },
         fail: function (xhr, editor, result) {
-            // 图片上传并返回结果，但图片插入错误时触发
-            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
             alert("上传图片失败!")
         },
         error: function (xhr, editor) {
-            // 图片上传出错时触发
-            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
         },
         timeout: function (xhr, editor) {
-            // 图片上传超时时触发
-            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
         },
-
-        // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-        // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
         customInsert: function (insertImg, result, editor) {
-            // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
-            // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
-
-            // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
             var url = result.url
             insertImg(url)
-
-            // result 必须是一个 JSON 格式字符串！！！否则报错
         }
     };
     editor.create();
     E.fullscreen.init('#editor');
     editor.txt.html($("#content").val());
     ClassroomInfoDlg.editor = editor;
+
+
+
+
+    //初始化作者详情编辑器
+    var userEdit = window.wangEditor;
+    var heyifanEditor = new userEdit('#userEdit');
+    heyifanEditor.customConfig.uploadImgServer = '/img/wangEditImageUpLoad';  // 上传图片到服务器
+    heyifanEditor.customConfig.uploadImgTimeout = 300000;
+    heyifanEditor.customConfig.uploadImgHooks = {
+        before: function (xhr, editor, files) {
+        },
+        success: function (xhr, editor, result) {
+        },
+        fail: function (xhr, editor, result) {
+            alert("上传图片失败!")
+        },
+        error: function (xhr, editor) {
+        },
+        timeout: function (xhr, editor) {
+        },
+        customInsert: function (insertImg, result, editor) {
+            var url = result.url
+            insertImg(url)
+        }
+    };
+    heyifanEditor.create();
+    userEdit.fullscreen.init('#userEdit');
+    heyifanEditor.txt.html($("#userDescription").val());
+    ClassroomInfoDlg.heyifanEdit = heyifanEditor;
 });

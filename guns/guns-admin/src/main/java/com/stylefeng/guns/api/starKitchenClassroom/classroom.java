@@ -1,9 +1,12 @@
 package com.stylefeng.guns.api.starKitchenClassroom;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.ResultMsg;
+import com.stylefeng.guns.modular.classroom.service.IClassroomService;
+import com.stylefeng.guns.modular.system.model.Classroom;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +19,8 @@ import java.util.Map;
 @Controller
 public class classroom {
 
+    @Autowired
+    private IClassroomService classroomService;
     /**
      * @return
      */
@@ -38,6 +43,15 @@ public class classroom {
          * 推荐视频数组
          */
         Map<String, Object> recommendMap = new HashMap<>();
+        EntityWrapper<Classroom>   classroomEntityWrapper = new EntityWrapper<>();
+        classroomEntityWrapper.where("coverphoto is not  null order by create_time desc");
+        List<Classroom> classroomList = classroomService.selectList(classroomEntityWrapper);
+        if(classroomList.size() >4){
+
+        }else {
+            recommendMap.put("recommendMap","没有足够的数据展示");
+        }
+
 
         /**
          * 视频集合

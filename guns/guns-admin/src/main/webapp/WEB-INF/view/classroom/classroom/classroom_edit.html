@@ -6,6 +6,8 @@
 
             <input id="content" name="做法" value='${item.content}' type="hidden"/>
 
+            <input id="userDescription" name="做法" value='${item.content}' type="hidden"/>
+
             <input id="columnId" name="做法" value='${item.columnId}' type="hidden"/>
 
             <input id="images" name="图集Ids" value="${item.images}" type="hidden"/>
@@ -31,49 +33,49 @@
                 </div>
             </div>
 
+            <div id="example" role="application" style="margin-bottom: 3%">
+                <div class="demo-section k-content">
+                    <h2>请选择课堂标签</h2>
+                    <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
+                    </select>
 
-
-    <div id="example" role="application" style="margin-bottom: 3%">
-        <div class="demo-section k-content">
-            <h2>请选择课堂标签</h2>
-            <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
-            </select>
-
-        </div>
-
-                <style>
-                    .demo-section label {
-                        display: block;
-                        margin: 15px 0 5px 0;
-                    }
-                    #get {
-                        float: right;
-                        margin: 25px auto 0;
-                    }
-                </style>
-
+                </div>
     </div>
 
-                        <div  >
+                        <div id="contentZindex">
                             <fieldset style="margin-top: 3%">
-                                <h2>内容</h2>
+                                <h2>图文详情编辑文本框</h2>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <div id="editor" class="editorHeight">
+                                        <div id="editor" class="editorHeight" >
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
                         </div>
 
-                        <div id="imagesContent"   style="display: none">
-                            <fieldset style="margin-top: 3%">
-                                <legend>图集上传</legend>
-                                <div class="putimg">
-                                    <input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">
-                                </div>
-                            </fieldset>
-                        </div>
+
+                                  <div id="userZindex">
+                                        <fieldset style="margin-top: 3%">
+                                            <h2>作者详情编辑文本框</h2>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div id="userEdit" class="editorHeight" >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                        <!--<div id="imagesContent"   style="display: none">-->
+                            <!--<fieldset style="margin-top: 3%">-->
+                                <!--<legend>图集上传</legend>-->
+                                <!--<div class="putimg">-->
+                                    <!--<input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">-->
+                                <!--</div>-->
+                            <!--</fieldset>-->
+                        <!--</div>-->
+
 
                         <div id="videoContent"  style="display: none;">
                             <fieldset style="margin-top: 1%">
@@ -99,8 +101,20 @@
     </div>
 </div>
 
+<style>
+    .demo-section label {
+        display: block;
+        margin: 15px 0 5px 0;
+    }
+    #get {
+        float: right;
+        margin: 25px auto 0;
+    }
+</style>
 <script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
 <script src="${ctxPath}/static/modular/classroom/classroom/classroom_info.js"></script>
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor-fullscreen-plugin.js"></script>
+<link href="${ctxPath}/static/js/plugins/wangEditor/wangEditor-fullscreen-plugin.css" rel="stylesheet">
 <script>
     var values =${item.columnId};
     var classRoom = $("#classRommVideo");
@@ -108,8 +122,6 @@
     multArrays =${multArr} ;
     $(document).ready(function () {
         modelType = ${modelType};
-
-
         var dataSource = new kendo.data.DataSource({
             transport: {
                 read: {

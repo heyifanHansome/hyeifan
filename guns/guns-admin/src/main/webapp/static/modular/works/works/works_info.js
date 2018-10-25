@@ -126,7 +126,8 @@ WorksInfoDlg.collectData = function() {
     .set('status')
     .set('baseId')
     .set('userId')
-    .set('video')
+        .set('role')
+        .set('video')
     .set('tagId');
 };
 
@@ -188,7 +189,7 @@ $(function() {
     /**
      * 动态获取所有用户
      */
-    var ajax = new $ax(Feng.ctxPath + "/userApi/getAllUserApi", function (data) {
+    /*var ajax = new $ax(Feng.ctxPath + "/userApi/getAllUserApi", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
@@ -197,7 +198,7 @@ $(function() {
     }, function (data) {
 
     });
-    ajax.start();
+    ajax.start();*/
 
 
     /**

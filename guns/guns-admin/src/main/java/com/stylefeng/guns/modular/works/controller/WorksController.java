@@ -9,8 +9,10 @@ import com.stylefeng.guns.core.common.constant.Const;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.FSS;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
+import com.stylefeng.guns.modular.system.dao.Dao;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.warpper.WorksWarpper;
 import com.stylefeng.guns.modular.tag.service.ITagService;
@@ -355,8 +357,19 @@ public  Object deleteVideoByObjectName (String objectName){
         List<Tag> tags = tagService.selectList(entityWrapper);
         return  tags;
     }
-
-
+    @Autowired
+    private Dao dao;
+    @RequestMapping("getUserapiOrManagerByRole")
+    @ResponseBody
+    public Object getUserapiOrManagerByRole(String role){
+        List<Map<String,Object>>result=new ArrayList<>();
+        if("userapi".equals(role)){
+            result=dao.selectBySQL("select id,name from "+ FSS.user_api);
+        }else if("manager".equals(role)){
+            result=dao.selectBySQL("select id,restaurant as name from "+ FSS.restaurant_info_manager);
+        }
+        return result;
+    }
 
 
 }

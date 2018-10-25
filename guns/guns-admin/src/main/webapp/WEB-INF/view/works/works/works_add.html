@@ -31,11 +31,26 @@
 
             </div>
 
-
+            <div class="col-sm-12">
+                <#select name="角色" id="role"/>
+            </div>
             <div class="row">
                 <div class="col-sm-6 b-r" >
-                            <#select id="userId" name="用户" underline="true">
-                            </#select>
+                            <#select id="userId" name="用户" underline="true"/>
+                    <script>
+                        $('#role').change(function () {
+                            if($(this).val()=="manager"||$(this).val()=="userapi"){
+                                $.post(Feng.ctxPath+"/works/getUserapiOrManagerByRole",{role:$(this).val()},function (data) {
+                                    $("#userId").empty();
+                                    for (var i = 0; i < data.length; i++) {
+                                        var jsonObj = data[i];
+                                        $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+                                    }
+                                })
+                            }
+                        });
+                        $('#role').append('<option value="">--请选择--</option>').append('<option value="manager">餐厅</option>').append('<option value="userapi">用户</option>');
+                    </script>
                             <#input id="name" name="作品名称 " value="" underline="true"/>
                     <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>

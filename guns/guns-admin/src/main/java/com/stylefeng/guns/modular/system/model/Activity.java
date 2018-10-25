@@ -1,6 +1,8 @@
 package com.stylefeng.guns.modular.system.model;
 
 import com.baomidou.mybatisplus.enums.IdType;
+
+import java.sql.Timestamp;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -34,10 +36,9 @@ public class Activity extends Model<Activity> {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
-     * 栏目类型ID为活动的ID
+     * 标签ID,逗号隔开,-1:官方推荐,-2:热门
      */
-    @TableField("column_id")
-    private Integer columnId;
+    private Integer tag_id;
     /**
      * 活动名
      */
@@ -58,8 +59,8 @@ public class Activity extends Model<Activity> {
     /**
      * 结束时间
      */
-    @TableField("end_time")
-    private Date endTime;
+//    @TableField("end_time")
+//    private Timestamp endTime;
     /**
      * 城市ID（0：表示全国）
      */

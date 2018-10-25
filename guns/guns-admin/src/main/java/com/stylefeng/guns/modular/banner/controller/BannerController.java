@@ -5,8 +5,10 @@ import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.FSS;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.dao.Dao;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Setting;
 import com.stylefeng.guns.modular.system.model.Tag;
@@ -158,6 +160,18 @@ public class BannerController extends BaseController {
             columnTypeIDs.add(0);
             tagEntityWrapper.in("column_id",columnTypeIDs);
         }
-        return tagService.selectList(tagEntityWrapper);
+        return tagEntityWrapper!=null?tagService.selectList(tagEntityWrapper):new ArrayList<Tag>() {};
+    }
+
+    @Autowired
+    private Dao dao;
+    @RequestMapping("getItemByType")
+    @ResponseBody
+    public Object getItemByType(String type){
+        List<Map<String,Object>>result=new ArrayList<>();
+        if(FSS.classroom.equals(type)){
+            result=dao.selectBySQL("select id,title as name from "+ type);
+        }
+        return result;
     }
 }

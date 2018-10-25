@@ -1,4 +1,6 @@
 @layout("/common/_container.html"){
+<script src="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.js"></script>
+<link href="${ctxPath}/static/modular/cloumnType/columnType/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
@@ -6,11 +8,10 @@
             <div class="row">
                 <div class="col-sm-12 b-r">
                     <input id="id" value="${item.id}" type="hidden"/>
-                    <input id="old_object_name" type="hidden"/>
                     <#input id="title" name="标题" value="${item.title}" underline="true"/>
                     <#avatar_lijun id="picture" name="封面图" avatarImg="${item.picture}"/>
+                    <input id="old_object_name" type="hidden"/>
                     <input id="object_name" name="阿里云OSS删除时用到的key" value="${item.object_name}" type="hidden"/>
-                    <#input id="href" name="广告跳转的超链接" value="${item.href}" underline="true"/>
                     <div id="example" role="application" style="margin-bottom: 3%">
                         <div class="demo-section k-content">
                             <h2>请选择标签</h2>
@@ -28,8 +29,38 @@
                             }
                         </style>
                     </div>
+                    <#select name="广告类型" id="type"/>
+                    <div id="item">
+                        <#select id="item_id" name="广告对象" underline="true"/>
+                    </div>
+                    <div id="url">
+                        <#input id="href" name="广告跳转的超链接" value="${item.href}" underline="true"/>
+                    </div>
                 </div>
                 <script>
+                    $('#type').change(function () {
+                        if($(this).val()!="sys_banner"){
+                            $('#href').val('');
+                            $.ajax({url:Feng.ctxPath+"/banner/getItemByType",data:{type:$(this).val()},success:function (data) {
+                                $("#item_id").empty().next().remove();
+                                for (var i = 0; i < data.length; i++) {
+                                    var jsonObj = data[i];
+                                    $("#item_id").append('<option value="' + jsonObj.id + '" '+('${item.item_id}'==jsonObj.id?'selected="selected"':'')+'>' + jsonObj.name + '</option>');
+                                }
+                                $('#item_id').searchableSelect();
+                                $('#item').show();
+                                $('#url').hide();
+                            }})
+                        }else{
+                            $("#item_id").empty().next().remove();
+                            $('#item').hide();
+                            $('#url').show();
+                        }
+                    });
+                    $('#type').append('<option value="sys_banner"'+('${item.type}'=='sys_banner'?"selected='selected'":"")+'>广告</option>')
+                               .append('<option value="sys_classroom"'+('${item.type}'=='sys_classroom'?"selected='selected'":"")+'>星厨课堂</option>')
+                        .val('${item.type}').change();
+
                     $(function () {
                         var multArrays ="${item.tagId}".split(",") ;
                         var dataSource = new kendo.data.DataSource({

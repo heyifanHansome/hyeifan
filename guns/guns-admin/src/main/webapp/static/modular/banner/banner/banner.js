@@ -98,7 +98,7 @@ $(function () {
     $.ajaxSetup({
         complete:function () {
             $('.img').each(function (i) {
-                if(i>1){
+                if($(this).text().startsWith("http")){
                     var imgUrl=$(this).text();
                     $(this).empty().append('<img src="'+imgUrl+'" style="width: 100%;" />');
                 }

@@ -5,9 +5,11 @@
 
             <div class="row">
                 <div class="row">
-                            <!--<#input id="columnId" name="栏目类型" underline="true"/>-->
                     <#select name="栏目类型" id="columnId"/>
                 <#input id="name" name="标签名"/>
+                    <#avatar id="picture" name="封面图"/>
+                    <input id="old_object_name" type="hidden"/>
+                    <input id="object_name" name="阿里云OSS删除时用到的key" type="hidden"/>
                 </div>
 
             </div>

@@ -7,11 +7,13 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.city.service.ICityService;
+import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.tag.service.ITagService;
 import net.sf.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.activity.service.IActivityService;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -62,7 +65,8 @@ public class ActivityController extends BaseController {
      * 跳转到添加活动管理
      */
     @RequestMapping("/activity_add")
-    public String activityAdd() {
+    public String activityAdd(Model model,String menu_id) {
+        model.addAttribute("menu_id",menu_id);
         return PREFIX + "activity_add.html";
     }
 
@@ -70,7 +74,7 @@ public class ActivityController extends BaseController {
      * 跳转到修改活动管理
      */
     @RequestMapping("/activity_update/{activityId}")
-    public String activityUpdate(@PathVariable Integer activityId, Model model) {
+    public String activityUpdate(@PathVariable Integer activityId, Model model,String menu_id) {
         Activity activity = activityService.selectById(activityId);
         switch (activity.getSourceId()){
             case 0:
@@ -91,6 +95,8 @@ public class ActivityController extends BaseController {
                 activity.setUid(("<span style='color:red;'>(未知角色)</span>"));
                 break;
         }
+        model.addAttribute("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(activity.getStartTime()!=null?activity.getStartTime():new java.util.Date()));
+        model.addAttribute("menu_id",menu_id);
         model.addAttribute("item", activity);
         LogObjectHolder.me().set(activity);
         return PREFIX + "activity_edit.html";
@@ -222,5 +228,32 @@ public class ActivityController extends BaseController {
         ossClient.deleteObject(setting.getAliOssBucket(), object_name);
         ossClient.shutdown();
         return ResultMsg.success("删除成功",null,null);
+    }
+
+    @Autowired
+    private ITagService tagService;
+    @Autowired
+    private IColumnTypeService columnTypeService;
+    @RequestMapping("getTag")
+    @ResponseBody
+    public Object getTag(String menu_id){
+        EntityWrapper<ColumnType>columnTypeEntityWrapper=new EntityWrapper<>();
+        columnTypeEntityWrapper.eq("menu_id",menu_id);
+        List<ColumnType> columnTypeList=columnTypeService.selectList(columnTypeEntityWrapper);
+        EntityWrapper<Tag>tagEntityWrapper=null;
+        if(!Tool.listIsNull(columnTypeList)){
+            tagEntityWrapper=new EntityWrapper<>();
+            List<Integer>columnTypeIDs=new ArrayList<>();
+            for (ColumnType columnType : columnTypeList) {
+                columnTypeIDs.add(columnType.getId());
+            }
+            columnTypeIDs.add(0);
+            tagEntityWrapper.in("column_id",columnTypeIDs);
+        }
+        List<Tag>tags=new ArrayList<>();
+        if(tagEntityWrapper!=null)tags=tagService.selectList(tagEntityWrapper);
+        tags.add(new Tag(-1,"官方推荐"));
+        tags.add(new Tag(-2,"热门"));
+        return tags;
     }
 }

@@ -3,39 +3,21 @@ package com.stylefeng.guns.api.classroom;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
-import com.baomidou.mybatisplus.plugins.pagination.Pagination;
-import com.stylefeng.guns.core.util.QRCodeUtil;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.core.util.Time;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
-import com.stylefeng.guns.modular.lijun.util.OSSClientUtil;
-import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.model.Classroom;
+import com.stylefeng.guns.modular.system.model.ColumnType;
+import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
-import com.stylefeng.guns.modular.system.vo.commentVo;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 import com.stylefeng.guns.modular.userCommentModel.service.IUserCommentService;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.apache.http.HttpResponse;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
-import java.util.List;
 
 
 /**

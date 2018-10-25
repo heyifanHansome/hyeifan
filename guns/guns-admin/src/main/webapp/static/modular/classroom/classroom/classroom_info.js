@@ -62,7 +62,6 @@ ClassroomInfoDlg.close = function () {
  * 收集数据
  */
 ClassroomInfoDlg.collectData = function () {
-    debugger;
     this.classroomInfoData['content'] = ClassroomInfoDlg.editor.txt.html();
     this.classroomInfoData['userDescription'] = ClassroomInfoDlg.heyifanEdit.txt.html();
     this
@@ -81,6 +80,9 @@ ClassroomInfoDlg.collectData = function () {
         .set('images')
         .set('tagId')
         .set('coverphoto')
+        .set('shorTitle')
+        .set('sort')
+        .set('postersTitle')
 };
 
 /**

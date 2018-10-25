@@ -10,12 +10,13 @@
         <result column="object_name" property="object_name" />
         <result column="href" property="href" />
         <result column="tag_id" property="tagId" />
-        <result column="classroom_id" property="classroomId" />
+        <result column="item_id" property="item_id" />
+        <result column="type" property="type" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, picture, object_name, href, tag_id
+        id, title, picture, object_name, href, tag_id, item_id, type
     </sql>
 
 </mapper>

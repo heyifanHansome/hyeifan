@@ -56,7 +56,7 @@ public class classroom {
             List<Banner> banners = bannerService.selectList(bannerEntityWrapper);
             if (banners.size() > 0)  {
                 for (Banner banner : banners) {
-                    bannerMap.put("videoId", banner.getClassroomId());
+                    bannerMap.put("videoId", banner.getItem_id());
                     bannerMap.put("picture", banner.getPicture());
                     bannerTempList.add(bannerMap);
                 }

@@ -22,7 +22,9 @@
         <result column="video" property="video" />
         <result column="tag_id" property="tagId" />
         <result column="coverphoto" property="coverphoto" />
-
+        <result column="number_learning" property="numberLearning" />
+        <result column="posters_title" property="postersTitle" />
+        <result column="user_description" property="userDescription" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

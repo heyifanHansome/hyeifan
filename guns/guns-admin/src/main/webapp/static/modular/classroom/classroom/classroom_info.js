@@ -2,15 +2,15 @@
  * 初始化星厨课堂详情对话框
  */
 var ClassroomInfoDlg = {
-    classroomInfoData : {}
+    classroomInfoData: {}
 };
 
 /**
  * 清除数据
  */
-ClassroomInfoDlg.clearData = function() {
+ClassroomInfoDlg.clearData = function () {
     this.classroomInfoData = {};
-}
+};
 
 /**
  * 设置对话框中的数据
@@ -18,26 +18,25 @@ ClassroomInfoDlg.clearData = function() {
  * @param key 数据的名称
  * @param val 数据的具体值
  */
-ClassroomInfoDlg.set = function(key, val) {
+ClassroomInfoDlg.set = function (key, val) {
 
-    if(key == 'tagId'){
+    if (key == 'tagId') {
         var heyifanArr = $('#tagId').val();
-        var newDemo ="" ;
-        if(heyifanArr!=null&&heyifanArr.length>0){
-            for (var z=0;z< heyifanArr.length;z++) {
-                newDemo += heyifanArr[z] +",";
+        var newDemo = "";
+        if (heyifanArr != null && heyifanArr.length > 0) {
+            for (var z = 0; z < heyifanArr.length; z++) {
+                newDemo += heyifanArr[z] + ",";
             }
             this.classroomInfoData[key] = newDemo;
             return this;
-        }else {
+        } else {
             this.classroomInfoData[key] = '';
             return this;
         }
-    }else {
+    } else {
         this.classroomInfoData[key] = (typeof val == "undefined") ? $("#" + key).val() : val;
         return this;
     }
-
 
 
 };
@@ -48,54 +47,56 @@ ClassroomInfoDlg.set = function(key, val) {
  * @param key 数据的名称
  * @param val 数据的具体值
  */
-ClassroomInfoDlg.get = function(key) {
+ClassroomInfoDlg.get = function (key) {
     return $("#" + key).val();
 };
 
 /**
  * 关闭此对话框
  */
-ClassroomInfoDlg.close = function() {
+ClassroomInfoDlg.close = function () {
     parent.layer.close(window.parent.Classroom.layerIndex);
 };
 
 /**
  * 收集数据
  */
-ClassroomInfoDlg.collectData = function() {
+ClassroomInfoDlg.collectData = function () {
+    debugger;
     this.classroomInfoData['content'] = ClassroomInfoDlg.editor.txt.html();
+    this.classroomInfoData['userDescription'] = ClassroomInfoDlg.heyifanEdit.txt.html();
     this
-    .set('id')
-    .set('columnId')
-    .set('title')
-    .set('thumb')
-    .set('url')
-    .set('description')
-    .set('startTime')
-    .set('cityId')
-    .set('sourceId')
-    .set('uid')
-    .set('publishIp')
-    .set('video')
-    .set('images')
-    .set('tagId')
-    .set('coverphoto')
+        .set('id')
+        .set('columnId')
+        .set('title')
+        .set('thumb')
+        .set('url')
+        .set('description')
+        .set('startTime')
+        .set('cityId')
+        .set('sourceId')
+        .set('uid')
+        .set('publishIp')
+        .set('video')
+        .set('images')
+        .set('tagId')
+        .set('coverphoto')
 };
 
 /**
  * 提交添加
  */
-ClassroomInfoDlg.addSubmit = function() {
+ClassroomInfoDlg.addSubmit = function () {
 
     this.clearData();
     this.collectData();
 
     //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/classroom/add", function(data){
+    var ajax = new $ax(Feng.ctxPath + "/classroom/add", function (data) {
         Feng.success("添加成功!");
         window.parent.Classroom.table.refresh();
         ClassroomInfoDlg.close();
-    },function(data){
+    }, function (data) {
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.classroomInfoData);
@@ -105,27 +106,27 @@ ClassroomInfoDlg.addSubmit = function() {
 /**
  * 提交修改
  */
-ClassroomInfoDlg.editSubmit = function() {
+ClassroomInfoDlg.editSubmit = function () {
 
     this.clearData();
     this.collectData();
 
     //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/classroom/update", function(data){
+    var ajax = new $ax(Feng.ctxPath + "/classroom/update", function (data) {
         Feng.success("修改成功!");
         window.parent.Classroom.table.refresh();
         ClassroomInfoDlg.close();
-    },function(data){
+    }, function (data) {
         Feng.error("修改失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.classroomInfoData);
     ajax.start();
 }
 
-$(function() {
+$(function () {
 
-var modelType;
-var classRoomArray;
+    var modelType;
+    var classRoomArray;
 
     /**
      * 动态获取所有栏目
@@ -159,7 +160,7 @@ var classRoomArray;
     /**
      * 动态获取所有用户
      */
-    var ajax = new $ax(Feng.ctxPath + "/userLoginApi/getAllUserApi", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/userApi/getAllUserApi", function (data) {
         for (var i = 0; i < data.length; i++) {
             var jsonObj = data[i];
             $("#uid").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
@@ -171,22 +172,72 @@ var classRoomArray;
     ajax.start();
 
     // 初始化缩略图上传
-    var avatarUp = new $WebUpload("thumb","/tool/uploadFile");
+    var avatarUp = new $WebUpload("thumb", "/tool/uploadFile");
     avatarUp.setUploadBarId("progressBar");
     avatarUp.init("/tool/uploadFile");
 
 
     // 初始化缩略图上传
-    var avatarUp = new $WebUpload("coverphoto","/tool/uploadFile");
+    var avatarUp = new $WebUpload("coverphoto", "/tool/uploadFile");
     avatarUp.setUploadBarId("progressBar");
     avatarUp.init("/tool/uploadFile");
 
 
-    //初始化编辑器
+    //初始化图文编辑器
 
     var E = window.wangEditor;
     var editor = new E('#editor');
+    editor.customConfig.uploadImgServer = '/img/wangEditImageUpLoad'  // 上传图片到服务器
+    editor.customConfig.uploadImgTimeout = 300000
+    editor.customConfig.uploadImgHooks = {
+        before: function (xhr, editor, files) {
+        },
+        success: function (xhr, editor, result) {
+        },
+        fail: function (xhr, editor, result) {
+            alert("上传图片失败!")
+        },
+        error: function (xhr, editor) {
+        },
+        timeout: function (xhr, editor) {
+        },
+        customInsert: function (insertImg, result, editor) {
+            var url = result.url
+            insertImg(url)
+        }
+    };
     editor.create();
+    E.fullscreen.init('#editor');
     editor.txt.html($("#content").val());
     ClassroomInfoDlg.editor = editor;
+
+
+
+
+    //初始化作者详情编辑器
+    var userEdit = window.wangEditor;
+    var heyifanEditor = new userEdit('#userEdit');
+    heyifanEditor.customConfig.uploadImgServer = '/img/wangEditImageUpLoad';  // 上传图片到服务器
+    heyifanEditor.customConfig.uploadImgTimeout = 300000;
+    heyifanEditor.customConfig.uploadImgHooks = {
+        before: function (xhr, editor, files) {
+        },
+        success: function (xhr, editor, result) {
+        },
+        fail: function (xhr, editor, result) {
+            alert("上传图片失败!")
+        },
+        error: function (xhr, editor) {
+        },
+        timeout: function (xhr, editor) {
+        },
+        customInsert: function (insertImg, result, editor) {
+            var url = result.url
+            insertImg(url)
+        }
+    };
+    heyifanEditor.create();
+    userEdit.fullscreen.init('#userEdit');
+    heyifanEditor.txt.html($("#userDescription").val());
+    ClassroomInfoDlg.heyifanEdit = heyifanEditor;
 });

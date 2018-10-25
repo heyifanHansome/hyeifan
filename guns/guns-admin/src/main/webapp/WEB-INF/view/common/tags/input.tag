@@ -26,6 +26,9 @@
                @if(isNotEmpty(placeholder)){
                placeholder="${placeholder}"
                @}
+               @if(isNotEmpty(placeholder)){
+               placeholder="${placeholder}"
+               @}
                @if(isNotEmpty(clickFun)){
                     onclick="${clickFun}"
                @}

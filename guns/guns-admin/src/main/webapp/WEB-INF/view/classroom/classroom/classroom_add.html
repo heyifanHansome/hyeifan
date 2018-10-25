@@ -6,6 +6,9 @@
 
             <input id="content" name="" type="hidden" underline="true"/>
 
+
+            <input id="userDescription" name="" type="hidden" underline="true"/>
+
             <input id="images" name="" type="hidden" underline="true"/>
 
             <input id="video" name="" type="hidden" underline="true"/>
@@ -30,10 +33,11 @@
                 <div class="col-sm-6">
                     <#select id ="cityId" name="城市"  underline="true">
                     </#select>
-            <#select id ="uid" name="发布者" underline="true">
-            </#select>
-            <#input id="description" name="描述" underline="true"/>
-        <#input id="startTime" name="开播时间" underline="true"/>
+                    <#select id ="uid" name="发布者" underline="true">
+                    </#select>
+                    <#input id="description" name="描述" underline="true"/>
+                    <#input id="startTime" name="开播时间" underline="true"/>
+                    <#input id="postersTitle" name="分享海报标题" span="daskdjlas"  placeholder="请不要填写超出11个字"  underline="true"/>
     </div>
 </div>
 
@@ -43,24 +47,11 @@
             <h2>请选择课堂标签</h2>
             <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
             </select>
-
         </div>
-
-        <style>
-            .demo-section label {
-                display: block;
-                margin: 15px 0 5px 0;
-            }
-            #get {
-                float: right;
-                margin: 25px auto 0;
-            }
-        </style>
-
     </div>
-                       <div >
+                       <div id="contentZindex">
                             <fieldset style="margin-top: 3%">
-                                <h2>内容</h2>
+                                <h2>图文详情编辑文本框</h2>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div id="editor" class="editorHeight" >
@@ -70,14 +61,18 @@
                             </fieldset>
                         </div>
 
-                <div id="imagesContent" style="display:none">
-                    <fieldset style="margin-top: 3%">
-                        <legend>图集上传</legend>
-                        <div class="putimg">
-                            <input id="imageFile" name="imageFile" multiple type="file" data-show-caption="true">
+
+                        <div id="userZindex" >
+                            <fieldset style="margin-top: 3%">
+                                <h2>作者详情编辑文本框</h2>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div id="userEdit" class="editorHeight" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
-                    </fieldset>
-                </div>
 
             <div id="videoContent" style=" display: none">
                 <fieldset style="margin-top: 1%">
@@ -88,6 +83,8 @@
                 </fieldset>
             </div>
 
+</div>
+
 <div class="row btn-group-m-t">
     <div class="col-sm-10">
         <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ClassroomInfoDlg.addSubmit()"/>
@@ -95,18 +92,28 @@
     </div>
 </div>
 </div>
+</div>
 
-</div>
-</div>
-<script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor-fullscreen-plugin.js"></script>
+<link href="${ctxPath}/static/js/plugins/wangEditor/wangEditor-fullscreen-plugin.css" rel="stylesheet">
 <script src="${ctxPath}/static/modular/classroom/classroom/classroom_info.js"></script>
+<style>
+    .demo-section label {
+        display: block;
+        margin: 15px 0 5px 0;
+    }
+    #get {
+        float: right;
+        margin: 25px auto 0;
+    }
+</style>
 <script>
-    laydate.render({
-        elem: '#endTime'
-    });
     laydate.render({
         elem: '#startTime'
     });
+
+
 
 /*初始化kendoui标签下拉框*/
     $(document).ready(function() {

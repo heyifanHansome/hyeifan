@@ -45,9 +45,12 @@ TagInfoDlg.close = function() {
  */
 TagInfoDlg.collectData = function() {
     this
-    .set('id')
-    .set('columnId')
-    .set('name')
+        .set('id')
+        .set('columnId')
+        .set('name')
+        .set('picture')
+        .set('object_name')
+        .set('old_object_name')
     // .set('createTime')
     // .set('updateTime');
 }
@@ -102,4 +105,7 @@ $(function() {
             $("#columnId").append(option);
         }
     });
+    var fileServerPathUp = new $WebUpload("picture","/tool/uploadFile");
+    fileServerPathUp.setUploadBarId("progressBar");
+    fileServerPathUp.init("/tool/uploadFile");
 });

@@ -16,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, column_id, name, create_time, update_time, picture, object_name
+        id, column_id, name, create_time, update_time, picture, object_name, sort
     </sql>
 
 </mapper>

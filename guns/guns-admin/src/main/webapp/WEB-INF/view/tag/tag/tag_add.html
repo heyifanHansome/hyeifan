@@ -7,11 +7,22 @@
                 <div class="row">
                     <#select name="栏目类型" id="columnId"/>
                     <#input id="name" name="标签名"/>
+                    <#input id="sort" name="排序"/>
                     <#avatar id="picture" name="封面图"/>
                     <input id="old_object_name" type="hidden"/>
                     <input id="object_name" name="阿里云OSS删除时用到的key" type="hidden"/>
                 </div>
-
+                <script>
+                    $("#columnId").append('<option value="0">通用标签</option>');
+                    $.post(Feng.ctxPath + "/columnType/getColumnTypeList", function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var jsonObj = data[i];
+                            var optionstring = "";
+                            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#parentId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
+                            $("#columnId").append(option);
+                        }
+                    });
+                </script>
             </div>
 
             <div class="row btn-group-m-t">

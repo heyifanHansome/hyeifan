@@ -51,6 +51,7 @@ TagInfoDlg.collectData = function() {
         .set('picture')
         .set('object_name')
         .set('old_object_name')
+        .set('sort')
     // .set('createTime')
     // .set('updateTime');
 }
@@ -96,15 +97,6 @@ TagInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-    $("#columnId").append('<option value="0">通用标签</option>');
-    $.post(Feng.ctxPath + "/columnType/getColumnTypeList", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            var jsonObj = data[i];
-            var optionstring = "";
-            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#parentId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
-            $("#columnId").append(option);
-        }
-    });
     var fileServerPathUp = new $WebUpload("picture","/tool/uploadFile");
     fileServerPathUp.setUploadBarId("progressBar");
     fileServerPathUp.init("/tool/uploadFile");

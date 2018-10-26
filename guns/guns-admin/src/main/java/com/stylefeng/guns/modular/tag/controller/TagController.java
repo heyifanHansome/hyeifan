@@ -1,10 +1,13 @@
 package com.stylefeng.guns.modular.tag.controller;
 
+import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
 import com.stylefeng.guns.modular.system.model.ColumnType;
+import com.stylefeng.guns.modular.system.model.Setting;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,6 +33,8 @@ import java.util.List;
 public class TagController extends BaseController {
 
     private String PREFIX = "/tag/tag/";
+    @Autowired
+    private SettingConfiguration settingConfiguration;
 
     @Autowired
     private ITagService tagService;
@@ -90,7 +95,13 @@ public class TagController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(Tag tag) {
+    public Object add(Tag tag,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
+            ossClient.shutdown();
+        }
         tag.setCreateTime(new Date(System.currentTimeMillis()));
         tagService.insert(tag);
         return SUCCESS_TIP;
@@ -102,6 +113,11 @@ public class TagController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer tagId) {
+        Tag tag = tagService.selectOne(new EntityWrapper<>(new Tag()).eq("id", tagId));
+        Setting setting=settingConfiguration.getSetting();
+        OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+        if(!Tool.isNull(tag.getObject_name()))ossClient.deleteObject(setting.getAliOssBucket(),tag.getObject_name());
+        ossClient.shutdown();
         tagService.deleteById(tagId);
         return SUCCESS_TIP;
     }
@@ -111,7 +127,13 @@ public class TagController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(Tag tag) {
+    public Object update(Tag tag,String old_object_name) {
+        if(!Tool.isNull(old_object_name)){
+            Setting setting=settingConfiguration.getSetting();
+            OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
+            ossClient.deleteObject(setting.getAliOssBucket(), old_object_name);
+            ossClient.shutdown();
+        }
         tag.setUpdateTime(new Date(System.currentTimeMillis()));
         tagService.updateById(tag);
         return SUCCESS_TIP;
@@ -125,8 +147,8 @@ public class TagController extends BaseController {
     @RequestMapping(value = "/getAllTag")
     @ResponseBody
     public List<Tag> getAllTag() {
-            List<Tag> tags =tagService.selectList(null);
-            return  tags;
+        List<Tag> tags =tagService.selectList(null);
+        return  tags;
     }
 
 

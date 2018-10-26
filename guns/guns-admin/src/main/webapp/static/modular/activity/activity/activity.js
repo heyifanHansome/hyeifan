@@ -20,7 +20,7 @@ Activity.initColumn = function () {
             // {title: '缩略图', field: 'thumb', visible: true, align: 'center', valign: 'middle'},
             // {title: '描述', field: 'description', visible: true, align: 'center', valign: 'middle'},
             {title: '开始时间', field: 'start_time', visible: true, align: 'center', valign: 'middle'},
-            {title: '结束时间', field: 'end_time', visible: true, align: 'center', valign: 'middle'},
+            // {title: '结束时间', field: 'end_time', visible: true, align: 'center', valign: 'middle'},
             {title: '城市名称', field: 'city_id', visible: true, align: 'center', valign: 'middle'},
         {title: '来源', field: 'source_id', visible: true, align: 'center', valign: 'middle'},
         {title: '审核状态', field: 'is_ok', visible: true, align: 'center', valign: 'middle'},
@@ -56,7 +56,7 @@ Activity.openAddActivity = function () {
         area: ['100%', '100%'], //宽高
         fix: false, //不固定
         maxmin: true,
-        content: Feng.ctxPath + '/activity/activity_add'
+        content: Feng.ctxPath + '/activity/activity_add' + '?menu_id='+location.search.split("=")[location.search.split("=").length-1]
     });
     this.layerIndex = index;
 };
@@ -72,7 +72,7 @@ Activity.openActivityDetail = function () {
             area: ['100%', '100%'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/activity/activity_update/' + Activity.seItem.id
+            content: Feng.ctxPath + '/activity/activity_update/' + Activity.seItem.id + '?menu_id='+location.search.split("=")[location.search.split("=").length-1]
         });
         this.layerIndex = index;
     }

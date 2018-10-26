@@ -56,7 +56,6 @@ ActivityInfoDlg.collectData = function() {
     if($('#msg').val()!=undefined)this.activityInfoData['msg'] = $('#msg').val();//给用户发审核不通过的内容
     this.activityInfoData['video'] = $('#video')!=undefined?$('#video').attr('href'):'';
     this.activityInfoData['thumb'] = JSON.stringify(images).toString();
-    console.log(this.activityInfoData.thumb);
     // this.activityInfoData['content'] = ActivityInfoDlg.editor.txt.html();
     var contents=[];
     $(contentArray).each(function () {
@@ -68,18 +67,20 @@ ActivityInfoDlg.collectData = function() {
     this.activityInfoData['content'] = JSON.stringify(contents);
     this
     .set('id')
-    .set('columnId')
+    .set('tag_id')
     .set('title')
         // .set('object_name')
         .set('old_object_name')
     .set('description')
     .set('startTime')
-    .set('endTime')
+    // .set('endTime')
     .set('cityId')
         .set('sourceId')
         .set('video_object_name')
         .set('is_ok')
         .set('applyNum')
+    this.activityInfoData.tag_id=this.activityInfoData.tag_id!=null?this.activityInfoData.tag_id.join(","):"";
+
 }
 
 /**
@@ -90,7 +91,7 @@ ActivityInfoDlg.addSubmit = function() {
     this.clearData();
     this.collectData();
     if(isNaN(this.activityInfoData.applyNum)){
-        alert("报名人数只能是数字");
+        Feng.error("报名人数只能是数字");
         return false;
     }
     //提交信息
@@ -112,7 +113,7 @@ ActivityInfoDlg.editSubmit = function() {
     this.clearData();
     this.collectData();
     if(isNaN(this.activityInfoData.applyNum)){
-        alert("报名人数只能是数字");
+        Feng.error("报名人数只能是数字")
         return false;
     }
     //提交信息
@@ -145,14 +146,6 @@ $(function() {
         $('#cityId').searchableSelect();
     });
     $('#is_ok').val($.trim($('#is_ok_').val())).change();
-    $.post(Feng.ctxPath + "/columnType/getColumnTypeList", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            var jsonObj = data[i];
-            var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#columnId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
-            $("#columnId").append(option);
-        }
-        $('#columnId').searchableSelect();
-    });
     Feng.initValidator("noticeInfoForm", ActivityInfoDlg.validateFields);
     // 初始化编辑器
     // var E = window.wangEditor;

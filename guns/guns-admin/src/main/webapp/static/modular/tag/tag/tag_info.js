@@ -48,7 +48,6 @@ TagInfoDlg.collectData = function() {
     .set('id')
     .set('columnId')
     .set('name')
-    .set('sort')
     // .set('createTime')
     // .set('updateTime');
 }

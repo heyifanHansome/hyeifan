@@ -418,8 +418,10 @@ public class userApiInteface {
             }
             result.put("jumpPages",jumpPages);
 
-            //开始放入加精内容
-            Map<String,Object>news=new HashMap<>();
+            //开始放入加精内容(资讯/课堂按照 首页加精→最新修改时间排序 活动/作品(用户-餐厅)按照 定位最近→最新修改时间排序)
+            //1活动,3资讯,1课堂,3资讯,1用户作品,3资讯,1餐厅作品,3资讯
+            //每个map有一个type字段,用以区分展示的是大图小图
+            List<Map<String,Object>>news=new ArrayList<>();
 
 
             return ResultMsg.success("查询成功",null,result);

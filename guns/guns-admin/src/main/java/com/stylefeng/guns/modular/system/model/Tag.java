@@ -65,4 +65,12 @@ public class Tag extends Model<Tag> {
     protected Serializable pkVal() {
         return this.id;
     }
+
+    public Tag() {
+    }
+
+    public Tag(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

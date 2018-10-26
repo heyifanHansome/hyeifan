@@ -127,11 +127,13 @@ public class Classroom extends Model<Classroom> {
 
 
     @TableField("sort")
-    private String sort;
+    private Integer sort;
 
     @TableField("shor_title")
     private String shorTitle;
 
+    @TableField("browse_count")
+    private Integer browseCount;
 
     @Override
     protected Serializable pkVal() {

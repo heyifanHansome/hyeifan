@@ -6,13 +6,9 @@ import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.banner.service.IBannerService;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
-import com.stylefeng.guns.modular.system.model.Banner;
-import com.stylefeng.guns.modular.system.model.Classroom;
-import com.stylefeng.guns.modular.system.model.Picture;
-import com.stylefeng.guns.modular.system.model.Tag;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.tag.service.ITagService;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.ibatis.annotations.Param;
+import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -40,6 +36,8 @@ public class classroom {
 
     @Autowired
     private IPictureService pictureService;
+    @Autowired
+    private IUserFabulousService userFabulousService;
 
     /**
      * 星厨课堂首页
@@ -69,20 +67,20 @@ public class classroom {
                     bannerMap.put("picture", banner.getPicture());
                     bannerTempList.add(bannerMap);
                 }
-            } else {
             }
             /**
              * 标签数组封装
              */
             List<Map<String, Object>> tagTempList = new ArrayList<>();
             EntityWrapper<Tag> tagEntityWrapper = new EntityWrapper<>();
-            tagEntityWrapper.where("column_id={0} or column_id={1}", 25, 27).orderBy("sort");
+            tagEntityWrapper.where("column_id={0} or column_id={1}", 25, 27).orderDesc(Collections.singleton("sort"));
             List<Tag> tags = tagService.selectList(tagEntityWrapper);
             if (tags.size() > 0) {
                 for (Tag tag : tags) {
                     Map<String, Object> tagMap = new HashMap<>();
                     tagMap.put("name", tag.getName());
                     tagMap.put("picture", tag.getPicture());
+                    tagMap.put("sort",tag.getSort());
                     tagTempList.add(tagMap);
                 }
             } else {
@@ -103,28 +101,33 @@ public class classroom {
                     recommendMap.put("videoId", classroom.getId());
                     recommendTempList.add(recommendMap);
                 }
-            } else {
             }
-
             /**
-             * 视频集合
+             * 视频课程集合
              */
             List<Map<String, Object>> videoTempList = new ArrayList<>();
             EntityWrapper<Classroom> classroomEntityWrapperList = new EntityWrapper<>();
-            classroomEntityWrapperList.orderDesc(Collections.singleton("create_time"));
+            classroomEntityWrapperList.where("column_id={0}",27).orderDesc(Collections.singleton("create_time"));
             List<Classroom> videoMapList = classroomService.selectList(classroomEntityWrapperList);
             if (videoMapList.size() > 0) {
                 for (Classroom classroom : videoMapList) {
                     Map<String, Object> videoMap = new HashMap<>();
                     videoMap.put("thumb", classroom.getThumb());
                     videoMap.put("title", classroom.getTitle());
+                    videoMap.put("column_id",classroom.getColumnId());
                     videoMap.put("id", classroom.getId());
                     String[] heyifanArr = classroom.getTagId().split(",");
                     for (String heyifan : heyifanArr) {
                         if (heyifan.equals("5")) {
                         } else if (heyifan.equals("6")) {
                         } else {
-                            tagName = (tagService.selectById(Integer.parseInt(heyifan))).getName();
+                            Tag tag = tagService.selectById(Integer.parseInt(heyifan)) ;
+                            if (tag == null) {
+
+                            }else {
+                                tagName = tag.getName();
+                            }
+
                         }
                     }
                     videoMap.put("tagName", tagName);
@@ -132,12 +135,10 @@ public class classroom {
                     videoTempList.add(videoMap);
                 }
 
-            } else {
             }
             /**
              * 电子菜谱数组集合
              */
-
             List<Map<String, Object>> recipsTempList = new ArrayList<>();
             EntityWrapper<Classroom> recipesEntity = new EntityWrapper<>();
             recipesEntity.where("column_id={0}", 25);
@@ -154,10 +155,20 @@ public class classroom {
                         if (heyifan.equals("5")) {
                         } else if (heyifan.equals("6")) {
                         } else {
-                            tagName = (tagService.selectById(Integer.parseInt(heyifan))).getName();
+                            Tag tag = tagService.selectById(Integer.parseInt(heyifan)) ;
+                            if (tag == null) {
+
+                            }else {
+                                tagName = tag.getName();
+                            }
                         }
                     }
                     recipesMap.put("tagName", tagName);
+                    recipesMap.put("browseCount","");
+                    EntityWrapper<UserFabulous> userFabulousEntityWrapper = new EntityWrapper<>();
+                    userFabulousEntityWrapper.where("column_id={0} and works_id={1}",   25 , classroom.getId());
+                    List<UserFabulous> userFabulousList =userFabulousService.selectList(userFabulousEntityWrapper);
+                    recipesMap.put("likeCount",userFabulousList.size());
                     recipsTempList.add(recipesMap);
                 }
             }
@@ -228,6 +239,8 @@ public class classroom {
     @ResponseBody
     ResultMsg getVideoInfoById(Integer id) {
         Map<String, Object> heyifanMap = null;
+        List<Map<String, Object>> contentInfo = new ArrayList<>();
+        List<Map<String, Object>> userInfo = new ArrayList<>();
         List<Map<String, Object>> videoInfoList = null;
         try {
             heyifanMap = new HashMap<>();
@@ -267,6 +280,19 @@ public class classroom {
             } else {
 
             }
+
+
+            if (classroom !=null) {
+                Map<String, Object> contentTemp = new HashMap<>();
+                contentTemp.put("content", classroom.getContent());
+                contentInfo.add(contentTemp);
+            }
+            if (classroom !=null) {
+                Map<String, Object> userTemp = new HashMap<>();
+                userTemp.put("userDescription", classroom.getUserDescription());
+                userInfo.add(userTemp);
+            }
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return ResultMsg.unSuccess("接口调用失败!");
@@ -277,7 +303,11 @@ public class classroom {
 
 
     /**
-     * 点击猜猜喜欢课程跳转的页面
+     *
+     * @param id  传入视频标签id
+     * @param pageSize 分页大小
+     * @param pageNo 分页页码
+     * @return 封装好的Map集合
      */
     @RequestMapping("clickGuess")
     @ResponseBody
@@ -285,8 +315,7 @@ public class classroom {
                          @RequestParam(value = "pageNo", defaultValue = "1", required = false) Integer pageNo) {
         Map<String, Object> heyifanMap = new HashMap<>();
         List<Map<String, Object>> tagList = new ArrayList<>();
-        List<Map<String, Object>> contentInfo = new ArrayList<>();
-        List<Map<String, Object>> userInfo = new ArrayList<>();
+
 
         String tagName = tagService.selectById(id).getName();
         try {
@@ -312,24 +341,17 @@ public class classroom {
                 }
             }
 
-            if (classroomList.size() > 0) {
-                Map<String, Object> contentTemp = new HashMap<>();
-                contentTemp.put("content", classroomList.get(0).getContent());
-                contentInfo.add(contentTemp);
-            }
-            if (classroomList.size() > 0) {
-                Map<String, Object> userTemp = new HashMap<>();
-                userTemp.put("userDescription", classroomList.get(0).getUserDescription());
-                userInfo.add(userTemp);
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResultMsg.fail("调用接口失败!", HttpStatus.BAD_REQUEST.toString(), "");
         }
-
-        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), "");
+        heyifanMap.put("likeGuess",tagList);
+        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), heyifanMap);
     }
+
+
+
+
 
 
 }

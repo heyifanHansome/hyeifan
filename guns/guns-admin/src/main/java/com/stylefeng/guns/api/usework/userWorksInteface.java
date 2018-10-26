@@ -253,7 +253,7 @@ public class userWorksInteface {
     }
 
     /**
-     * 点赞取消赞公用接口
+     * 点赞接口
      *
      * @param userFabulous 点赞表
      * @return

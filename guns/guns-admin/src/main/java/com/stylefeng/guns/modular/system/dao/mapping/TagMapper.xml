@@ -11,6 +11,7 @@
         <result column="update_time" property="updateTime" />
         <result column="picture" property="picture" />
         <result column="object_name" property="object_name" />
+        <result column="sort" property="sort" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

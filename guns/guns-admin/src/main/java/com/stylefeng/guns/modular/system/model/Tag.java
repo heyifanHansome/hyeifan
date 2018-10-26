@@ -56,6 +56,10 @@ public class Tag extends Model<Tag> {
     private String picture;
 
     private String object_name;
+    /**
+     * 排序字段
+     */
+    private Integer sort;
 
     @Override
     protected Serializable pkVal() {

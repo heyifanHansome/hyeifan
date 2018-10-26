@@ -77,14 +77,14 @@ public class ActivityController extends BaseController {
     public String activityUpdate(@PathVariable Integer activityId, Model model,String menu_id) {
         Activity activity = activityService.selectById(activityId);
         switch (activity.getSourceId()){
-            case 0:
+            case "0":
                 User user=new User();
                 user.setId(Integer.valueOf(activity.getUid()));
                 EntityWrapper<User>userEntityWrapper=new EntityWrapper<>(user);
                 user=userService.selectOne(userEntityWrapper);
                 activity.setUid(((user!=null?user.getName():"<span style='color:red;'>该管理员已被删除</span>")+"<span style='color:red;'>(管理员)</span>"));
                 break;
-            case 1:
+            case "1":
                 UserApi api=new UserApi();
                 api.setId(Integer.valueOf(activity.getUid()));
                 EntityWrapper<UserApi>apiEntityWrapper=new EntityWrapper<>(api);

@@ -38,7 +38,7 @@ public class Activity extends Model<Activity> {
     /**
      * 标签ID,逗号隔开,-1:官方推荐,-2:热门
      */
-    private Integer tag_id;
+    private String tag_id;
     /**
      * 活动名
      */
@@ -70,7 +70,7 @@ public class Activity extends Model<Activity> {
      * 来源ID（0：官方，1：个人）
      */
     @TableField("source_id")
-    private Integer sourceId;
+    private String sourceId;
     /**
      * 当是官方时为管理员的ID，是个人时，表示用户的ID
      */

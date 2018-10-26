@@ -12,11 +12,12 @@
         <result column="picture" property="picture" />
         <result column="object_name" property="object_name" />
         <result column="sort" property="sort" />
+        <result column="remark" property="remark" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, column_id, name, create_time, update_time, picture, object_name, sort
+        id, column_id, name, create_time, update_time, picture, object_name, sort, remark
     </sql>
 
 </mapper>

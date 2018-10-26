@@ -4,7 +4,13 @@
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group" id="special" style="display: none;">
+                        <label class="col-sm-3 control-label">ID</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="id" name="id"  type="text">
+                        </div>
+                    </div>
                     <#select name="栏目类型" id="columnId"/>
                     <#input id="name" name="标签名"/>
                     <#input id="sort" name="排序"/>
@@ -21,6 +27,7 @@
                             var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#parentId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
                             $("#columnId").append(option);
                         }
+                        $("#columnId").val("0").bind('change',{id:""},special).change();
                     });
                 </script>
             </div>
@@ -33,7 +40,6 @@
             </div>
         </div>
 
-        <input id="id" name="" type="hidden"/>
         <input id="createTime" type="hidden"/>
         <input id="updateTime"  type="hidden"/>
     </div>

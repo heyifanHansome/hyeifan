@@ -4,7 +4,17 @@
         <div class="form-horizontal">
 
             <div class="row">
-                <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group" id="special" style="display: none;">
+                        <label class="col-sm-3 control-label">ID</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="new_id" name="new_id" value="${item.id}" type="text" placeholder="通用标签为特殊标签,ID只能输入负数" />
+                            <input class="form-control" id="id" name="id" value="${item.id}" type="hidden" placeholder="通用标签为特殊标签,ID只能输入负数" />
+                            </br>
+                            <input class="form-control" id="remark" name="remark" value="${item.remark}" type="text" placeholder="通用标签需要联系业务逻辑,请勿随意添加" />
+                            <span style="color: red;">(备注)</span>
+                        </div>
+                    </div>
                     <!--<#input id="columnId" name="栏目类型" value="${item.columnId}" underline="true"/>-->
                     <#select name="栏目类型" id="columnId"/>
                     <#input id="name" name="标签名" value="${item.name}" />
@@ -22,7 +32,7 @@
                             var option=$('<option value="' + jsonObj.id + '" '+(jsonObj.id==$('#parentId_').val()?'selected="selected"':'')+'>' + jsonObj.name + '</option>')
                             $("#columnId").append(option);
                         }
-                        $("#columnId").val("${item.columnId}").change()
+                        $("#columnId").val("${item.columnId}").bind('change',{id:"${item.id}"},special).change();
                     });
                 </script>
             </div>
@@ -35,7 +45,6 @@
             </div>
         </div>
 
-        <input id="id" value="${item.id}" type="hidden"/>
         <input id="createTime"  value="${item.createTime}"  type="hidden"/>
         <input id="updateTime"  value="${item.updateTime}"  type="hidden"/>
     </div>

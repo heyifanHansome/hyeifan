@@ -3,9 +3,12 @@ package com.stylefeng.guns.modular.tag.controller;
 import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.modular.cloumnType.service.IColumnTypeService;
+import com.stylefeng.guns.modular.lijun.util.FSS;
 import com.stylefeng.guns.modular.lijun.util.SettingConfiguration;
 import com.stylefeng.guns.modular.lijun.util.Tool;
+import com.stylefeng.guns.modular.system.dao.Dao;
 import com.stylefeng.guns.modular.system.model.ColumnType;
 import com.stylefeng.guns.modular.system.model.Setting;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -89,7 +93,8 @@ public class TagController extends BaseController {
         }
         return tags;
     }
-
+@Autowired
+private Dao dao;
     /**
      * 新增标签管理表
      */
@@ -103,7 +108,21 @@ public class TagController extends BaseController {
             ossClient.shutdown();
         }
         tag.setCreateTime(new Date(System.currentTimeMillis()));
-        tagService.insert(tag);
+        if(!Tool.isNull(tag.getId())){
+            List<Tag>tags=tagService.selectList(new EntityWrapper<>(new Tag()).eq("id",tag.getId()));
+            if(!Tool.listIsNull(tags))return new ErrorTip(500,"id为"+tag.getId()+"的标签已经存在");
+            dao.insertBySQL("insert into "+ FSS.tag+" values("+tag.getId()+","
+                            +(!Tool.isNull(tag.getColumnId())?("'"+tag.getColumnId()+"'"):"null")+","
+                            +(!Tool.isNull(tag.getName())?("'"+tag.getName()+"'"):"null")+","
+                            +(!Tool.isNull(tag.getCreateTime())?("'"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tag.getCreateTime()) +"'"):"null")+","
+                            +(!Tool.isNull(tag.getUpdateTime())?("'"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tag.getUpdateTime())+"'"):"null")+","
+                            +(!Tool.isNull(tag.getPicture())?("'"+tag.getPicture()+"'"):"null")+","
+                            +(!Tool.isNull(tag.getObject_name())?("'"+tag.getObject_name()+"'"):"null")+","
+                            +(!Tool.isNull(tag.getSort())?("'"+tag.getSort()+"'"):"null")+","
+                            +(!Tool.isNull(tag.getRemark())?("'"+tag.getRemark()+"'"):"null")+")");
+        }else{
+            tagService.insert(tag);
+        }
         return SUCCESS_TIP;
     }
 
@@ -113,6 +132,7 @@ public class TagController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer tagId) {
+        if(tagId<1)return new ErrorTip(500,"通用(特殊)标签无法通过后台删除,请联系技术支持");
         Tag tag = tagService.selectOne(new EntityWrapper<>(new Tag()).eq("id", tagId));
         Setting setting=settingConfiguration.getSetting();
         OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
@@ -127,7 +147,7 @@ public class TagController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(Tag tag,String old_object_name) {
+    public Object update(Tag tag,String old_object_name,String new_id) {
         if(!Tool.isNull(old_object_name)){
             Setting setting=settingConfiguration.getSetting();
             OSSClient ossClient = new OSSClient(setting.getAliOssEndpoint(), setting.getAliOssAccessId(), setting.getAliOssAccessKey());
@@ -135,7 +155,28 @@ public class TagController extends BaseController {
             ossClient.shutdown();
         }
         tag.setUpdateTime(new Date(System.currentTimeMillis()));
-        tagService.updateById(tag);
+        if(!"0".equals(tag.getColumnId().trim())&&Integer.valueOf(new_id)<1){
+            tagService.deleteById(tag.getId());
+            tagService.insert(tag);
+        }else if("0".equals(tag.getColumnId().trim())){
+            if(!new_id.equals(tag.getId().toString())){
+                List<Tag>tags=tagService.selectList(new EntityWrapper<>(new Tag()).eq("id",new_id));
+                if(!Tool.listIsNull(tags))return new ErrorTip(500,"id为"+new_id+"的标签已经存在");
+            }
+            dao.updateBySQL("update "+FSS.tag+" set "+
+                            (tag.getColumnId()!=null?(" column_id='"+tag.getColumnId()+"',"):"")+
+                            (tag.getName()!=null?(" name='"+tag.getName()+"',"):"")+
+                            (tag.getCreateTime()!=null?(" create_time='"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tag.getCreateTime())+"',"):"")+
+                            (tag.getUpdateTime()!=null?(" update_time='"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tag.getUpdateTime())+"',"):"")+
+                            (tag.getPicture()!=null?(" picture='"+tag.getPicture()+"',"):"")+
+                            (tag.getObject_name()!=null?(" object_name='"+tag.getObject_name()+"',"):"")+
+                            (tag.getSort()!=null?(" sort='"+tag.getSort()+"',"):"")+
+                            (tag.getRemark()!=null?(" remark='"+tag.getRemark()+"',"):"")+
+                            " id="+new_id+" where id="+tag.getId()
+                    );
+        }else{
+            tagService.updateById(tag);
+        }
         return SUCCESS_TIP;
     }
 

@@ -59,7 +59,9 @@ public class Tag extends Model<Tag> {
     /**
      * 排序字段
      */
-    private Integer sort;
+    private String sort;
+
+    private String remark;
 
     @Override
     protected Serializable pkVal() {

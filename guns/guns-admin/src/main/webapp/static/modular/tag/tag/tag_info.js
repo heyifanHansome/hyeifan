@@ -63,12 +63,19 @@ TagInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    if(isNaN(this.tagInfoData.id)||parseInt(this.tagInfoData.id)>0){
+        Feng.error("特殊标签ID只能输入负数");
+        return false;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/tag/add", function(data){
-        Feng.success("添加成功!");
-        window.parent.Tag.table.refresh();
-        TagInfoDlg.close();
+        if(data.code!=200){
+            Feng.error("添加失败!" + data.message + "!");
+        }else{
+            Feng.success("添加成功!");
+            window.parent.Tag.table.refresh();
+            TagInfoDlg.close();
+        }
     },function(data){
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
@@ -83,12 +90,20 @@ TagInfoDlg.editSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    this.tagInfoData.new_id=$.trim($("#new_id").val());
+    if(this.tagInfoData.columnId=="0"&&(isNaN(this.tagInfoData.new_id)||parseInt(this.tagInfoData.new_id)>0)){
+        Feng.error("特殊标签ID只能输入负数");
+        return false;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/tag/update", function(data){
-        Feng.success("修改成功!");
-        window.parent.Tag.table.refresh();
-        TagInfoDlg.close();
+        if(data.code!=200){
+            Feng.error("修改失败!" + data.message + "!");
+        }else{
+            Feng.success("修改成功!");
+            window.parent.Tag.table.refresh();
+            TagInfoDlg.close();
+        }
     },function(data){
         Feng.error("修改失败!" + data.responseJSON.message + "!");
     });
@@ -101,3 +116,11 @@ $(function() {
     fileServerPathUp.setUploadBarId("progressBar");
     fileServerPathUp.init("/tool/uploadFile");
 });
+function special(e) {
+    if($(this).val()=="0"){
+        $('#special').show();
+   }else{
+        $('#special').hide();
+        $('#id').val(e.data.id);
+   }
+}

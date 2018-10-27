@@ -306,7 +306,6 @@ public class classroom {
                 studyLogService.insert(studyLog);
             }
 
-
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return ResultMsg.unSuccess("接口调用失败!");

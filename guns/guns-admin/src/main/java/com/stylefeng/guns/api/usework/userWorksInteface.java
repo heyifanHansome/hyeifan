@@ -14,34 +14,25 @@ import com.stylefeng.guns.modular.tagRelation.service.ITagRelationService;
 import com.stylefeng.guns.modular.userCommentModel.service.IUserCommentService;
 import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
 import com.stylefeng.guns.modular.works.service.IWorksService;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import io.swagger.annotations.*;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Heyifan Cotter on 2018/10/17. 用户发布作品接口
+ *  用户发布作品接口
+ * Created by Heyifan Cotter on 2018/10/17.
  */
 
-
+@Api(value = "作品发布Contrller",tags = "作品发布接口")
 @RequestMapping("userWorksApi")
 @Controller
 public class userWorksInteface {

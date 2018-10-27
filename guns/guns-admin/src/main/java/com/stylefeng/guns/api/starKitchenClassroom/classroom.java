@@ -7,21 +7,26 @@ import com.stylefeng.guns.modular.banner.service.IBannerService;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.system.service.IStudyLogService;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
 /**
- * Created by Heyifan Cotter on 2018/10/23. 星厨课堂前台接口
+ * 星厨课堂前台接口
+ * Created by Heyifan Cotter on 2018/10/23.
  */
+@Api(tags = "星厨课堂接口")
 @RequestMapping("professionalVideo")
 @Controller
 public class classroom {
@@ -47,7 +52,59 @@ public class classroom {
      *
      * @return
      */
-    @RequestMapping("coverPage")
+    @ApiOperation(value = "获取星厨课堂首页的数据", notes = "点击星厨课堂需要调用的后台接口")
+    @ApiResponses(@ApiResponse(code = 200, message = "\"data\": {\n" +
+            "\t\"videoMap\" + '视频Map': [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"column_id\": 不用管这个字段, \n" +
+            "\t\t\t\"numberLearing\": \"学习人数\",\n" +
+            "\t\t\t\"thumb\": \"缩略图Url\",\n" +
+            "\t\t\t\"id\": \"当前视频id\"\n" +
+            "\t\t\t\"title\": \"视频标题\"\n" +
+            "\t\t\t\"tagName\": \"分类名称\"\n" +
+            "\t\t}\n" +
+            "\t\n" +
+            "\t],\n" +
+            "\t\"recommendMap\": \"推荐视频Map\" [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"shorTitle\": \"短标题\",\n" +
+            "\t\t\t\"coverPhoto\": \"封面图\",\n" +
+            "\t\t\t\"videoId\": \"当前视频id\"\n" +
+            "\t\t}\n" +
+            "\n" +
+            "\t],\n" +
+            "\t\"bannerMap\":\"广告Map\" [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"videoId\": \"跳转视频的id\",\n" +
+            "\t\t\t\"picture\": \"图片url\"\n" +
+            "\t\t},\n" +
+            "\t\n" +
+            "\t],\n" +
+            "\t\"tagMap\": [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"name\": \"分类名称\",\n" +
+            "\t\t\t\"sort\": \"排序\",\n" +
+            "\t\t\t\"picture\": \"图片url\"\n" +
+            "\t\t},\n" +
+            "\t\n" +
+            "\t],\n" +
+            "\t\"recipesMap\": \"电子菜谱Map\" [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"browseCount\": \"浏览量\",\n" +
+            "\t\t\t\"descritpion\": \"描述\",\n" +
+            "\t\t\t\"likeCount\": \"点赞数量\",\n" +
+            "\t\t\t\"title\": \"标题\",\n" +
+            "\t\t\t\"tagName\": \"分类名称\",\n" +
+            "\t\t\t\"thmb\": \"封面图\",\n" +
+            "\t\t\t\"recipesId\": \"电子菜谱id\"\n" +
+            "\t\t}\n" +
+            "\t]\n" +
+            "},\n" +
+            "\"detail\": \"200\",\n" +
+            "\"message\": \"接口访问成功!\",\n" +
+            "\"success\": \"ok\" "
+    ))
+    @RequestMapping(value = "coverPage", method = RequestMethod.POST)
     @ResponseBody
     ResultMsg coverPage() {
         /**
@@ -175,6 +232,7 @@ public class classroom {
                     recipsTempList.add(recipesMap);
                 }
             }
+
             heyifanMap.put("bannerMap", bannerTempList);
             heyifanMap.put("tagMap", tagTempList);
             heyifanMap.put("recommendMap", recommendTempList);
@@ -192,7 +250,29 @@ public class classroom {
     /**
      * 获取全部星厨课堂列表
      */
-    @RequestMapping("getAllStartVideo")
+    @ApiOperation(value = "获取星厨课堂列表", notes = "点击获取星厨课堂类表接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10"),
+            @ApiImplicitParam(name = "pageNo", value = "页码", required = true, defaultValue = "1")
+    })
+    @ApiResponses(@ApiResponse(code = 200, message = "{\n" +
+            "    \"data\": {\n" +
+            "        \"allVideoMap\": [\n" +
+            "            {\n" +
+            "                \"numberLearing\": \"学习人数\",\n" +
+            "                \"thumb\": \"缩略图url\",\n" +
+            "                \"id\": \"视频id\",\n" +
+            "                \"title\": \"视频标题\",\n" +
+            "                \"tagName\": \"分类名称\"\n" +
+            "            }\n" +
+            "            \n" +
+            "         \n" +
+            "    },\n" +
+            "    \"detail\": \"200\",\n" +
+            "    \"message\": \"接口调用成功!\",\n" +
+            "    \"success\": \"ok\"\n" +
+            "}"))
+    @RequestMapping(value = "getAllStartVideo",method = RequestMethod.POST)
     @ResponseBody
     ResultMsg getAllStartVideo(@RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
                                @RequestParam(value = "pageNo", defaultValue = "1", required = false) Integer pageNo) {
@@ -211,14 +291,18 @@ public class classroom {
                 tempMap.put("id", classroom.getId());
                 tempMap.put("thumb", classroom.getThumb());
                 tempMap.put("title", classroom.getTitle());
-                tempMap.put("time", classroom.getCreateTime());
                 tempMap.put("numberLearing", "");
                 String[] heyifanArr = classroom.getTagId().split(",");
                 for (String heyifan : heyifanArr) {
                     if (heyifan.equals("5")) {
                     } else if (heyifan.equals("6")) {
                     } else {
-                        tagName = (tagService.selectById(Integer.parseInt(heyifan))).getName();
+                        Tag tag = tagService.selectById(Integer.parseInt(heyifan));
+                        if (tag == null) {
+
+                        } else {
+                            tagName = tag.getName();
+                        }
                     }
                 }
                 tempMap.put("tagName", tagName);
@@ -238,10 +322,42 @@ public class classroom {
      * @param id 传入的视频id
      * @return 视频详情页面需要的map数据
      */
-    @RequestMapping("getVideoInfoById")
+    @ApiOperation(value = "根据id进入详情页", notes = "根据id进入详情页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "传入id", required = true),
+            @ApiImplicitParam(name = "phone", value = "当前用户电话号码", required = true)
+    }
+    )
+    @ApiResponses(@ApiResponse(code = 200, message = "{\n" +
+            "    \"data\": {\n" +
+            "        \"userInfo\":\"作者详情页面需要的数据\" [\n" +
+            "            {\n" +
+            "                \"userDescription\": \"<p>ad</p>\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"videoMapInfo\": [\n" +
+            "            {\n" +
+            "                \"tagId\": -1,                \n" +
+            "                \"description\": \"12\",\n" +
+            "                \"commitCount\": \"\",\n" +
+            "                \"likeCount\": \"\",\n" +
+            "                \"title\": \"23\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"contentInfo\":\"图文需要的数据\" [\n" +
+            "            {\n" +
+            "                \"content\": \"<p>asd</p>\"\n" +
+            "            }\n" +
+            "        ]\n" +
+            "    },\n" +
+            "    \"detail\": \"200\",\n" +
+            "    \"message\": \"接口调用成功!\",\n" +
+            "    \"success\": \"ok\"\n" +
+            "}"))
+    @RequestMapping(value = "getVideoInfoById", method = RequestMethod.POST)
     @ResponseBody
-    ResultMsg getVideoInfoById(Integer id, Integer phone) {
-
+    ResultMsg getVideoInfoById(Integer id, String phone) {
+        Integer newPhone = Integer.parseInt(phone.substring(0, phone.length() - 1));
         Map<String, Object> heyifanMap = null;
         List<Map<String, Object>> contentInfo = new ArrayList<>();
         List<Map<String, Object>> userInfo = new ArrayList<>();
@@ -262,7 +378,9 @@ public class classroom {
                     EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
                     entityWrapper.eq("base_id", classroom.getVideo());
                     List<Picture> pictures = pictureService.selectList(entityWrapper);
-                    tempVideo.put("videoHttp", pictures.get(0));
+                    if (pictures.size() > 0) {
+                        tempVideo.put("videoHttp", pictures.get(0));
+                    }
                 }
                 /**
                  * 分类id
@@ -288,6 +406,7 @@ public class classroom {
                 Map<String, Object> contentTemp = new HashMap<>();
                 contentTemp.put("content", classroom.getContent());
                 contentInfo.add(contentTemp);
+
             }
             if (classroom != null) {
                 Map<String, Object> userTemp = new HashMap<>();
@@ -296,21 +415,23 @@ public class classroom {
             }
             //学习人数添加判断
             EntityWrapper<StudyLog> entityWrapper = new EntityWrapper<>();
-            entityWrapper.where("column_id={0} and works_id={1} and phone = {3}", classroom.getColumnId(), classroom.getId(), phone);
+            entityWrapper.where("column_id={0} and works_id={1} and phone = {2}", classroom.getColumnId(), classroom.getId(), newPhone);
             List<StudyLog> list = studyLogService.selectList(entityWrapper);
             if (list.size() == 0) {
                 StudyLog studyLog = new StudyLog();
                 studyLog.setColumnId(classroom.getColumnId());
-                studyLog.setId(classroom.getId());
-                studyLog.setPhone(phone);
+                studyLog.setWorksId(id);
+                studyLog.setPhone(Integer.parseInt(phone.substring(0, phone.length() - 1)));
                 studyLogService.insert(studyLog);
             }
 
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResultMsg.unSuccess("接口调用失败!");
         }
         heyifanMap.put("videoMapInfo", videoInfoList);
+        heyifanMap.put("userInfo", userInfo);
+        heyifanMap.put("contentInfo", contentInfo);
         return ResultMsg.success("接口调用成功!", HttpStatus.OK.toString(), heyifanMap);
     }
 
@@ -321,7 +442,32 @@ public class classroom {
      * @param pageNo   分页页码
      * @return 封装好的Map集合
      */
-    @RequestMapping("clickGuess")
+    @ApiOperation(value = "猜猜可能喜欢的课程前台接口", notes = "猜猜可能喜欢的课程前台接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "出入视频相关的id", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "页大小", required = false, defaultValue = "10"),
+            @ApiImplicitParam(name = "pageNo", value = "页码", required = false, defaultValue = "1"),
+    })
+    @ApiResponses(@ApiResponse(code = 200, message = "{\n" +
+            "    \"data\": {\n" +
+            "        \"likeGuess\": [\n" +
+            "\n" +
+            "            {\n" +
+            "                \"thumb\": \"缩略图\",\n" +
+            "                \"browseCount\": \"浏览量\",\n" +
+            "                \"description\": \"描述\",\n" +
+            "                \"likeCount\": \"点赞量\",\n" +
+            "                \"tagName\": \"分类名称\",\n" +
+            "                \"title\": \"标题\"\n" +
+            "            },\n" +
+            "\n" +
+            "        ]\n" +
+            "    },\n" +
+            "    \"detail\": \"200\",\n" +
+            "    \"message\": \"调用接口成功!\",\n" +
+            "    \"success\": \"ok\"\n" +
+            "}"))
+    @RequestMapping(value = "clickGuess", method = RequestMethod.POST)
     @ResponseBody
     ResultMsg clickGuess(@RequestParam(value = "id", required = true) Integer id, @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
                          @RequestParam(value = "pageNo", defaultValue = "1", required = false) Integer pageNo) {

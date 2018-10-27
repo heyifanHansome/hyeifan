@@ -8,6 +8,7 @@ import com.stylefeng.guns.modular.system.model.UserFabulous;
 import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,10 +34,12 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * 通用接口
+ * 前台API通用接口
  * Created by Heyifan Cotter on 2018/10/26.
  */
+@Api(value = "前台通用Controller",tags = "前台通用接口")
 @RequestMapping("commonApi")
+@Controller
 public class commonApi {
 
     @Autowired
@@ -50,9 +54,6 @@ public class commonApi {
     @ApiOperation(value = "点赞取消赞", notes = "用来取消点赞")
     @ApiImplicitParams(
             @ApiImplicitParam(name = "UserFabulous", value = "点赞对象", required = true)
-//            @ApiImplicitParam(name = "userId", value = "点赞用户id", required = true),
-//            @ApiImplicitParam(name = "columnId", value = "点赞板块id", required = true),
-//            @ApiImplicitParam(name = "worksId", value = "具体id", required = true)
     )
     @RequestMapping(value = "clickLike", method = RequestMethod.POST)
     @ResponseBody

@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -15,6 +19,9 @@ import java.io.Serializable;
  * @author stylefeng
  * @since 2018-10-26
  */
+@Getter
+@Setter
+@ToString
 @TableName("sys_study_log")
 public class StudyLog extends Model<StudyLog> {
 
@@ -41,50 +48,8 @@ public class StudyLog extends Model<StudyLog> {
     private Integer phone;
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getColumnId() {
-        return columnId;
-    }
-
-    public void setColumnId(Integer columnId) {
-        this.columnId = columnId;
-    }
-
-    public Integer getWorksId() {
-        return worksId;
-    }
-
-    public void setWorksId(Integer worksId) {
-        this.worksId = worksId;
-    }
-
-    public Integer getPhone() {
-        return phone;
-    }
-
-    public void setPhone(Integer phone) {
-        this.phone = phone;
-    }
-
     @Override
     protected Serializable pkVal() {
         return this.id;
-    }
-
-    @Override
-    public String toString() {
-        return "StudyLog{" +
-        "id=" + id +
-        ", columnId=" + columnId +
-        ", worksId=" + worksId +
-        ", phone=" + phone +
-        "}";
     }
 }

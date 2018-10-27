@@ -7,6 +7,7 @@ import com.stylefeng.guns.modular.banner.service.IBannerService;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IStudyLogService;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class classroom {
     private IPictureService pictureService;
     @Autowired
     private IUserFabulousService userFabulousService;
+    @Autowired
+    private IStudyLogService studyLogService;
 
     /**
      * 星厨课堂首页
@@ -80,7 +83,7 @@ public class classroom {
                     Map<String, Object> tagMap = new HashMap<>();
                     tagMap.put("name", tag.getName());
                     tagMap.put("picture", tag.getPicture());
-                    tagMap.put("sort",tag.getSort());
+                    tagMap.put("sort", tag.getSort());
                     tagTempList.add(tagMap);
                 }
             } else {
@@ -107,24 +110,24 @@ public class classroom {
              */
             List<Map<String, Object>> videoTempList = new ArrayList<>();
             EntityWrapper<Classroom> classroomEntityWrapperList = new EntityWrapper<>();
-            classroomEntityWrapperList.where("column_id={0}",27).orderDesc(Collections.singleton("create_time"));
+            classroomEntityWrapperList.where("column_id={0}", 27).orderDesc(Collections.singleton("create_time"));
             List<Classroom> videoMapList = classroomService.selectList(classroomEntityWrapperList);
             if (videoMapList.size() > 0) {
                 for (Classroom classroom : videoMapList) {
                     Map<String, Object> videoMap = new HashMap<>();
                     videoMap.put("thumb", classroom.getThumb());
                     videoMap.put("title", classroom.getTitle());
-                    videoMap.put("column_id",classroom.getColumnId());
+                    videoMap.put("column_id", classroom.getColumnId());
                     videoMap.put("id", classroom.getId());
                     String[] heyifanArr = classroom.getTagId().split(",");
                     for (String heyifan : heyifanArr) {
                         if (heyifan.equals("5")) {
                         } else if (heyifan.equals("6")) {
                         } else {
-                            Tag tag = tagService.selectById(Integer.parseInt(heyifan)) ;
+                            Tag tag = tagService.selectById(Integer.parseInt(heyifan));
                             if (tag == null) {
 
-                            }else {
+                            } else {
                                 tagName = tag.getName();
                             }
 
@@ -155,20 +158,20 @@ public class classroom {
                         if (heyifan.equals("5")) {
                         } else if (heyifan.equals("6")) {
                         } else {
-                            Tag tag = tagService.selectById(Integer.parseInt(heyifan)) ;
+                            Tag tag = tagService.selectById(Integer.parseInt(heyifan));
                             if (tag == null) {
 
-                            }else {
+                            } else {
                                 tagName = tag.getName();
                             }
                         }
                     }
                     recipesMap.put("tagName", tagName);
-                    recipesMap.put("browseCount","");
+                    recipesMap.put("browseCount", "");
                     EntityWrapper<UserFabulous> userFabulousEntityWrapper = new EntityWrapper<>();
-                    userFabulousEntityWrapper.where("column_id={0} and works_id={1}",   25 , classroom.getId());
-                    List<UserFabulous> userFabulousList =userFabulousService.selectList(userFabulousEntityWrapper);
-                    recipesMap.put("likeCount",userFabulousList.size());
+                    userFabulousEntityWrapper.where("column_id={0} and works_id={1}", 25, classroom.getId());
+                    List<UserFabulous> userFabulousList = userFabulousService.selectList(userFabulousEntityWrapper);
+                    recipesMap.put("likeCount", userFabulousList.size());
                     recipsTempList.add(recipesMap);
                 }
             }
@@ -187,7 +190,7 @@ public class classroom {
     }
 
     /**
-     * 获取全部星厨课堂视屏列表
+     * 获取全部星厨课堂列表
      */
     @RequestMapping("getAllStartVideo")
     @ResponseBody
@@ -237,7 +240,8 @@ public class classroom {
      */
     @RequestMapping("getVideoInfoById")
     @ResponseBody
-    ResultMsg getVideoInfoById(Integer id) {
+    ResultMsg getVideoInfoById(Integer id, Integer phone) {
+
         Map<String, Object> heyifanMap = null;
         List<Map<String, Object>> contentInfo = new ArrayList<>();
         List<Map<String, Object>> userInfo = new ArrayList<>();
@@ -280,18 +284,28 @@ public class classroom {
             } else {
 
             }
-
-
-            if (classroom !=null) {
+            if (classroom != null) {
                 Map<String, Object> contentTemp = new HashMap<>();
                 contentTemp.put("content", classroom.getContent());
                 contentInfo.add(contentTemp);
             }
-            if (classroom !=null) {
+            if (classroom != null) {
                 Map<String, Object> userTemp = new HashMap<>();
                 userTemp.put("userDescription", classroom.getUserDescription());
                 userInfo.add(userTemp);
             }
+            //学习人数添加判断
+            EntityWrapper<StudyLog> entityWrapper = new EntityWrapper<>();
+            entityWrapper.where("column_id={0} and works_id={1} and phone = {3}", classroom.getColumnId(), classroom.getId(), phone);
+            List<StudyLog> list = studyLogService.selectList(entityWrapper);
+            if (list.size() == 0) {
+                StudyLog studyLog = new StudyLog();
+                studyLog.setColumnId(classroom.getColumnId());
+                studyLog.setId(classroom.getId());
+                studyLog.setPhone(phone);
+                studyLogService.insert(studyLog);
+            }
+
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -303,10 +317,9 @@ public class classroom {
 
 
     /**
-     *
-     * @param id  传入视频标签id
+     * @param id       传入视频标签id
      * @param pageSize 分页大小
-     * @param pageNo 分页页码
+     * @param pageNo   分页页码
      * @return 封装好的Map集合
      */
     @RequestMapping("clickGuess")
@@ -345,13 +358,9 @@ public class classroom {
             e.printStackTrace();
             return ResultMsg.fail("调用接口失败!", HttpStatus.BAD_REQUEST.toString(), "");
         }
-        heyifanMap.put("likeGuess",tagList);
+        heyifanMap.put("likeGuess", tagList);
         return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), heyifanMap);
     }
-
-
-
-
 
 
 }

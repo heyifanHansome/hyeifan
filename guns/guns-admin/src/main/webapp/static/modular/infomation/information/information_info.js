@@ -160,9 +160,10 @@ $(function() {
     ajax.start();
 
     // 初始化缩略图上传
-    var avatarUp = new $WebUpload("thumb");
+    var avatarUp = new $WebUpload("thumb", "/tool/uploadFile");
     avatarUp.setUploadBarId("progressBar");
-    avatarUp.init();
+    avatarUp.init("/tool/uploadFile");
+
 
 
     //初始化编辑器

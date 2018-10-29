@@ -21,6 +21,7 @@
         <result column="user_id" property="userId" />
         <result column="tag_id" property="tagId" />
         <result column="role" property="role" />
+        <result column="thumb" property="thumb" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -53,7 +53,6 @@ public class dynamicApi {
     private IPictureService pictureService;
 
 
-
     @ApiOperation(value = "无关注的动态接口", notes = "无关注的动态接口")
     @ApiResponses(@ApiResponse(code = 200, message = ""))
     ResultMsg clickDynamic() {
@@ -114,22 +113,66 @@ public class dynamicApi {
     @RequestMapping(value = "postNew", method = RequestMethod.POST)
     ResultMsg postNew(@RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo) {
         List<Map<String, Object>> heyifanMap = new ArrayList<>();
-
-
         try {
+            List<Map<String, Object>> firstTempList = new ArrayList<>();
+            //获取当前
             EntityWrapper<Works> entityWrapper = new EntityWrapper<>();
             entityWrapper.orderDesc(Collections.singleton("create_time"));
             List<Works> worksList = worksService.selectList(entityWrapper);
-
+            //前台显示的最新的一天
             Date firstCreateTime = worksList.get(0).getCreateTime();
-            System.out.println(firstCreateTime);
+
 
             EntityWrapper<Works> worksEntityWrapper = new EntityWrapper<>();
-            worksEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0",firstCreateTime);
-            List<Works> works = worksService.selectList(worksEntityWrapper);
-            System.err.println(works.size());
+            /**
+             * 构造当前日期查询条件
+             */
+            worksEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0", firstCreateTime);
+            List<Works> firstWorks = worksService.selectList(worksEntityWrapper);
+            for (Works work : firstWorks) {
+                Map<String, Object> tempMap = new HashMap<>();
+                EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
+                pictureEntityWrapper.eq("base_id", work.getId());
+                if (work.getVideo() != null) {
+                    List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+                    tempMap.put("videoId", work.getId());
+                    tempMap.put("thumb", work.getThumb());
+                } else {
+                    tempMap.put("contentId", work.getId());
+                    tempMap.put("thumb", work.getThumb());
+                }
+            }
+
+            Integer secondSize = firstWorks.size();
+
+            //前台显示的距离最新的一天最近的一天
+            Date secondCreateTime = worksList.get(secondSize).getCreateTime();
+
+
+
+            /**
+             * 构造当前日期查询条件
+             */
+            worksEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0", secondCreateTime);
+            List<Works> secodworks = worksService.selectList(worksEntityWrapper);
+            for (Works work : secodworks) {
+                Map<String, Object> tempMap = new HashMap<>();
+                EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
+                pictureEntityWrapper.eq("base_id", work.getId());
+                if (work.getVideo() != null) {
+                    List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+                    tempMap.put("videoId", work.getId());
+                    tempMap.put("thumb", work.getThumb());
+                } else {
+                    tempMap.put("contentId", work.getId());
+                    tempMap.put("thumb", work.getThumb());
+                }
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
+            return ResultMsg.fail("调用接口异常!", HttpStatus.BAD_REQUEST.toString(), "");
         }
 
 

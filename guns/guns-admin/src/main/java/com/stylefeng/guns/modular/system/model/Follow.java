@@ -13,9 +13,9 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * <p>
+ *
  * 关注关系表
- * </p>
+ *
  *
  * @author stylefeng
  * @since 2018-10-29

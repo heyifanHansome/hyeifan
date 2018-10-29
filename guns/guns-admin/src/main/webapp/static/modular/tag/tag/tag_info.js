@@ -52,6 +52,7 @@ TagInfoDlg.collectData = function() {
         .set('object_name')
         .set('old_object_name')
         .set('sort')
+        .set('remark')
     // .set('createTime')
     // .set('updateTime');
 }

@@ -73,6 +73,9 @@ public class JumpPageController extends BaseController {
 //        List<JumpPage>jumpPages=jumpPageService.selectList(null);
         List<JumpPage>jumpPages=jumpPageService.selectList(new EntityWrapper<>(new JumpPage()).orderBy("orders",true));
         for (JumpPage jumpPage : jumpPages) {
+            if(!Tool.isNull(jumpPage.getPicture())){
+                jumpPage.setPicture("<img src='"+jumpPage.getPicture()+"' style='width:100%;'/>");
+            }
             switch (jumpPage.getCode()){
                 case "0":jumpPage.setCode("星厨俱乐部");
                     break;

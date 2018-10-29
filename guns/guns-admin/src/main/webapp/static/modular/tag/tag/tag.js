@@ -17,7 +17,8 @@ Tag.initColumn = function () {
             // {title: 'id', field: 'id', visible: true, align: 'center', valign: 'middle'},
             {title: '栏目类型', field: 'columnId', visible: true, align: 'center', valign: 'middle'},
         {title: '标签名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-        {title: '图片', field: 'picture', visible: true, align: 'center', valign: 'middle',class:'img'},
+        {title: '图片', field: 'picture', visible: true, align: 'center', valign: 'middle'},
+        {title: '备注', field: 'remark', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '更新时间', field: 'updateTime', visible: true, align: 'center', valign: 'middle'}
     ];
@@ -99,16 +100,6 @@ Tag.search = function () {
 };
 
 $(function () {
-    $.ajaxSetup({
-        complete:function () {
-            $('.img').each(function (i) {
-                if(i>1){
-                    var imgUrl=$(this).text();
-                    $(this).empty().append('<img src="'+imgUrl+'" style="width: 100%;" />');
-                }
-            });
-        }
-    });
     var defaultColunms = Tag.initColumn();
     var table = new BSTable(Tag.id, "/tag/list", defaultColunms);
     table.setPaginationType("client");

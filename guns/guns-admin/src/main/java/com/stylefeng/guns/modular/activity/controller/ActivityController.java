@@ -252,8 +252,7 @@ public class ActivityController extends BaseController {
         }
         List<Tag>tags=new ArrayList<>();
         if(tagEntityWrapper!=null)tags=tagService.selectList(tagEntityWrapper);
-        tags.add(new Tag(-1,"官方推荐"));
-        tags.add(new Tag(-2,"热门"));
+        tags.addAll(tagService.selectList(tagEntityWrapper==null?new EntityWrapper<Tag>().eq("column_id","0"):tagEntityWrapper.eq("column_id","0")));
         return tags;
     }
 }

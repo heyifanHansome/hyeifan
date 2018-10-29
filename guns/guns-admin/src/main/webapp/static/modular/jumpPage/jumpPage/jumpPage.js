@@ -95,16 +95,6 @@ JumpPage.search = function () {
 };
 
 $(function () {
-    $.ajaxSetup({
-        complete:function () {
-            $('.img').each(function (i) {
-                if($(this).text().startsWith("http")){
-                    var imgUrl=$(this).text();
-                    $(this).empty().append('<img src="'+imgUrl+'" style="width: 100%;" />');
-                }
-            });
-        }
-    });
     var defaultColunms = JumpPage.initColumn();
     var table = new BSTable(JumpPage.id, "/jumpPage/list", defaultColunms);
     table.setPaginationType("client");

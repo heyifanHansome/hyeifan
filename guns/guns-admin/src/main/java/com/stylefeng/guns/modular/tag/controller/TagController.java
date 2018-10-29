@@ -82,6 +82,9 @@ public class TagController extends BaseController {
         ew.orderBy("create_time",false);
         List<Tag> tags=tagService.selectList(ew);
         for (Tag tag : tags) {
+            if(!Tool.isNull(tag.getPicture())){
+                tag.setPicture("<img src='"+tag.getPicture()+"' style='width:100%;'/>");
+            }
             if(Tool.isNull(tag.getColumnId())||tag.getColumnId().equals("0")){
                 tag.setColumnId("<span style='color:red;'>通用标签</span>");
             }else{

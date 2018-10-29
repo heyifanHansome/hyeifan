@@ -2,8 +2,7 @@ import com.stylefeng.guns.modular.lijun.util.LocationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class test {
     @Test
@@ -23,4 +22,24 @@ public class test {
         System.err.println(SQL);
     }
 
+    @Test
+    public void ListRemove(){
+        List<Map<String,Object>>list1=new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Map<String,Object>map=new HashMap<>();
+            map.put("data",i);
+            list1.add(map);
+        }
+        System.err.println(list1);
+        Map<String,Object>information=new HashMap<>();
+        Iterator<Map<String,Object>> it=list1.iterator();
+        while (it.hasNext()){
+            System.err.println("--");
+            information.put("data",it.next());
+            it.remove();
+            break;
+        }
+        System.err.println(information);
+        System.err.println(list1);
+    }
 }

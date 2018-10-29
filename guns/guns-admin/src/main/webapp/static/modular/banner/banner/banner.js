@@ -95,16 +95,6 @@ Banner.search = function () {
 };
 
 $(function () {
-    $.ajaxSetup({
-        complete:function () {
-            $('.img').each(function (i) {
-                if($(this).text().startsWith("http")){
-                    var imgUrl=$(this).text();
-                    $(this).empty().append('<img src="'+imgUrl+'" style="width: 100%;" />');
-                }
-            });
-        }
-    });
     var defaultColunms = Banner.initColumn();
     var table = new BSTable(Banner.id, "/banner/list", defaultColunms);
     table.setPaginationType("client");

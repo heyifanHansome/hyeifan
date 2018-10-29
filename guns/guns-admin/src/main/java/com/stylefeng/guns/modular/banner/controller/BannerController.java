@@ -81,7 +81,13 @@ public class BannerController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-        return bannerService.selectList(null);
+        List<Banner>banners=bannerService.selectList(null);
+        for (Banner banner : banners) {
+            if(!Tool.isNull(banner.getPicture())){
+                banner.setPicture("<img src='"+banner.getPicture()+"' style='width:100%;'/>");
+            }
+        }
+        return banners;
     }
 
     /**

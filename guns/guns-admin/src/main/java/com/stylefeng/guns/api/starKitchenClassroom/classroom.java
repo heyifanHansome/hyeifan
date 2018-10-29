@@ -6,25 +6,27 @@ import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.banner.service.IBannerService;
 import com.stylefeng.guns.modular.classroom.service.IClassroomService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
-import com.stylefeng.guns.modular.system.model.Banner;
-import com.stylefeng.guns.modular.system.model.Classroom;
-import com.stylefeng.guns.modular.system.model.Picture;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.model.Tag;
+import com.stylefeng.guns.modular.system.service.IStudyLogService;
 import com.stylefeng.guns.modular.tag.service.ITagService;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.ibatis.annotations.Param;
+import com.stylefeng.guns.modular.userFabulous.service.IUserFabulousService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
 /**
- * Created by Heyifan Cotter on 2018/10/23. 星厨课堂前台接口
+ * 星厨课堂前台接口
+ * Created by Heyifan Cotter on 2018/10/23.
  */
+@Api(tags = "星厨课堂接口")
 @RequestMapping("professionalVideo")
 @Controller
 public class classroom {
@@ -40,13 +42,69 @@ public class classroom {
 
     @Autowired
     private IPictureService pictureService;
+    @Autowired
+    private IUserFabulousService userFabulousService;
+    @Autowired
+    private IStudyLogService studyLogService;
 
     /**
      * 星厨课堂首页
      *
      * @return
      */
-    @RequestMapping("coverPage")
+    @ApiOperation(value = "获取星厨课堂首页的数据", notes = "点击星厨课堂需要调用的后台接口")
+    @ApiResponses(@ApiResponse(code = 200, message = "\"data\": {\n" +
+            "\t\"videoMap\" + '视频Map': [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"column_id\": 不用管这个字段, \n" +
+            "\t\t\t\"numberLearing\": \"学习人数\",\n" +
+            "\t\t\t\"thumb\": \"缩略图Url\",\n" +
+            "\t\t\t\"id\": \"当前视频id\"\n" +
+            "\t\t\t\"title\": \"视频标题\"\n" +
+            "\t\t\t\"tagName\": \"分类名称\"\n" +
+            "\t\t}\n" +
+            "\t\n" +
+            "\t],\n" +
+            "\t\"recommendMap\": \"推荐视频Map\" [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"shorTitle\": \"短标题\",\n" +
+            "\t\t\t\"coverPhoto\": \"封面图\",\n" +
+            "\t\t\t\"videoId\": \"当前视频id\"\n" +
+            "\t\t}\n" +
+            "\n" +
+            "\t],\n" +
+            "\t\"bannerMap\":\"广告Map\" [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"videoId\": \"跳转视频的id\",\n" +
+            "\t\t\t\"picture\": \"图片url\"\n" +
+            "\t\t},\n" +
+            "\t\n" +
+            "\t],\n" +
+            "\t\"tagMap\": [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"name\": \"分类名称\",\n" +
+            "\t\t\t\"sort\": \"排序\",\n" +
+            "\t\t\t\"picture\": \"图片url\"\n" +
+            "\t\t},\n" +
+            "\t\n" +
+            "\t],\n" +
+            "\t\"recipesMap\": \"电子菜谱Map\" [\n" +
+            "\t\t{\n" +
+            "\t\t\t\"browseCount\": \"浏览量\",\n" +
+            "\t\t\t\"descritpion\": \"描述\",\n" +
+            "\t\t\t\"likeCount\": \"点赞数量\",\n" +
+            "\t\t\t\"title\": \"标题\",\n" +
+            "\t\t\t\"tagName\": \"分类名称\",\n" +
+            "\t\t\t\"thmb\": \"封面图\",\n" +
+            "\t\t\t\"recipesId\": \"电子菜谱id\"\n" +
+            "\t\t}\n" +
+            "\t]\n" +
+            "},\n" +
+            "\"detail\": \"200\",\n" +
+            "\"message\": \"接口访问成功!\",\n" +
+            "\"success\": \"ok\" "
+    ))
+    @RequestMapping(value = "coverPage", method = RequestMethod.POST)
     @ResponseBody
     ResultMsg coverPage() {
         /**
@@ -69,20 +127,20 @@ public class classroom {
                     bannerMap.put("picture", banner.getPicture());
                     bannerTempList.add(bannerMap);
                 }
-            } else {
             }
             /**
              * 标签数组封装
              */
             List<Map<String, Object>> tagTempList = new ArrayList<>();
             EntityWrapper<Tag> tagEntityWrapper = new EntityWrapper<>();
-            tagEntityWrapper.where("column_id={0} or column_id={1}", 25, 27).orderBy("sort");
+            tagEntityWrapper.where("column_id={0} or column_id={1}", 25, 27).orderDesc(Collections.singleton("sort"));
             List<Tag> tags = tagService.selectList(tagEntityWrapper);
             if (tags.size() > 0) {
                 for (Tag tag : tags) {
                     Map<String, Object> tagMap = new HashMap<>();
                     tagMap.put("name", tag.getName());
                     tagMap.put("picture", tag.getPicture());
+                    tagMap.put("sort", tag.getSort());
                     tagTempList.add(tagMap);
                 }
             } else {
@@ -103,28 +161,33 @@ public class classroom {
                     recommendMap.put("videoId", classroom.getId());
                     recommendTempList.add(recommendMap);
                 }
-            } else {
             }
-
             /**
-             * 视频集合
+             * 视频课程集合
              */
             List<Map<String, Object>> videoTempList = new ArrayList<>();
             EntityWrapper<Classroom> classroomEntityWrapperList = new EntityWrapper<>();
-            classroomEntityWrapperList.orderDesc(Collections.singleton("create_time"));
+            classroomEntityWrapperList.where("column_id={0}", 27).orderDesc(Collections.singleton("create_time"));
             List<Classroom> videoMapList = classroomService.selectList(classroomEntityWrapperList);
             if (videoMapList.size() > 0) {
                 for (Classroom classroom : videoMapList) {
                     Map<String, Object> videoMap = new HashMap<>();
                     videoMap.put("thumb", classroom.getThumb());
                     videoMap.put("title", classroom.getTitle());
+                    videoMap.put("column_id", classroom.getColumnId());
                     videoMap.put("id", classroom.getId());
                     String[] heyifanArr = classroom.getTagId().split(",");
                     for (String heyifan : heyifanArr) {
                         if (heyifan.equals("5")) {
                         } else if (heyifan.equals("6")) {
                         } else {
-                            tagName = (tagService.selectById(Integer.parseInt(heyifan))).getName();
+                            Tag tag = tagService.selectById(Integer.parseInt(heyifan));
+                            if (tag == null) {
+
+                            } else {
+                                tagName = tag.getName();
+                            }
+
                         }
                     }
                     videoMap.put("tagName", tagName);
@@ -132,12 +195,10 @@ public class classroom {
                     videoTempList.add(videoMap);
                 }
 
-            } else {
             }
             /**
              * 电子菜谱数组集合
              */
-
             List<Map<String, Object>> recipsTempList = new ArrayList<>();
             EntityWrapper<Classroom> recipesEntity = new EntityWrapper<>();
             recipesEntity.where("column_id={0}", 25);
@@ -154,13 +215,24 @@ public class classroom {
                         if (heyifan.equals("5")) {
                         } else if (heyifan.equals("6")) {
                         } else {
-                            tagName = (tagService.selectById(Integer.parseInt(heyifan))).getName();
+                            Tag tag = tagService.selectById(Integer.parseInt(heyifan));
+                            if (tag == null) {
+
+                            } else {
+                                tagName = tag.getName();
+                            }
                         }
                     }
                     recipesMap.put("tagName", tagName);
+                    recipesMap.put("browseCount", "");
+                    EntityWrapper<UserFabulous> userFabulousEntityWrapper = new EntityWrapper<>();
+                    userFabulousEntityWrapper.where("column_id={0} and works_id={1}", 25, classroom.getId());
+                    List<UserFabulous> userFabulousList = userFabulousService.selectList(userFabulousEntityWrapper);
+                    recipesMap.put("likeCount", userFabulousList.size());
                     recipsTempList.add(recipesMap);
                 }
             }
+
             heyifanMap.put("bannerMap", bannerTempList);
             heyifanMap.put("tagMap", tagTempList);
             heyifanMap.put("recommendMap", recommendTempList);
@@ -176,9 +248,31 @@ public class classroom {
     }
 
     /**
-     * 获取全部星厨课堂视屏列表
+     * 获取全部星厨课堂列表
      */
-    @RequestMapping("getAllStartVideo")
+    @ApiOperation(value = "获取星厨课堂列表", notes = "点击获取星厨课堂类表接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10"),
+            @ApiImplicitParam(name = "pageNo", value = "页码", required = true, defaultValue = "1")
+    })
+    @ApiResponses(@ApiResponse(code = 200, message = "{\n" +
+            "    \"data\": {\n" +
+            "        \"allVideoMap\": [\n" +
+            "            {\n" +
+            "                \"numberLearing\": \"学习人数\",\n" +
+            "                \"thumb\": \"缩略图url\",\n" +
+            "                \"id\": \"视频id\",\n" +
+            "                \"title\": \"视频标题\",\n" +
+            "                \"tagName\": \"分类名称\"\n" +
+            "            }\n" +
+            "            \n" +
+            "         \n" +
+            "    },\n" +
+            "    \"detail\": \"200\",\n" +
+            "    \"message\": \"接口调用成功!\",\n" +
+            "    \"success\": \"ok\"\n" +
+            "}"))
+    @RequestMapping(value = "getAllStartVideo",method = RequestMethod.POST)
     @ResponseBody
     ResultMsg getAllStartVideo(@RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
                                @RequestParam(value = "pageNo", defaultValue = "1", required = false) Integer pageNo) {
@@ -197,14 +291,18 @@ public class classroom {
                 tempMap.put("id", classroom.getId());
                 tempMap.put("thumb", classroom.getThumb());
                 tempMap.put("title", classroom.getTitle());
-                tempMap.put("time", classroom.getCreateTime());
                 tempMap.put("numberLearing", "");
                 String[] heyifanArr = classroom.getTagId().split(",");
                 for (String heyifan : heyifanArr) {
                     if (heyifan.equals("5")) {
                     } else if (heyifan.equals("6")) {
                     } else {
-                        tagName = (tagService.selectById(Integer.parseInt(heyifan))).getName();
+                        Tag tag = tagService.selectById(Integer.parseInt(heyifan));
+                        if (tag == null) {
+
+                        } else {
+                            tagName = tag.getName();
+                        }
                     }
                 }
                 tempMap.put("tagName", tagName);
@@ -224,10 +322,45 @@ public class classroom {
      * @param id 传入的视频id
      * @return 视频详情页面需要的map数据
      */
-    @RequestMapping("getVideoInfoById")
+    @ApiOperation(value = "根据id进入详情页", notes = "根据id进入详情页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "传入id", required = true),
+            @ApiImplicitParam(name = "phone", value = "当前用户电话号码", required = true)
+    }
+    )
+    @ApiResponses(@ApiResponse(code = 200, message = "{\n" +
+            "    \"data\": {\n" +
+            "        \"userInfo\":\"作者详情页面需要的数据\" [\n" +
+            "            {\n" +
+            "                \"userDescription\": \"<p>ad</p>\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"videoMapInfo\": [\n" +
+            "            {\n" +
+            "                \"tagId\": -1,                \n" +
+            "                \"description\": \"12\",\n" +
+            "                \"commitCount\": \"\",\n" +
+            "                \"likeCount\": \"\",\n" +
+            "                \"title\": \"23\"\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"contentInfo\":\"图文需要的数据\" [\n" +
+            "            {\n" +
+            "                \"content\": \"<p>asd</p>\"\n" +
+            "            }\n" +
+            "        ]\n" +
+            "    },\n" +
+            "    \"detail\": \"200\",\n" +
+            "    \"message\": \"接口调用成功!\",\n" +
+            "    \"success\": \"ok\"\n" +
+            "}"))
+    @RequestMapping(value = "getVideoInfoById", method = RequestMethod.POST)
     @ResponseBody
-    ResultMsg getVideoInfoById(Integer id) {
+    ResultMsg getVideoInfoById(Integer id, String phone) {
+        Integer newPhone = Integer.parseInt(phone.substring(0, phone.length() - 1));
         Map<String, Object> heyifanMap = null;
+        List<Map<String, Object>> contentInfo = new ArrayList<>();
+        List<Map<String, Object>> userInfo = new ArrayList<>();
         List<Map<String, Object>> videoInfoList = null;
         try {
             heyifanMap = new HashMap<>();
@@ -245,7 +378,9 @@ public class classroom {
                     EntityWrapper<Picture> entityWrapper = new EntityWrapper<>();
                     entityWrapper.eq("base_id", classroom.getVideo());
                     List<Picture> pictures = pictureService.selectList(entityWrapper);
-                    tempVideo.put("videoHttp", pictures.get(0));
+                    if (pictures.size() > 0) {
+                        tempVideo.put("videoHttp", pictures.get(0));
+                    }
                 }
                 /**
                  * 分类id
@@ -267,26 +402,78 @@ public class classroom {
             } else {
 
             }
-        } catch (NumberFormatException e) {
+            if (classroom != null) {
+                Map<String, Object> contentTemp = new HashMap<>();
+                contentTemp.put("content", classroom.getContent());
+                contentInfo.add(contentTemp);
+
+            }
+            if (classroom != null) {
+                Map<String, Object> userTemp = new HashMap<>();
+                userTemp.put("userDescription", classroom.getUserDescription());
+                userInfo.add(userTemp);
+            }
+            //学习人数添加判断
+            EntityWrapper<StudyLog> entityWrapper = new EntityWrapper<>();
+            entityWrapper.where("column_id={0} and works_id={1} and phone = {2}", classroom.getColumnId(), classroom.getId(), newPhone);
+            List<StudyLog> list = studyLogService.selectList(entityWrapper);
+            if (list.size() == 0) {
+                StudyLog studyLog = new StudyLog();
+                studyLog.setColumnId(classroom.getColumnId());
+                studyLog.setWorksId(id);
+                studyLog.setPhone(Integer.parseInt(phone.substring(0, phone.length() - 1)));
+                studyLogService.insert(studyLog);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
             return ResultMsg.unSuccess("接口调用失败!");
         }
         heyifanMap.put("videoMapInfo", videoInfoList);
+        heyifanMap.put("userInfo", userInfo);
+        heyifanMap.put("contentInfo", contentInfo);
         return ResultMsg.success("接口调用成功!", HttpStatus.OK.toString(), heyifanMap);
     }
 
 
     /**
-     * 点击猜猜喜欢课程跳转的页面
+     * @param id       传入视频标签id
+     * @param pageSize 分页大小
+     * @param pageNo   分页页码
+     * @return 封装好的Map集合
      */
-    @RequestMapping("clickGuess")
+    @ApiOperation(value = "猜猜可能喜欢的课程前台接口", notes = "猜猜可能喜欢的课程前台接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "出入视频相关的id", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "页大小", required = false, defaultValue = "10"),
+            @ApiImplicitParam(name = "pageNo", value = "页码", required = false, defaultValue = "1"),
+    })
+    @ApiResponses(@ApiResponse(code = 200, message = "{\n" +
+            "    \"data\": {\n" +
+            "        \"likeGuess\": [\n" +
+            "\n" +
+            "            {\n" +
+            "                \"thumb\": \"缩略图\",\n" +
+            "                \"browseCount\": \"浏览量\",\n" +
+            "                \"description\": \"描述\",\n" +
+            "                \"likeCount\": \"点赞量\",\n" +
+            "                \"tagName\": \"分类名称\",\n" +
+            "                \"title\": \"标题\"\n" +
+            "            },\n" +
+            "\n" +
+            "        ]\n" +
+            "    },\n" +
+            "    \"detail\": \"200\",\n" +
+            "    \"message\": \"调用接口成功!\",\n" +
+            "    \"success\": \"ok\"\n" +
+            "}"))
+    @RequestMapping(value = "clickGuess", method = RequestMethod.POST)
     @ResponseBody
     ResultMsg clickGuess(@RequestParam(value = "id", required = true) Integer id, @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
                          @RequestParam(value = "pageNo", defaultValue = "1", required = false) Integer pageNo) {
         Map<String, Object> heyifanMap = new HashMap<>();
         List<Map<String, Object>> tagList = new ArrayList<>();
-        List<Map<String, Object>> contentInfo = new ArrayList<>();
-        List<Map<String, Object>> userInfo = new ArrayList<>();
+
 
         String tagName = tagService.selectById(id).getName();
         try {
@@ -312,23 +499,12 @@ public class classroom {
                 }
             }
 
-            if (classroomList.size() > 0) {
-                Map<String, Object> contentTemp = new HashMap<>();
-                contentTemp.put("content", classroomList.get(0).getContent());
-                contentInfo.add(contentTemp);
-            }
-            if (classroomList.size() > 0) {
-                Map<String, Object> userTemp = new HashMap<>();
-                userTemp.put("userDescription", classroomList.get(0).getUserDescription());
-                userInfo.add(userTemp);
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResultMsg.fail("调用接口失败!", HttpStatus.BAD_REQUEST.toString(), "");
         }
-
-        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), "");
+        heyifanMap.put("likeGuess", tagList);
+        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), heyifanMap);
     }
 
 

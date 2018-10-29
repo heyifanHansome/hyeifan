@@ -27,7 +27,7 @@
         <result column="user_description" property="userDescription" />
         <result column="sort" property="sort" />
         <result column="shor_title" property="shorTitle" />
-
+        <result column="browse_count" property="browseCount" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -38,6 +38,12 @@
         order by create_time ASC
     </select>
 
+    <select id="findByCommdCretaeTime"  resultMap="BaseResultMap">
+        select a.* from sys_works a
+            where ( DATEDIFF (" +  #{createTime}  + ", a.create_time) = 0 )
+    </select>
+
+
 
 
 </mapper>

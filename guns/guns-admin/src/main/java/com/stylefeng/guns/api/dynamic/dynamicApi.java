@@ -6,6 +6,7 @@ import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.fans.service.IFansService;
 import com.stylefeng.guns.modular.follow.service.IFollowService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
+import com.stylefeng.guns.modular.system.dao.WorksMapper;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
@@ -20,8 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+
+import static com.stylefeng.guns.modular.lijun.util.FSS.works;
 
 /**
  * Created by Heyifan Cotter on 2018/10/29.
@@ -29,6 +33,7 @@ import java.util.*;
  */
 @Api(value = "星厨动态前台接口", tags = "星厨动态前台接口")
 @RequestMapping("dynamicApi")
+@RestController
 public class dynamicApi {
     @Autowired
     private IUserApiService userApiService;
@@ -46,6 +51,7 @@ public class dynamicApi {
     private IWorksService worksService;
     @Autowired
     private IPictureService pictureService;
+
 
 
     @ApiOperation(value = "无关注的动态接口", notes = "无关注的动态接口")
@@ -110,19 +116,24 @@ public class dynamicApi {
         List<Map<String, Object>> heyifanMap = new ArrayList<>();
 
 
-        EntityWrapper<Works> entityWrapper = new EntityWrapper<>();
-        entityWrapper.orderDesc(Collections.singleton("create_time"));
-        List<Works> worksList = worksService.selectList(entityWrapper);
+        try {
+            EntityWrapper<Works> entityWrapper = new EntityWrapper<>();
+            entityWrapper.orderDesc(Collections.singleton("create_time"));
+            List<Works> worksList = worksService.selectList(entityWrapper);
 
-        Date firstCreateTime = worksList.get(0).getCreateTime();
+            Date firstCreateTime = worksList.get(0).getCreateTime();
+            System.out.println(firstCreateTime);
+
+            EntityWrapper<Works> worksEntityWrapper = new EntityWrapper<>();
+            worksEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0",firstCreateTime);
+            List<Works> works = worksService.selectList(worksEntityWrapper);
+            System.err.println(works.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
-        EntityWrapper<Works> worksEntityWrapper = new EntityWrapper<>();
-        worksEntityWrapper.where(("DATEDIFF( {0}, sys_works.create_time) = {1}") == "0", "sys_works.create_time");
-        List<Works> works = worksService.selectList(worksEntityWrapper);
-
-
-        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), heyifanMap);
+        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), works);
 
 
     }

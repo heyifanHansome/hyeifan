@@ -6,6 +6,7 @@ import com.stylefeng.guns.modular.works.service.IWorksService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +24,10 @@ public class WorksServiceImpl extends ServiceImpl<WorksMapper, Works> implements
     @Override
     public List<Map<String, Object>> list(String condition) {
         return this.baseMapper.list(condition);
+    }
+
+    @Override
+    public List<Works> findByCommdCretaeTime(Date createTime) {
+        return this.baseMapper.findByCommdCretaeTime(createTime);
     }
 }

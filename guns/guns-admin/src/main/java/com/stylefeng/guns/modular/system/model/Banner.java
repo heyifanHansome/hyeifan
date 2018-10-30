@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * <p>
@@ -53,6 +54,8 @@ public class Banner extends Model<Banner> {
 
     private String item_id;
     private String type;
+    private Timestamp submit_time;
+    private String is_ok;
 
 
     @Override

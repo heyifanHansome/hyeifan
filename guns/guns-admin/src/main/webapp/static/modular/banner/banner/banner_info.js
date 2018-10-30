@@ -53,7 +53,8 @@ BannerInfoDlg.collectData = function() {
         .set('old_object_name')
     .set('href')
         .set('tagId')
-.set('item_id')
+        .set('item_id')
+        .set('is_ok')
 .set('type');
     this.bannerInfoData.tagId=this.bannerInfoData.tagId!=null?this.bannerInfoData.tagId.join(","):"";
 }

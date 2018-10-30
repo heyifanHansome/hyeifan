@@ -4,15 +4,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ResultMsg;
 import com.stylefeng.guns.modular.lijun.util.*;
-import com.stylefeng.guns.modular.system.dao.Dao;
 import com.stylefeng.guns.modular.system.model.Setting;
 import com.stylefeng.guns.modular.system.model.UserApi;
 import com.stylefeng.guns.modular.system.model.UserInfo;
 import com.stylefeng.guns.modular.system.model.UserTarget;
-import com.stylefeng.guns.modular.system.service.IUserApiService;
-import com.stylefeng.guns.modular.tag.service.ITagService;
-import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
-import com.stylefeng.guns.modular.userTarget.service.IUserTargetService;
 import io.swagger.annotations.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -20,7 +15,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,19 +33,9 @@ import static com.stylefeng.guns.modular.lijun.util.Tool.notEmptySQL;
  */
 @RestController
 @RequestMapping("userApi")
-public class userApiInteface {
-    @Autowired
-    private IUserApiService userApiService;
-    @Autowired
-    private IUserInfoService userInfoService;
-    @Autowired
-    private SettingConfiguration settingConfiguration;
-    @Autowired
-    private ITagService tagService;
-    @Autowired
-    private Dao dao;
-    @Autowired
-    private IUserTargetService userTargetService;
+public class userApiInteface extends PublicMethod{
+
+
     @ApiOperation(value = "获取手机验证码",notes = "根据手机号生成验证码以短信形式发送,返回的内容里会有成功与否的消息")
     @ApiImplicitParams({
             @ApiImplicitParam(name="phone",value = "手机号",required = true)
@@ -87,17 +71,19 @@ public class userApiInteface {
             @ApiImplicitParam(name="phone",value = "手机号",required = true),
             @ApiImplicitParam(name="code",value = "验证码",required = true)
     })
-    @ApiResponses(@ApiResponse(code = 200, message = "data:{" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "birthday:生日," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "createtime:注册时间," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "sex:性别;(0:其他;1:男;2:女)," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "avatar:头像," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "apiToken:登录状态的TOKEN," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "phone:手机号," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "name:昵称," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "id:用户ID," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "email:邮箱," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "}"))
+    @ApiResponses(@ApiResponse(code = 200, message = "data:{\n" +
+            "\n" +
+            "      birthday:生日,\n" +
+            "      createtime:注册时间,\n" +
+            "      sex:性别;(0:其他;1:男;2:女),\n" +
+            "      avatar:头像,\n"  +
+            "      apiToken:登录状态的TOKEN,\n" +
+            "      phone:手机号,\n" +
+            "      name:昵称,\n" +
+            "      id:用户ID,\n" +
+            "      email:邮箱\n" +
+            "\r" +
+            "      }"))
     @RequestMapping(value = "userLogin",method = RequestMethod.POST)
     @ResponseBody
     public ResultMsg userLogin(String phone,String code){
@@ -155,9 +141,7 @@ public class userApiInteface {
             return  ResultMsg.fail("系统错误",e.toString(),null);
         }
     }
-    private List<Map<String, Object>> getUser(String phone,String token){
-        return dao.selectBySQL("SELECT api.*,info.id info_id,info.user_id,info.api_token,info.credits,info.money,info.login_ip,info.create_time,info.update_time,info.real_name,info.id_card,info.city_id,info.join_club,info.appointment,info.enlightening FROM "+FSS.user_api+" api RIGHT JOIN "+FSS.user_info+" info ON (api.id = info.user_id) WHERE api.phone = '"+phone+"' AND info.api_token = '"+token+"'");
-    }
+
     @ApiOperation(value = "用户实名认证",notes = "该接口需要登录状态下,实名认证成功后的信息是存在另外一张表的,非必要时,是不会通过登录等接口返回的,这里只会返回是否成功")
     @ApiImplicitParams({
             @ApiImplicitParam(name="idCard",value = "身份证号码",required = true),
@@ -231,33 +215,37 @@ public class userApiInteface {
             @ApiImplicitParam(name="phone",value = "用户手机号",required = true),
             @ApiImplicitParam(name="token",value = "用户登录的最新token",required = true)
     })
-    @ApiResponses(@ApiResponse(code = 200, message = "data:{targets:" +
-            "[" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "    {" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "      name: 一级板块名称(没什么用)," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "      id: 该板块ID," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "      targets: [该板块包含哪些项目" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "        {" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "          name: 项目名称(用于展示)," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "          id: 项目ID," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "          targets: [该项目有哪几个选项" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "            {" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "              score: 选项对应分数," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "              grade: 选项对应等级," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "              name: 选项用于展示的名称," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "              pid: 选项的父ID," + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "              id: 选项自身ID" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "            }" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "          ]" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "        }" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "      ]" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "    }" + "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "  ],"+ "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "  userTargetIds:[" +"</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "用户提交过审核的(没提交过审核的,你传了用户id这里就是个空数组)第三层(选项)对应的ID数组"+"</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "]" +"</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "  }"+ "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "注意:用户在选择完之后,要以同样格式!要以同样格式!要以同样格式!将三级,也就是最里面\"选项\"有选中的包装起来提交,三级没有选中的,该三级所在的二级就不用包装,如果同一个一级下的二级都没有选中三级,那这个一级也不用包装给我,最后是JSON字符串形式提交"))
+    @ApiResponses(@ApiResponse(code = 200, message = "data:{\n" +
+            "&nbsp;"+"targets:\n" +
+            "&nbsp;&nbsp;"+"[\n" +
+            "&nbsp;&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"name: 一级板块名称(没什么用),\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"id: 该板块ID,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"targets:\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"[\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"name: 项目名称(用于展示),\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"id: 项目ID,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"targets:\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"[\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"score: 选项对应分数,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"grade: 选项对应等级,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"name: 选项用于展示的名称,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"pid: 选项的父ID,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"id: 选项自身ID\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"]\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"]\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"],\n"+
+            "&nbsp;&nbsp;&nbsp;"+"userTargetIds:\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"[\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"用户提交过审核的(没提交过审核的,你传了用户id这里就是个空数组)第三层(选项)对应的ID数组\n"+
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"]\n" +
+            "&nbsp;&nbsp;&nbsp;"+"}\n"+
+            "注意:用户在选择完之后,要以同样格式!要以同样格式!要以同样格式!将三级,也就是最里面选项有选中的包装起来提交,三级没有选中的,该三级所在的二级就不用包装,如果同一个一级下的二级都没有选中三级,那这个一级也不用包装给我,最后是JSON字符串形式提交"))
     @RequestMapping(value="getTargetJSONObjectList",method = RequestMethod.POST)
     @ResponseBody
     public ResultMsg getTargetJSONObjectList(String phone,String token) {
@@ -360,19 +348,127 @@ public class userApiInteface {
         }
     }
 
-
-    @ApiOperation(value = "首页初始界面接口",notes = "")
+    @ApiOperation(value = "首页→加精界面接口",notes = "该接口返回data分为三个大板块:顶部推荐厨师分组→chefs,中部跳转模块→jumpPages,加精内容→news,加精内容(news)是个数组,长度最多为16,数组内对象已经按照UI图去掉不需要内容以及排列好顺序,只需要拿来循环,根据数组内每个对象的type字段(必定会有),来排列每个对象的data(必定会有)字段.另:数组内每个对象可根据type字段来建立,每个对象即使遇到空值或者空数组,我也会填充成空字符串或者空数组")
     @ApiImplicitParams({
             @ApiImplicitParam(name="lng_x",value = "定位坐标,lng或x轴",required = true),
             @ApiImplicitParam(name="lat_y",value = "定位坐标,lat或y轴",required = true)
     })
-    @ApiResponses(@ApiResponse(code = 200, message = "注意返回值里的detail字段的内容提示,该接口data字段没有返回值"))
+    @ApiResponses(@ApiResponse(code = 200, message = "data:{\n" +
+            "&nbsp;"+"chefs:[\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"name:厨师昵称(不是实名),\n" +
+            "&nbsp;&nbsp;&nbsp;"+"id:用来跳转个人主页时传参,\n" +
+            "&nbsp;&nbsp;&nbsp;"+"avatar:头像\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"...\n" +
+            "&nbsp;"+"],\n" +
+            "&nbsp;"+"jumpPages:[\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"code:跳转页面代号(最后再做介绍),\n" +
+            "&nbsp;&nbsp;&nbsp;"+"picture:背景图\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"...\n" +
+            "&nbsp;"+"],\n" +
+            "&nbsp;"+"news:[\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"type:"+ FSS.activity + "\n" +
+            "&nbsp;&nbsp;&nbsp;"+"data:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"thumb:图片,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"hot:true有火焰图标false没有火焰图标,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"id:跳转活动详情页传参,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"applyUsers:[\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"id:用户ID(可跳转个人主页传参用),\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"avatar:头像图片\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"...\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"]\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"type:"+ FSS.banner + "\n" +
+            "&nbsp;&nbsp;&nbsp;"+"data:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"href:广告跳转H5的超链接,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"title:标题,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"hot:true有火焰图标false没有火焰图标,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"picture:图片,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"tagNames:[标签名称数组,...]\n" +
+            "&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"type:"+ FSS.information + "\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"data:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"thumb:图片,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"description:简介文字,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"title:标题,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"hot:true有火焰图标false没有火焰图标,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"column_id:栏目名,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"id:跳转资讯详情页传参用\n" +
+            "&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"type:"+ FSS.classroom + "\n" +
+            "&nbsp;&nbsp;&nbsp;"+"data:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"thumb:图片,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"title:标题,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"hot:true有火焰图标false没有火焰图标,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"column_id:栏目名,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"id:跳转星厨课堂详情页传参用\n" +
+            "&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"type:"+ FSS.works + "_user\n" +
+            "&nbsp;&nbsp;&nbsp;"+"data:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"thumb:图片,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"hot:true有火焰图标false没有火焰图标,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"name:标题,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"id:跳转作品详情页传参用,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"user:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"avatar:头像图片\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"id:用户ID(可跳转个人主页传参用),\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"name:用户昵称\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"{\n" +
+            "&nbsp;&nbsp;&nbsp;"+"type:"+ FSS.works + "_manager\n" +
+            "&nbsp;&nbsp;&nbsp;"+"data:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"thumb:图片,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"hot:true有火焰图标false没有火焰图标,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"name:标题,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"id:跳转作品详情页传参用,\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"user:{\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"avatar:头像图片\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"id:餐厅ID(可跳转餐厅主页传参用),\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"name:餐厅名称\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;&nbsp;"+"}\n" +
+            "&nbsp;&nbsp;"+"},\n" +
+            "&nbsp;&nbsp;"+"...\n" +
+            "&nbsp;"+"]\n" +
+            ""+"}\n" +
+            "最后对于jumpPages做一个约定说明:0→星厨俱乐部,1→拜师学艺,2→厨友圈,3→赛事活动,4→宴席预定,5→星厨招聘"))
     @RequestMapping(value = "indexPartStatic",method = RequestMethod.POST)
     @ResponseBody
     public ResultMsg indexPartStatic(String lng_x,String lat_y){
         if(Tool.isNull(lng_x))return ResultMsg.fail("缺少参数","lng_x",null);
         if(Tool.isNull(lat_y))return ResultMsg.fail("缺少参数","lat_y",null);
         try{
+            //把加精的广告拿最多两条出来,备用(t1.id后加-ROUND(RAND())是为了让有时候一条广告都出不来的效果)
+            List<Map<String,Object>>banners=dao.selectBySQL("SELECT * FROM "+FSS.banner+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.banner+")-(SELECT MIN(id) FROM "+FSS.banner+"))+(SELECT MIN(id) FROM "+FSS.banner+")) AS id) AS t2 WHERE t1.id-ROUND(RAND()) >= t2.id and is_ok='1' and type='"+FSS.banner+"' and FIND_IN_SET('-1',tag_id) order by submit_time desc LIMIT 2");
+            for (int i = 0; i < banners.size(); i++) {
+                if(!Tool.isNull(banners.get(i).get("tag_id"))&&Arrays.asList(banners.get(i).get("tag_id").toString().trim().split(",")).contains("-2")){
+                    banners.get(i).put("hot",true);
+                }else{
+                    banners.get(i).put("hot",false);
+                }
+                List<Map<String,Object>>tags=dao.selectBySQL("select * from "+FSS.tag+" where id in("+banners.get(i).get("tag_id")+") and id not in(-1,-2)");
+                List<String>tagNames=new ArrayList<>();
+                for (Map<String, Object> tag : tags) {
+                    if(!Tool.isNull(tag.get("name")))tagNames.add(tag.get("name").toString());
+                }
+                banners.get(i).put("tagNames",tagNames);
+                Tool.removeMapParmeByKey(banners.get(i),new String[]{"item_id","submit_time","object_name","id","type","is_ok","tag_id"});
+            }
             Map<String,Object>result=new HashMap<>();
             //开始获取推荐厨师
             //1.拉取厨师分组的所有城市ID,用这些城市ID找出城市集合
@@ -382,27 +478,40 @@ public class userApiInteface {
                 cityIds.add(groupUser.get("city_id").toString());
             }
             List<Map<String,Object>>citys=dao.selectBySQL("select * from "+FSS.city+" where id in("+ StringUtils.join(cityIds,",")+") and"+notEmptySQL("lngx","laty"));
+            //注意上面的citys并不代表所有城市,而是被推荐厨师表限制的城市,所以要使用城市最好使用下面的citysAll
+            List<Map<String,Object>>citysAll=dao.selectBySQL("select * from "+FSS.city+" where "+notEmptySQL("lngx","laty"));
             //2.在城市集合中,用前台传进来的lng_x和lat_y两个坐标找出距离最近的城市,的ID
-            Map<String,Object>city=null;
+            Map<String,Object>userGroupCity=null;
             double tempDistanceOne=Double.MAX_VALUE;
             for (int i = 0; i < citys.size(); i++) {
                 double tempDistanceTwo=LocationUtils.getDistance(Double.valueOf(lat_y),Double.valueOf(lng_x),Double.valueOf(citys.get(i).get("laty").toString()),Double.valueOf(citys.get(i).get("lngx").toString()));
                 citys.get(i).put("distance",tempDistanceTwo);//把每个城市距离登录用户的距离记录一下
                 if(tempDistanceTwo<tempDistanceOne){
                     tempDistanceOne=tempDistanceTwo;
-                    city=citys.get(i);
+                    userGroupCity=citys.get(i);
                 }
             }
-            citys=Tool.ListMapOrderByMapKeyDesc(citys,new String[]{"distance"});//根据距离由远到近排列一下
+            //这个cityAll是距离用户最近的city,而不是上面的根据推荐厨师所有的city_id决定的
+            Map<String,Object>cityAll=null;
+            double tempDistanceOne_=Double.MAX_VALUE;
+            for (int i = 0; i < citysAll.size(); i++) {
+                double tempDistanceTwo=LocationUtils.getDistance(Double.valueOf(lat_y),Double.valueOf(lng_x),Double.valueOf(citysAll.get(i).get("laty").toString()),Double.valueOf(citysAll.get(i).get("lngx").toString()));
+                citysAll.get(i).put("distance",tempDistanceTwo);//把每个城市距离登录用户的距离记录一下
+                if(tempDistanceTwo<tempDistanceOne_){
+                    tempDistanceOne_=tempDistanceTwo;
+                    cityAll=citysAll.get(i);
+                }
+            }
+            citysAll=Tool.ListMapOrderByMapKeyDesc(citysAll,new String[]{"distance"});//根据距离由远到近排列一下
             List<String>orderDistanceAscCityIds=new ArrayList<>();
-            for (int i = citys.size() - 1; i >= 0; i--) {
+            for (int i = citysAll.size() - 1; i >= 0; i--) {
                 //再由近到远拿出来单独放着备用(目前就餐厅作品用到,后期修改逻辑可能其他地方也要用)
-                if(!Tool.isNull(citys.get(i).get("id")))orderDistanceAscCityIds.add("'"+citys.get(i).get("id").toString().trim()+"'");
+                if(!Tool.isNull(citysAll.get(i).get("id")))orderDistanceAscCityIds.add("'"+citysAll.get(i).get("id").toString().trim()+"'");
             }
             //3.用最近的城市的id找到对应分组的厨师们,再加上城市ID等于0也就是分组为"全国"的厨师们,放到要返回的结果result里去(这里要特别注意顺序一定要符合数据库里用户的ID顺序)
             LinkedHashSet<String>userIDs=new LinkedHashSet<>();
-            if(city!=null){
-                List<Map<String,Object>>groups=dao.selectBySQL("select * from "+FSS.index_up_group_user+" where city_id='"+city.get("id")+"'");
+            if(userGroupCity!=null){
+                List<Map<String,Object>>groups=dao.selectBySQL("select * from "+FSS.index_up_group_user+" where city_id='"+userGroupCity.get("id")+"'");
                 for (Map<String, Object> group : groups) {
                     if(Tool.mapGetKeyNotEmpty(group,"user_api_id")){
                         for (String user_api_id : group.get("user_api_id").toString().split(",")) {
@@ -422,15 +531,15 @@ public class userApiInteface {
             List<Map<String,Object>>userApis=dao.selectBySQL("select * from "+FSS.user_api+" where id in("+StringUtils.join(userIDs,",")+") order by FIELD(id,"+StringUtils.join(userIDs,",")+")");
             for (int i = 0; i < userApis.size(); i++) {
                 //待处理数据,等接口写完后再对照UI处理
-
+                Tool.removeMapParmeByKey(userApis.get(i),new String[]{"createtime","phone","sex","sex","object_name"});
             }
             result.put("chefs",userApis);
 
             //开始放入跳转板块
-            List<Map<String,Object>>jumpPages=dao.selectBySQL("select * from "+FSS.jump_page+" order by orders asc");
+            List<Map<String,Object>>jumpPages=dao.selectBySQL("select * from "+FSS.jump_page+" where enable='1' order by orders asc");
             for (int i = 0; i < jumpPages.size(); i++) {
                 //待处理数据,等接口写完后再对照UI处理
-
+                Tool.removeMapParmeByKey(jumpPages.get(i),new String[]{"enable","object_name","id","orders"});
             }
             result.put("jumpPages",jumpPages);
 
@@ -440,35 +549,63 @@ public class userApiInteface {
             //①　加精内容推荐1号位和2号位之间②　加精内容推荐5号位和6号位之间
             List<Map<String,Object>>news=new ArrayList<>();
             //先拿12条资讯,并处理好数据,不然进入下面for循环不好弄,进去后把12条资讯按照位置塞进去;
-            List<Map<String,Object>>informations=dao.selectBySQL("select * from "+FSS.information+" where FIND_IN_SET('-1',tag_id) order by update_time desc limit 0,12");
+            List<Map<String,Object>>informations=dao.selectBySQL("select * from "+FSS.information+" where FIND_IN_SET('-1',tag_id) order by create_time desc,update_time desc limit 0,12");
             for (int i = 0; i < informations.size(); i++) {
                 //待处理数据,等接口写完后再对照UI处理
-
+                if(!Tool.isNull(informations.get(i).get("column_id"))){
+                    informations.get(i).put("column_id",getColumnNameByColumnId(informations.get(i).get("column_id")));
+                }
+                if(!Tool.isNull(informations.get(i).get("tag_id"))&&informations.get(i).get("tag_id").toString().contains("-2")){
+                    informations.get(i).put("hot",true);
+                }else{
+                    informations.get(i).put("hot",false);
+                }
+                Tool.removeMapParmeByKey(informations.get(i),new String[]{"create_time","content","uid","update_time","publish_ip","source_id","city_id","images","tag_id"});
             }
             //拿到定位最近的城市,上面已经拿到了,变量名为:city,city为Map<String,Object>,且使用时要防止city为null,为null时,筛选条件就没有city_id,为null时,还说明了,数据库里sys_city所有数据都没有坐标;
             for (int i = 0; i < 16; i++) {
                 if(i==0){//1活动---加精,定位最近→最新开始时间(startTime)排序   之后有广告
                     List<Map<String,Object>>activitys=dao.selectBySQL("select * from (" +
-                            "select * from (SELECT * FROM "+FSS.activity+" where FIND_IN_SET('-1',tag_id) and start_time>NOW() "+(city!=null?("and city_id='"+city.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)a" +
+                            "select * from (SELECT * FROM "+FSS.activity+" where is_ok='1' and FIND_IN_SET('-1',tag_id) and start_time>NOW() "+(cityAll!=null?("and city_id='"+cityAll.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)a" +
                             " union " +
-                            "select * from (SELECT * FROM "+FSS.activity+" where FIND_IN_SET('-1',tag_id) and start_time>NOW() "+(city!=null?("and city_id<>'"+city.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)b" +
+                            "select * from (SELECT * FROM "+FSS.activity+" where is_ok='1' and FIND_IN_SET('-1',tag_id) and start_time>NOW() "+(cityAll!=null?("and city_id<>'"+cityAll.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)b" +
                             " union " +
-                            "select * from (SELECT * FROM "+FSS.activity+" where FIND_IN_SET('-1',tag_id) and start_time<NOW() "+(city!=null?("and city_id='"+city.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)c" +
+                            "select * from (SELECT * FROM "+FSS.activity+" where is_ok='1' and FIND_IN_SET('-1',tag_id) and start_time<NOW() "+(cityAll!=null?("and city_id='"+cityAll.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)c" +
                             " union " +
-                            "select * from (SELECT * FROM "+FSS.activity+" where FIND_IN_SET('-1',tag_id) and start_time<NOW() "+(city!=null?("and city_id<>'"+city.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)d" +
+                            "select * from (SELECT * FROM "+FSS.activity+" where is_ok='1' and FIND_IN_SET('-1',tag_id) and start_time<NOW() "+(cityAll!=null?("and city_id<>'"+cityAll.get("id")+"'"):"")+" ORDER BY start_time desc limit 10)d" +
                             ")e limit 0,1");
                     if(!Tool.listIsNull(activitys)){
                         Map<String,Object>activity=new HashMap<>();
                         activity.put("type",FSS.activity);
-                        //往活动里面塞报名用户[Map集合],最多5个用户,只需要头像和昵称
+                        //往活动里面塞报名用户[Map集合],最多5个用户
                         List<Map<String,Object>>activityApplys=dao.selectBySQL("select * from "+FSS.activity_apply+" where activity_id='"+activitys.get(0).get("id")+"'");
                         List<Map<String,Object>>activityUserApis=new ArrayList<>();
                         if(!Tool.listIsNull(activityApplys)&&!Tool.isNull(activityApplys.get(0).get("user_api_id"))){
-                            activityUserApis=dao.selectBySQL("select * from "+FSS.user_api+" where id in("+activityApplys.get(0).get("user_api_id")+") order by FIELD(id,"+activityApplys.get(0).get("user_api_id")+") limit 0,5");
+                            List<String>user_api_ids=Arrays.asList(activityApplys.get(0).get("user_api_id").toString().split(","));
+                            Collections.reverse(user_api_ids);//select出来的用户顺序是正序的,放页面上需要倒过来最新的5个或少于5个的用户
+                            activityUserApis=dao.selectBySQL("select * from "+FSS.user_api+" where id in("+StringUtils.join(user_api_ids,",")+") order by FIELD(id,"+StringUtils.join(user_api_ids,",")+") limit 0,5");
+                            for (int i1 = 0; i1 < activityUserApis.size(); i1++) {
+                                Tool.removeMapParmeByKey(activityUserApis.get(i1),new String[]{"createtime","phone","sex","object_name","name"});
+                            }
                         }
-                        activitys.get(0).put("users",activityUserApis);
+                        activitys.get(0).put("applyUsers",activityUserApis);
+                        activitys.get(0).put("thumb",Tool.mapGetKeyNotEmpty(activitys.get(0),"thumb")&&activitys.get(0).get("thumb").toString().startsWith("[")&&activitys.get(0).get("thumb").toString().endsWith("]")&&!JSONArray.fromObject(activitys.get(0).get("thumb").toString()).isEmpty()?JSONObject.fromObject(JSONArray.fromObject(activitys.get(0).get("thumb").toString()).get(0)).get("url"):"");
+                        if(!Tool.isNull(activitys.get(0).get("tag_id"))&&Arrays.asList(activitys.get(0).get("tag_id").toString().trim().split(",")).contains("-2")){
+                            activitys.get(0).put("hot",true);
+                        }else{
+                            activitys.get(0).put("hot",false);
+                        }
+                        Tool.removeMapParmeByKey(activitys.get(0),new String[]{"create_time","content","update_time","publish_ip","tag_id","source_id","description"
+                                ,"is_ok","apply_num","city_id","uid","video","video_object_name","end_time","start_time"});
                         activity.put("data",activitys.get(0));
                         news.add(activity);
+                    }
+                    //加广告
+                    if(!Tool.listIsNull(banners)){
+                        Map<String,Object>banner=new HashMap<>();
+                        banner.put("type",FSS.banner);
+                        banner.put("data",banners.get(0));
+                        news.add(banner);
                     }
                 }if(i>0&&i<4){//3资讯---首页加精→最新修改时间排序
                     newsPutInformation(news, informations);
@@ -477,14 +614,30 @@ public class userApiInteface {
                     if(!Tool.listIsNull(classrooms)){
                         Map<String,Object>classroom=new HashMap<>();
                         classroom.put("type",FSS.classroom);
+                        if(!Tool.isNull(classrooms.get(0).get("column_id"))){
+                            classrooms.get(0).put("column_id",getColumnNameByColumnId(classrooms.get(0).get("column_id")));
+                        }
+                        if(!Tool.isNull(classrooms.get(0).get("tag_id"))&&Arrays.asList(classrooms.get(0).get("tag_id").toString().trim().split(",")).contains("-2")){
+                            classrooms.get(0).put("hot",true);
+                        }else{
+                            classrooms.get(0).put("hot",false);
+                        }
+                        Tool.removeMapParmeByKey(classrooms.get(0),new String[]{"images","create_time","description","video","sort","coverphoto","content","start_time","update_time","shor_title","shor_title","user_description","city_id","posters_title","tag_id"});
                         classroom.put("data",classrooms.get(0));
                         news.add(classroom);
+                    }
+                    //加广告
+                    if(!Tool.listIsNull(banners)&&banners.size()>1){
+                        Map<String,Object>banner=new HashMap<>();
+                        banner.put("type",FSS.banner);
+                        banner.put("data",banners.get(1));
+                        news.add(banner);
                     }
                 }if(i>4&&i<8){//3资讯---首页加精→最新修改时间排序
                     newsPutInformation(news, informations);
                 }if(i==8){//1用户作品---定位最近→最新修改时间排序
                     //最近登录,且优先是city这个城市的100人
-                    List<Map<String,Object>>userInfos=dao.selectBySQL("SELECT * FROM "+FSS.user_info+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.user_info+")-(SELECT MIN(id) FROM "+FSS.user_info+"))+(SELECT MIN(id) FROM "+FSS.user_info+")) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY "+(city!=null?("FIELD(city,'"+city.get("id")+"') desc,"):"")+"t1.update_time desc LIMIT 100");
+                    List<Map<String,Object>>userInfos=dao.selectBySQL("SELECT * FROM "+FSS.user_info+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.user_info+")-(SELECT MIN(id) FROM "+FSS.user_info+"))+(SELECT MIN(id) FROM "+FSS.user_info+")) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY "+(cityAll!=null?("FIELD(city_id,'"+cityAll.get("id")+"') desc,"):"")+"t1.update_time desc LIMIT 100");
                     if(!Tool.listIsNull(userInfos)){
                         List<String>userIds=new ArrayList<>();
                         for (int i1 = 0; i1 < userInfos.size(); i1++) {
@@ -494,17 +647,19 @@ public class userApiInteface {
                         }
                         List<Map<String,Object>>workss=new ArrayList<>();
                         //拿这100人去找他们加精的,最新的作品,找出来,取第一个
-                        workss=dao.selectBySQL("select * from "+FSS.works+" where role='userapi' and FIND_IN_SET('-1',tag_id) and user_id in("+StringUtils.join(userIds,",")+") order by update_time desc limit 1");
+                        workss=dao.selectBySQL("select * from "+FSS.works+" where status='1' and role='userapi' and FIND_IN_SET('-1',tag_id) and user_id in("+StringUtils.join(userIds,",")+") order by update_time desc limit 1");
                         if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                             Map<String,Object>works=new HashMap<>();
                             works.put("type",FSS.works+"_user");
+                            repeatWoksFragment(workss);
                             works.put("data",workss.get(0));
                             news.add(works);
                         }else{//如果没有,那就找这100人之外其他人加精的,最新的作品,找出来,取第一个
-                            workss=dao.selectBySQL("select * from "+FSS.works+" where role='userapi' and FIND_IN_SET('-1',tag_id) and user_id not in("+StringUtils.join(userIds,",")+") order by update_time desc limit 1");
+                            workss=dao.selectBySQL("select * from "+FSS.works+" where status='1' and role='userapi' and FIND_IN_SET('-1',tag_id) and user_id not in("+StringUtils.join(userIds,",")+") order by update_time desc limit 1");
                             if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                                 Map<String,Object>works=new HashMap<>();
                                 works.put("type",FSS.works+"_user");
+                                repeatWoksFragment(workss);
                                 works.put("data",workss.get(0));
                                 news.add(works);
                             }
@@ -514,7 +669,7 @@ public class userApiInteface {
                     newsPutInformation(news, informations);
                 }if(i==12){//1餐厅作品---定位最近→最新修改时间排序
                     //优先按照城市由近到远,取100家餐厅
-                    List<Map<String,Object>>managers=dao.selectBySQL("SELECT * FROM "+FSS.restaurant_info_manager+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.restaurant_info_manager+")-(SELECT MIN(id) FROM "+FSS.restaurant_info_manager+"))+(SELECT MIN(id) FROM "+FSS.restaurant_info_manager+")) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY "+(!Tool.listIsNull(orderDistanceAscCityIds)?("FIELD(city,'"+StringUtils.join(orderDistanceAscCityIds,",")+"') desc"):"")+" LIMIT 100");
+                    List<Map<String,Object>>managers=dao.selectBySQL("SELECT * FROM "+FSS.restaurant_info_manager+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.restaurant_info_manager+")-(SELECT MIN(id) FROM "+FSS.restaurant_info_manager+"))+(SELECT MIN(id) FROM "+FSS.restaurant_info_manager+")) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY "+(!Tool.listIsNull(orderDistanceAscCityIds)?("FIELD(city_id,"+StringUtils.join(orderDistanceAscCityIds,",")+") desc"):"")+" LIMIT 100");
                     if(!Tool.listIsNull(managers)){
                         List<String>managerIds=new ArrayList<>();
                         for (int i1 = 0; i1 < managers.size(); i1++) {
@@ -524,17 +679,19 @@ public class userApiInteface {
                         }
                         List<Map<String,Object>>workss=new ArrayList<>();
                         //拿这100家餐厅去找他们加精的,最新的作品,找出来,取第一个
-                        workss=dao.selectBySQL("select * from "+FSS.works+" where role='manager' and FIND_IN_SET('-1',tag_id) and user_id in("+StringUtils.join(managerIds,",")+") order by update_time desc limit 1");
+                        workss=dao.selectBySQL("select * from "+FSS.works+" where status='1' and role='manager' and FIND_IN_SET('-1',tag_id) and user_id in("+StringUtils.join(managerIds,",")+") order by update_time desc limit 1");
                         if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                             Map<String,Object>works=new HashMap<>();
                             works.put("type",FSS.works+"_manager");
+                            repeatWoksFragment(workss);
                             works.put("data",workss.get(0));
                             news.add(works);
                         }else{//如果没有,那就找这100家餐厅之外其他餐厅加精的,最新的作品,找出来,取第一个
-                            workss=dao.selectBySQL("select * from "+FSS.works+" where role='manager' and FIND_IN_SET('-1',tag_id) and user_id not in("+StringUtils.join(managerIds,",")+") order by update_time desc limit 1");
+                            workss=dao.selectBySQL("select * from "+FSS.works+" where status='1' and role='manager' and FIND_IN_SET('-1',tag_id) and user_id not in("+StringUtils.join(managerIds,",")+") order by update_time desc limit 1");
                             if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                                 Map<String,Object>works=new HashMap<>();
                                 works.put("type",FSS.works+"_manager");
+                                repeatWoksFragment(workss);
                                 works.put("data",workss.get(0));
                                 news.add(works);
                             }
@@ -552,16 +709,49 @@ public class userApiInteface {
         }
     }
 
-    private void newsPutInformation(List<Map<String, Object>> news, List<Map<String, Object>> informations) {
-        Map<String,Object>information=new HashMap<>();
-        information.put("type", FSS.information);
-        Iterator<Map<String,Object>> it=informations.iterator();
-        while (it.hasNext()){
-            information.put("data",it.next());
-            it.remove();
-            break;
+    private void repeatWoksFragment(List<Map<String, Object>> workss) {
+        if(!Tool.isNull(workss.get(0).get("images"))){
+            List<String>thumbs=getALiOSSPircturesByBaseId(workss.get(0).get("images").toString());
+            workss.get(0).put("thumb",!Tool.listIsNull(thumbs)?thumbs.get(0):"");
+        }else{
+            workss.get(0).put("thumb","");
         }
-        news.add(information);
+        if(!Tool.isNull(workss.get(0).get("tag_id"))&&Arrays.asList(workss.get(0).get("tag_id").toString().trim().split(",")).contains("-2")){
+            workss.get(0).put("hot",true);
+        }else{
+            workss.get(0).put("hot",false);
+        }
+        if(!Tool.isNull(workss.get(0).get("role"))&&!Tool.isNull(workss.get(0).get("user_id"))&&("manager".equals(workss.get(0).get("role"))||"userapi".equals(workss.get(0).get("role")))){
+            List<Map<String,Object>>users=dao.selectBySQL("select id"+("userapi".equals(workss.get(0).get("role"))?",name":",restaurant")+("userapi".equals(workss.get(0).get("role"))?",avatar":",thumb")+("manager".equals(workss.get(0).get("role"))?",city_id":"")+" from "+("userapi".equals(workss.get(0).get("role"))?FSS.user_api:FSS.restaurant_info_manager)+" where id="+workss.get(0).get("user_id"));
+            String cityName="";
+            if("manager".equals(workss.get(0).get("role"))){
+//                String cityName=getCityNameByCityId();
+                cityName=!Tool.listIsNull(users)&&!Tool.isNull(users.get(0).get("city_id"))?getCityNameByCityId(users.get(0).get("city_id")):"";
+                if(!Tool.listIsNull(users)){
+                    users.get(0).put("restaurant",users.get(0).get("restaurant")+(!Tool.isNull(cityName)?("|"+cityName):""));
+                    Tool.removeMapParmeByKey(users.get(0),new String[]{"city_id"});
+                }
+            }
+            workss.get(0).put("user",!Tool.listIsNull(users)?users.get(0):new HashMap<String,Object>());
+        }else{
+            workss.get(0).put("user",new HashMap<String,Object>());
+        }
+        Tool.removeMapParmeByKey(workss.get(0),new String[]{"seasoning","images","practice","role","create_time","supplementary_material","remark","video","main_ingredient","update_time"
+        ,"status","tag_id","column_id","user_id"});
+    }
+
+    private void newsPutInformation(List<Map<String, Object>> news, List<Map<String, Object>> informations) {
+        if(!Tool.listIsNull(informations)){
+            Map<String,Object>information=new HashMap<>();
+            information.put("type", FSS.information);
+            Iterator<Map<String,Object>> it=informations.iterator();
+            while (it.hasNext()){
+                information.put("data",it.next());
+                it.remove();
+                break;
+            }
+            news.add(information);
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import com.stylefeng.guns.modular.system.model.Setting;
 import com.stylefeng.guns.modular.system.model.Tag;
 import com.stylefeng.guns.modular.tag.service.ITagService;
 import net.sf.json.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -83,6 +84,30 @@ public class BannerController extends BaseController {
     public Object list(String condition) {
         List<Banner>banners=bannerService.selectList(null);
         for (Banner banner : banners) {
+            String[] tagIds=banner.getTagId()!=null?banner.getTagId().trim().split(","):new String[]{};
+            for (int i = 0; i < tagIds.length; i++) {
+                if("-1".equals(tagIds[i].trim()))banner.setTitle(banner.getTitle()+"<span style='color:red;'>(精)</span>");
+                if("-2".equals(tagIds[i].trim()))banner.setTitle(banner.getTitle()+"<span style='color:red;'>(热)</span>");
+            }
+            banner.setIs_ok("1".equals(banner.getIs_ok())?"是":"否");
+//            if(!Tool.isNull(banner.getTagId())){
+//                List<Map<String,Object>>tags=dao.selectBySQL("select * from "+FSS.banner+" where id in("+banner.getTagId()+")");
+//                List<String>tagNames=new ArrayList<>();
+//                for (Map<String, Object> tag : tags) {
+//                    if(!Tool.isNull(tag.get("name")))tagNames.add(tag.get("nasme").toString());
+//                }
+//                banner.setTagId(StringUtils.join(tagNames,","));
+//            }
+            switch (banner.getType()){
+                case FSS.classroom:
+                    List<Map<String,Object>>items=!Tool.isNull(banner.getItem_id())?dao.selectBySQL("select title from "+banner.getType()+" where id="+banner.getItem_id()):new ArrayList<>();
+                    banner.setItem_id("星厨课堂:"+(Tool.isNull(banner.getItem_id())?"<span style='color:red;'>未指定广告对象,请指定广告对象</span>":!Tool.listIsNull(items)?items.get(0).get("title"):"<span style='color:red;'>指定的广告对象已被删除,请清理掉本条广告,或者为本条广告指定其他的广告对象</span>"));
+                    break;
+                case FSS.banner:banner.setItem_id("广告");
+                    break;
+                default:banner.setItem_id("<span style='color:red;'>未知</span>");
+                    break;
+            }
             if(!Tool.isNull(banner.getPicture())){
                 banner.setPicture("<img src='"+banner.getPicture()+"' style='width:100%;'/>");
             }

@@ -12,6 +12,7 @@ import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
 import com.stylefeng.guns.modular.userTarget.service.IUserTargetService;
 import com.stylefeng.guns.modular.works.service.IWorksService;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.stylefeng.guns.modular.lijun.util.FSS.works;
@@ -112,9 +114,13 @@ public class dynamicApi {
 
     @RequestMapping(value = "postNew", method = RequestMethod.POST)
     ResultMsg postNew(@RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo) {
-        List<Map<String, Object>> heyifanMap = new ArrayList<>();
+        Map<String, Object> heyifanMap = new HashMap<>();
+        List<Map<String, Object>> firstTempList = new ArrayList<>();
+        List<Map<String, Object>> secondTempList = new ArrayList<>();
+        EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
+        EntityWrapper<Picture> videoEntityWrapper = new EntityWrapper<>();
         try {
-            List<Map<String, Object>> firstTempList = new ArrayList<>();
+
             //获取当前
             EntityWrapper<Works> entityWrapper = new EntityWrapper<>();
             entityWrapper.orderDesc(Collections.singleton("create_time"));
@@ -129,54 +135,82 @@ public class dynamicApi {
              */
             worksEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0", firstCreateTime);
             List<Works> firstWorks = worksService.selectList(worksEntityWrapper);
+
             for (Works work : firstWorks) {
                 Map<String, Object> tempMap = new HashMap<>();
-                EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
-                pictureEntityWrapper.eq("base_id", work.getId());
-                if (work.getVideo() != null) {
-                    List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
-                    tempMap.put("videoId", work.getId());
-                    tempMap.put("thumb", work.getThumb());
-                } else {
-                    tempMap.put("contentId", work.getId());
-                    tempMap.put("thumb", work.getThumb());
-                }
+//                pictureEntityWrapper.eq("base_id",work.getImages());
+                tempMap.put("id",work.getId());
+                tempMap.put("thumb",work.getThumb());
+                tempMap.put("type",work.getType());
+
+//                videoEntityWrapper.eq("base_id", work.getVideo());
+//                List<Picture> videos = pictureService.selectList(videoEntityWrapper);
+//                List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+//
+//                if (videos.size() > 0) {
+//                    tempMap.put("videoId", work.getId());
+//                    tempMap.put("thumb", work.getThumb());
+//                    tempMap.put("type", "mp4");
+//                }
+//                if(pictures.size()>0){
+//                    tempMap.put("contentId", work.getId());
+//                    tempMap.put("thumb", work.getThumb());
+//                    tempMap.put("type", "picture");
+//                }
+                firstTempList.add(tempMap);
             }
 
             Integer secondSize = firstWorks.size();
-
             //前台显示的距离最新的一天最近的一天
             Date secondCreateTime = worksList.get(secondSize).getCreateTime();
-
-
-
+            System.err.println(secondCreateTime);
             /**
              * 构造当前日期查询条件
              */
-            worksEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0", secondCreateTime);
-            List<Works> secodworks = worksService.selectList(worksEntityWrapper);
+            EntityWrapper<Works> secondEntityWrapper = new EntityWrapper<>();
+            secondEntityWrapper.where(" DATEDIFF ({0} ,sys_works.create_time)=0", secondCreateTime);
+            List<Works> secodworks = worksService.selectList(secondEntityWrapper);
             for (Works work : secodworks) {
-                Map<String, Object> tempMap = new HashMap<>();
-                EntityWrapper<Picture> pictureEntityWrapper = new EntityWrapper<>();
-                pictureEntityWrapper.eq("base_id", work.getId());
-                if (work.getVideo() != null) {
-                    List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
-                    tempMap.put("videoId", work.getId());
-                    tempMap.put("thumb", work.getThumb());
-                } else {
-                    tempMap.put("contentId", work.getId());
-                    tempMap.put("thumb", work.getThumb());
-                }
+
+
+
+
+                Map<String, Object> secondtempMap = new HashMap<>();
+                secondtempMap.put("id",work.getId());
+                secondtempMap.put("thumb",work.getThumb());
+                secondtempMap.put("type",work.getType());
+//                pictureEntityWrapper.eq("base_id",work.getImages());
+//                videoEntityWrapper.eq("base_id", work.getVideo());
+//                List<Picture> videos = pictureService.selectList(videoEntityWrapper);
+//                List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
+//                if (videos.size()>0) {
+//                    secondtempMap.put("videoId", work.getId());
+//                    secondtempMap.put("thumb", work.getThumb());
+//                    secondtempMap.put("type", "mp4");
+//                }
+//                if(pictures.size()>0){
+//                    secondtempMap.put("contentId", work.getId());
+//                    secondtempMap.put("thumb", work.getThumb());
+//                    secondtempMap.put("type", "picture");
+//                }
+                secondTempList.add(secondtempMap);
             }
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String firstTime = simpleDateFormat.format(firstCreateTime);
+            String secondTime = simpleDateFormat.format(secondCreateTime);
+
+            heyifanMap.put("firstCreateTime", firstTime);
+            heyifanMap.put("secondCreateTime", secondTime);
+            heyifanMap.put("firstTempList", firstTempList);
+            heyifanMap.put("secondTempList", secondTempList);
 
 
         } catch (Exception e) {
             e.printStackTrace();
             return ResultMsg.fail("调用接口异常!", HttpStatus.BAD_REQUEST.toString(), "");
         }
-
-
-        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), works);
+        return ResultMsg.success("调用接口成功!", HttpStatus.OK.toString(), heyifanMap);
 
 
     }

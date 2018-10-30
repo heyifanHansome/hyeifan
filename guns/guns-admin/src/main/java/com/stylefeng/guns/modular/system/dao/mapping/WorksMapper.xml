@@ -21,6 +21,7 @@
         <result column="user_id" property="userId" />
         <result column="tag_id" property="tagId" />
         <result column="role" property="role" />
+        <result column="thumb" property="thumb" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -37,6 +38,12 @@
         </if>
         order by create_time ASC
     </select>
+
+    <select id="findByCommdCretaeTime"  resultMap="BaseResultMap">
+        select a.* from sys_works a
+            where ( DATEDIFF (" +  #{createTime}  + ", a.create_time) = 0 )
+    </select>
+
 
 
 

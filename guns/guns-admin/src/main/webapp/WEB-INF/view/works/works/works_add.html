@@ -8,6 +8,8 @@
             <input id="practice" name="" type="hidden" underline="true"/>
 
 
+            <#avatar id="thumb" name="缩略图" avatarImg="" underline="true"/>
+
             <div id="example" role="application" style="margin-bottom: 3%">
                 <div class="demo-section k-content">
                     <h2>请选择活动标签</h2>
@@ -18,16 +20,6 @@
                     <!--<button class="k-button" id="get">Send Invitation</button>-->
                 </div>
 
-                <style>
-                    .demo-section label {
-                        display: block;
-                        margin: 15px 0 5px 0;
-                    }
-                    #get {
-                        float: right;
-                        margin: 25px auto 0;
-                    }
-                </style>
 
             </div>
 
@@ -133,6 +125,17 @@
 </div>
 <script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
+
+<style>
+    .demo-section label {
+        display: block;
+        margin: 15px 0 5px 0;
+    }
+    #get {
+        float: right;
+        margin: 25px auto 0;
+    }
+</style>
 <script>
     $(document).ready(function() {
         var dataSource = new kendo.data.DataSource({

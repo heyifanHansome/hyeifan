@@ -126,8 +126,8 @@ WorksInfoDlg.collectData = function() {
     .set('status')
     .set('baseId')
     .set('userId')
-        .set('role')
-        .set('video')
+    .set('role')
+     .set('video')
     .set('tagId');
 };
 
@@ -199,6 +199,12 @@ $(function() {
 
     });
     ajax.start();*/
+
+    // 初始化缩略图上传
+    var avatarUp = new $WebUpload("thumb", "/tool/uploadFile");
+    avatarUp.setUploadBarId("progressBar");
+    avatarUp.init("/tool/uploadFile");
+
 
 
     /**

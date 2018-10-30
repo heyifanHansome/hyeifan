@@ -4,6 +4,7 @@ import com.stylefeng.guns.modular.system.model.Works;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,4 +19,8 @@ import java.util.Map;
 public interface WorksMapper extends BaseMapper<Works> {
 
     List<Map<String, Object>> list(@Param("condition") String condition);
+
+
+    List<Works> findByCommdCretaeTime(@Param("createTime") Date createTime);
+
 }

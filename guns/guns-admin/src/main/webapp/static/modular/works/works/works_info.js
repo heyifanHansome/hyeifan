@@ -128,7 +128,9 @@ WorksInfoDlg.collectData = function() {
     .set('userId')
     .set('role')
      .set('video')
-    .set('tagId');
+    .set('tagId')
+    .set('type')
+    .set('thumb')
 };
 
 /**
@@ -205,6 +207,19 @@ $(function() {
     avatarUp.setUploadBarId("progressBar");
     avatarUp.init("/tool/uploadFile");
 
+//联动
+    $('#role').change(function () {
+        if($(this).val()=="manager"||$(this).val()=="userapi"){
+            $.post(Feng.ctxPath+"/works/getUserapiOrManagerByRole",{role:$(this).val()},function (data) {
+                $("#userId").empty();
+                for (var i = 0; i < data.length; i++) {
+                    var jsonObj = data[i];
+                    $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+                }
+            })
+        }
+    });
+    $('#role').append('<option value="">--请选择--</option>').append('<option value="manager">餐厅</option>').append('<option value="userapi">用户</option>');
 
 
     /**

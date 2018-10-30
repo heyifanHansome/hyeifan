@@ -15,36 +15,21 @@
                     <h2>请选择活动标签</h2>
                     <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
                     </select>
-
-
-                    <!--<button class="k-button" id="get">Send Invitation</button>-->
                 </div>
 
 
             </div>
 
-            <div class="col-sm-12">
-                <#select name="角色" id="role"/>
             </div>
             <div class="row">
                 <div class="col-sm-6 b-r" >
-                            <#select id="userId" name="用户" underline="true"/>
-                    <script>
-                        $('#role').change(function () {
-                            if($(this).val()=="manager"||$(this).val()=="userapi"){
-                                $.post(Feng.ctxPath+"/works/getUserapiOrManagerByRole",{role:$(this).val()},function (data) {
-                                    $("#userId").empty();
-                                    for (var i = 0; i < data.length; i++) {
-                                        var jsonObj = data[i];
-                                        $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
-                                    }
-                                })
-                            }
-                        });
-                        $('#role').append('<option value="">--请选择--</option>').append('<option value="manager">餐厅</option>').append('<option value="userapi">用户</option>');
-                    </script>
-                            <#input id="name" name="作品名称 " value="" underline="true"/>
-                    <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
+                    <#select id ="role" name="角色"  >
+                    </#select>
+                    <#select id ="userId" name="用户">
+                    </#select>
+                            <#input id="name" name="作品名称 " />
+                            <#button btnCss="info" name="添加主料输入框"  icon="fa-check" clickFun="goAdd(1)"/>
+
                     <div id='oneleftbuttons'>
                         <div class='col-sm-12'>  <input  class='form-control main_ingredient'  placeholder="请添加主料 如肉"  type='text' underline='true'/></div> <div class='col-sm-12'> </div>
                     </div>
@@ -61,14 +46,22 @@
 
 
                 <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">作品类型<span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
+                        <div class="col-sm-9">
+                            <select onchange="typeChange($(this).val())" class="form-control" id="type"  name="type"  underline="true">
+                                <option value="1">图文</option>
+                                <option value="2">视频</option>
+                            </select >
+                        </div>
 
-                            <#input id="remark" name="备注" underline="true"/>
-                            <#select id="status" name="预约" underline="true">
+                    </div>
+                            <#input id="remark" name="备注"/>
+                            <#select id="status" name="预约" >
                                 <option value="0">未审查</option>
                                 <option value="1">通过</option>
                                 <option value="2">拒绝</option>
                             </#select>
-                            <!--<#input id="updateTime" name="更新时间" readonly="readonly" underline="true"/>-->
                     <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
                     <div id='onerightbuttons'>
                         <div class='col-sm-12'> <input  class='form-control main_ingredient'    placeholder="请添加主料单位 如一斤" type='text' underline='true'/></div> <div class='col-sm-12'> </div>
@@ -95,7 +88,7 @@
                         </div>
                     </fieldset>
 
-                    <div>
+                    <div id="imagesContent">
                         <fieldset  style="margin-top: 3%">
                             <legend>图集上传</legend>
                             <div class="putimg"	>
@@ -104,8 +97,8 @@
                         </fieldset>
                     </div>
 
-                <div>
-                    <fieldset  style="margin-top: 3%">
+                <div id="videoContent">
+                    <fieldset  style="margin-top: 3%;"  >
                         <legend>视频上传</legend>
                         <div class="putimg"	>
                             <input id="videoFile" name="videoFile" multiple type="file" data-show-caption="true">
@@ -131,12 +124,10 @@
         display: block;
         margin: 15px 0 5px 0;
     }
-    #get {
-        float: right;
-        margin: 25px auto 0;
-    }
 </style>
 <script>
+
+
     $(document).ready(function() {
         var dataSource = new kendo.data.DataSource({
             transport: {
@@ -154,7 +145,30 @@
             autoBind: false,
             dataSource: dataSource,
         });
+
+
+        $("#role").css("margin-bottom","2%");
+        $("#type").css("margin-bottom","2%");
+        $("#remark").css("margin-bottom","2%");
+        $("#userId").css("margin-bottom","2%");
+        $("#name").css("margin-bottom","2%");
+        $("#status").css("margin-bottom","2%");
+
+        $('#videoContent').hide();
     });
+
+
+
+
+    function typeChange (id) {
+        if(id==1){
+             $('#imagesContent').show();
+            $('#videoContent').hide();
+        }else {
+            $('#imagesContent').hide();
+            $('#videoContent').show();
+        }
+    }
 
 
     /*定义动态添加方法*/

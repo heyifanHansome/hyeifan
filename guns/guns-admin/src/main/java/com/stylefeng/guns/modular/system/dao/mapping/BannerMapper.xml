@@ -12,11 +12,13 @@
         <result column="tag_id" property="tagId" />
         <result column="item_id" property="item_id" />
         <result column="type" property="type" />
+        <result column="submit_time" property="submit_time" />
+        <result column="is_ok" property="is_ok" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, picture, object_name, href, tag_id, item_id, type
+        id, title, picture, object_name, href, tag_id, item_id, type, submit_time, is_ok
     </sql>
 
 </mapper>

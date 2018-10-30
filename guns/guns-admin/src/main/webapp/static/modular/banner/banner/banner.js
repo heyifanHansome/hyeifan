@@ -17,9 +17,10 @@ Banner.initColumn = function () {
             // {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
             {title: '标题', field: 'title', visible: true, align: 'center', valign: 'middle'},
         {title: '封面图片', field: 'picture',visible: true, align: 'center', valign: 'middle',class:"img"},
-            // {title: '阿里云OSS删除时用到的key', field: 'object_name', visible: true, align: 'center', valign: 'middle'},
-            // {title: '广告跳转的超链接', field: 'href', visible: true, align: 'center', valign: 'middle'},
-            {title: '标签', field: 'tagId', visible: true, align: 'center', valign: 'middle'}
+        // {title: '标签', field: 'tagId', visible: true, align: 'center', valign: 'middle'},
+        {title: '广告对象', field: 'item_id', visible: true, align: 'center', valign: 'middle'},
+        {title: '是否启用', field: 'is_ok', visible: true, align: 'center', valign: 'middle'},
+        {title: '提交时间', field: 'submit_time', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

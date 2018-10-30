@@ -110,6 +110,11 @@ public class ActivityController extends BaseController {
     public Object list(String condition) {
         List<Map<String, Object>> list = activityService.list(condition);
         for (Map<String, Object> activity : list) {
+            String[] tagIds=!Tool.isNull(activity.get("tag_id"))?activity.get("tag_id").toString().trim().split(","):new String[]{};
+            for (int i = 0; i < tagIds.length; i++) {
+                if("-1".equals(tagIds[i].trim()))activity.put("title",activity.get("title")+"<span style='color:red;'>(精)</span>");
+                if("-2".equals(tagIds[i].trim()))activity.put("title",activity.get("title")+"<span style='color:red;'>(热)</span>");
+            }
             City city=cityService.selectOne(new EntityWrapper<>(new City()).eq("id",activity.get("city_id")));
             activity.put("city_id",city!=null&&!Tool.isNull(city.getName())?city.getName():"<span style='color:red'>*所选城市不存在*</span>");
             if(!Tool.isNull(activity.get("source_id"))){

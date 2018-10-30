@@ -1,5 +1,7 @@
 package com.stylefeng.guns.modular.lijun.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class FSS {
 	/**
 	 * 登录验证码session里的字段名
@@ -185,9 +187,18 @@ public class FSS {
 	 * 首页跳转版块
 	 */
 	public static final String jump_page = "sys_jump_page";
-
-
-
+	/**
+	 * 点赞表
+	 */
+	public static final String praise = "sys_praise";
+	/**
+	 * 课堂学习(浏览)表---据何一凡说后期用来记录所有的浏览
+	 */
+	public static final String study_log="sys_study_log";
+	/**
+	 * 广告表
+	 */
+	public static final String banner="sys_banner";
 
 
 }

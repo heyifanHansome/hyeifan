@@ -42,4 +42,11 @@ public class test {
         System.err.println(information);
         System.err.println(list1);
     }
+    @Test
+    public void split(){
+        String ids="28, ";
+        List<String>idss=Arrays.asList(ids.split(","));
+        System.err.println(ids.split(",").length);
+        System.err.println(idss.size());
+    }
 }

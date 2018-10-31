@@ -1,0 +1,47 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                            <div id="contentZindex">
+                                <fieldset style="margin-top: 3%">
+                                    <h2>拜师学艺文本框</h2>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div id="editor" class="editorHeight" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+
+                            <div id="userZindex" >
+                                <fieldset style="margin-top: 3%">
+                                    <h2>收徒需知文本框</h2>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div id="userEdit" class="editorHeight" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RuleInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="RuleInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor.js"></script>
+<script type="text/javascript" src="${ctxPath}/static/js/plugins/wangEditor/wangEditor-fullscreen-plugin.js"></script>
+<link href="${ctxPath}/static/js/plugins/wangEditor/wangEditor-fullscreen-plugin.css" rel="stylesheet">
+<script src="${ctxPath}/static/modular/ruleModel/rule/rule_info.js"></script>
+@}

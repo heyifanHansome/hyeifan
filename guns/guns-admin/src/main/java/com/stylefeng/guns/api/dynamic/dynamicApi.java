@@ -6,13 +6,11 @@ import com.stylefeng.guns.modular.city.service.ICityService;
 import com.stylefeng.guns.modular.fans.service.IFansService;
 import com.stylefeng.guns.modular.follow.service.IFollowService;
 import com.stylefeng.guns.modular.picture.service.IPictureService;
-import com.stylefeng.guns.modular.system.dao.WorksMapper;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserApiService;
 import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
 import com.stylefeng.guns.modular.userTarget.service.IUserTargetService;
 import com.stylefeng.guns.modular.works.service.IWorksService;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.stylefeng.guns.modular.lijun.util.FSS.works;
 
 /**
  * Created by Heyifan Cotter on 2018/10/29.
@@ -138,25 +135,10 @@ public class dynamicApi {
 
             for (Works work : firstWorks) {
                 Map<String, Object> tempMap = new HashMap<>();
-//                pictureEntityWrapper.eq("base_id",work.getImages());
                 tempMap.put("id",work.getId());
                 tempMap.put("thumb",work.getThumb());
                 tempMap.put("type",work.getType());
 
-//                videoEntityWrapper.eq("base_id", work.getVideo());
-//                List<Picture> videos = pictureService.selectList(videoEntityWrapper);
-//                List<Picture> pictures = pictureService.selectList(pictureEntityWrapper);
-//
-//                if (videos.size() > 0) {
-//                    tempMap.put("videoId", work.getId());
-//                    tempMap.put("thumb", work.getThumb());
-//                    tempMap.put("type", "mp4");
-//                }
-//                if(pictures.size()>0){
-//                    tempMap.put("contentId", work.getId());
-//                    tempMap.put("thumb", work.getThumb());
-//                    tempMap.put("type", "picture");
-//                }
                 firstTempList.add(tempMap);
             }
 

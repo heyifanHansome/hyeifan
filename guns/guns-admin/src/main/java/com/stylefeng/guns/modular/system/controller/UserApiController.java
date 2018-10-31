@@ -7,9 +7,7 @@ import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.util.ToolUtil;
-import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.model.UserInfo;
-import com.stylefeng.guns.modular.system.warpper.UserWorksWarpper;
 import com.stylefeng.guns.modular.userInfo.service.IUserInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +34,7 @@ import java.util.Map;
 @RequestMapping("/userApi")
 public class UserApiController extends BaseController {
 
-    private String PREFIX = "/system/userLoginApi/";
+    private String PREFIX = "/system/userApi/";
 
     @Autowired
     private IUserApiService userApiService;
@@ -49,7 +47,7 @@ public class UserApiController extends BaseController {
      */
     @RequestMapping("")
     public String index() {
-        return PREFIX + "userLoginApi.html";
+        return PREFIX + "userApi.html";
     }
 
     /**
@@ -77,7 +75,6 @@ public class UserApiController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition) {
-
         List<Map<String, Object>> list  = userApiService.list(condition);
         return super.warpObject(new UserApiWarpper(list));
 

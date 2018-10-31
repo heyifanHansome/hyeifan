@@ -124,7 +124,7 @@ public class userApiInteface extends PublicMethod{
                 userInfo.setApiToken(apiToken);
                 userInfo.setCredits(0);
                 userInfo.setMoney(0);
-                userInfo.setLoginIp("192.168.0.0.1");
+                userInfo.setLoginIp("192.168.0.1");
                 userInfo.setCreateTime(new DateTime());
 //                userInfo.setRealName(userApi.getName());//实名认证后才有,根据这个字段是否为空判断用户进行了实名认证没
                 userInfo.setJoinClub(0);
@@ -454,7 +454,7 @@ public class userApiInteface extends PublicMethod{
         if(Tool.isNull(lat_y))return ResultMsg.fail("缺少参数","lat_y",null);
         try{
             //把加精的广告拿最多两条出来,备用(t1.id后加-ROUND(RAND())是为了让有时候一条广告都出不来的效果)
-            List<Map<String,Object>>banners=dao.selectBySQL("SELECT * FROM "+FSS.banner+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.banner+")-(SELECT MIN(id) FROM "+FSS.banner+"))+(SELECT MIN(id) FROM "+FSS.banner+")) AS id) AS t2 WHERE t1.id-ROUND(RAND()) >= t2.id and is_ok='1' and type='"+FSS.banner+"' and FIND_IN_SET('-1',tag_id) order by submit_time desc LIMIT 2");
+            List<Map<String,Object>>banners=dao.selectBySQL("SELECT * FROM "+FSS.banner+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.banner+")-(SELECT MIN(id) FROM "+FSS.banner+"))+(SELECT MIN(id) FROM "+FSS.banner+")) AS id) AS t2 WHERE t1.id-ROUND(RAND()) >= t2.id and is_ok='1' and type='"+FSS.banner+"' and FIND_IN_SET('-1',tag_id) order by submit_time desc LIMIT "+new Random().nextInt(2)+",2");
             for (int i = 0; i < banners.size(); i++) {
                 if(!Tool.isNull(banners.get(i).get("tag_id"))&&Arrays.asList(banners.get(i).get("tag_id").toString().trim().split(",")).contains("-2")){
                     banners.get(i).put("hot",true);
@@ -651,7 +651,7 @@ public class userApiInteface extends PublicMethod{
                         if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                             Map<String,Object>works=new HashMap<>();
                             works.put("type",FSS.works+"_user");
-                            repeatWoksFragment(workss);
+                            repeatWoksFragment(workss,0);
                             works.put("data",workss.get(0));
                             news.add(works);
                         }else{//如果没有,那就找这100人之外其他人加精的,最新的作品,找出来,取第一个
@@ -659,7 +659,7 @@ public class userApiInteface extends PublicMethod{
                             if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                                 Map<String,Object>works=new HashMap<>();
                                 works.put("type",FSS.works+"_user");
-                                repeatWoksFragment(workss);
+                                repeatWoksFragment(workss,0);
                                 works.put("data",workss.get(0));
                                 news.add(works);
                             }
@@ -683,7 +683,7 @@ public class userApiInteface extends PublicMethod{
                         if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                             Map<String,Object>works=new HashMap<>();
                             works.put("type",FSS.works+"_manager");
-                            repeatWoksFragment(workss);
+                            repeatWoksFragment(workss,0);
                             works.put("data",workss.get(0));
                             news.add(works);
                         }else{//如果没有,那就找这100家餐厅之外其他餐厅加精的,最新的作品,找出来,取第一个
@@ -691,7 +691,7 @@ public class userApiInteface extends PublicMethod{
                             if(!Tool.listIsNull(workss)){//如果有,就塞到news里
                                 Map<String,Object>works=new HashMap<>();
                                 works.put("type",FSS.works+"_manager");
-                                repeatWoksFragment(workss);
+                                repeatWoksFragment(workss,0);
                                 works.put("data",workss.get(0));
                                 news.add(works);
                             }
@@ -709,22 +709,22 @@ public class userApiInteface extends PublicMethod{
         }
     }
 
-    private void repeatWoksFragment(List<Map<String, Object>> workss) {
-        if(!Tool.isNull(workss.get(0).get("images"))){
-            List<String>thumbs=getALiOSSPircturesByBaseId(workss.get(0).get("images").toString());
-            workss.get(0).put("thumb",!Tool.listIsNull(thumbs)?thumbs.get(0):"");
+    private void repeatWoksFragment(List<Map<String, Object>> workss,int index) {
+        if(!Tool.isNull(workss.get(index).get("images"))){
+            List<String>thumbs=getALiOSSPircturesByBaseId(workss.get(index).get("images").toString());
+            workss.get(index).put("thumb",!Tool.listIsNull(thumbs)?thumbs.get(index):"");
         }else{
-            workss.get(0).put("thumb","");
+            workss.get(index).put("thumb","");
         }
-        if(!Tool.isNull(workss.get(0).get("tag_id"))&&Arrays.asList(workss.get(0).get("tag_id").toString().trim().split(",")).contains("-2")){
-            workss.get(0).put("hot",true);
+        if(!Tool.isNull(workss.get(index).get("tag_id"))&&Arrays.asList(workss.get(index).get("tag_id").toString().trim().split(",")).contains("-2")){
+            workss.get(index).put("hot",true);
         }else{
-            workss.get(0).put("hot",false);
+            workss.get(index).put("hot",false);
         }
-        if(!Tool.isNull(workss.get(0).get("role"))&&!Tool.isNull(workss.get(0).get("user_id"))&&("manager".equals(workss.get(0).get("role"))||"userapi".equals(workss.get(0).get("role")))){
-            List<Map<String,Object>>users=dao.selectBySQL("select id"+("userapi".equals(workss.get(0).get("role"))?",name":",restaurant")+("userapi".equals(workss.get(0).get("role"))?",avatar":",thumb")+("manager".equals(workss.get(0).get("role"))?",city_id":"")+" from "+("userapi".equals(workss.get(0).get("role"))?FSS.user_api:FSS.restaurant_info_manager)+" where id="+workss.get(0).get("user_id"));
+        if(!Tool.isNull(workss.get(index).get("role"))&&!Tool.isNull(workss.get(index).get("user_id"))&&("manager".equals(workss.get(index).get("role"))||"userapi".equals(workss.get(index).get("role")))){
+            List<Map<String,Object>>users=dao.selectBySQL("select id"+("userapi".equals(workss.get(index).get("role"))?",name":",restaurant")+("userapi".equals(workss.get(index).get("role"))?",avatar":",thumb")+("manager".equals(workss.get(index).get("role"))?",city_id":"")+" from "+("userapi".equals(workss.get(index).get("role"))?FSS.user_api:FSS.restaurant_info_manager)+" where id="+workss.get(index).get("user_id"));
             String cityName="";
-            if("manager".equals(workss.get(0).get("role"))){
+            if("manager".equals(workss.get(index).get("role"))){
 //                String cityName=getCityNameByCityId();
                 cityName=!Tool.listIsNull(users)&&!Tool.isNull(users.get(0).get("city_id"))?getCityNameByCityId(users.get(0).get("city_id")):"";
                 if(!Tool.listIsNull(users)){
@@ -732,11 +732,11 @@ public class userApiInteface extends PublicMethod{
                     Tool.removeMapParmeByKey(users.get(0),new String[]{"city_id"});
                 }
             }
-            workss.get(0).put("user",!Tool.listIsNull(users)?users.get(0):new HashMap<String,Object>());
+            workss.get(index).put("user",!Tool.listIsNull(users)?users.get(0):new HashMap<String,Object>());
         }else{
-            workss.get(0).put("user",new HashMap<String,Object>());
+            workss.get(index).put("user",new HashMap<String,Object>());
         }
-        Tool.removeMapParmeByKey(workss.get(0),new String[]{"seasoning","images","practice","role","create_time","supplementary_material","remark","video","main_ingredient","update_time"
+        Tool.removeMapParmeByKey(workss.get(index),new String[]{"seasoning","images","practice","role","create_time","supplementary_material","remark","video","main_ingredient","update_time"
         ,"status","tag_id","column_id","user_id"});
     }
 
@@ -754,4 +754,126 @@ public class userApiInteface extends PublicMethod{
         }
     }
 
+    @ApiOperation(value = "首页→最新资讯界面接口",notes = "该接口返回data分为两个字段:hasNext→是否还有可加载内容(true/false前端可根据这个字段判断是否下次继续上划加载),最新内容→news,加精内容(news)是个数组,长度最多为11,数组内对象随机顺序,只需要拿来循环,根据数组内每个对象的type字段(必定会有),来排列每个对象的data(必定会有)字段.另:数组内每个对象可根据type字段来建立,每个对象即使遇到空值或者空数组,我也会填充成空字符串或者空数组")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value="页面号,第几页的意思,从0开始。至于每页多少条,我已经固定死了,每页10条内容,另,如果满足10条内容,就随机添加或者不添加一条广告",required = true)
+    })
+    @ApiResponses(@ApiResponse(code=200,message="data:{\n" +
+            "&nbsp;" + "news:[请参照/userApi/indexPartStatic也就是首页→加精界面接口返回值里data里news字段格式],\n" +
+            "&nbsp;" + "hasNext:true或者false,是否还有下一页内容\n" +
+            "}"))
+    @RequestMapping(value="indexPartDynamic",method =  RequestMethod.POST)
+    @ResponseBody
+    public ResultMsg indexPartDynamic(String pageNum){
+        try{
+            if(Tool.isNull(pageNum))return ResultMsg.fail("缺少参数","pageNum",null);
+            List<Map<String,Object>>news=new ArrayList<>();
+            //1条活动
+            List<Map<String,Object>>activitys=dao.selectBySQL("select * from "+FSS.activity+" where is_ok='1' ORDER BY update_time desc,create_time desc limit "+(Integer.valueOf(pageNum)*1)+",1");
+            for (int i = 0; i < activitys.size(); i++) {
+                Map<String,Object>activity=new HashMap<>();
+                activity.put("type",FSS.activity);
+                //往活动里面塞报名用户[Map集合],最多5个用户
+                List<Map<String,Object>>activityApplys=dao.selectBySQL("select * from "+FSS.activity_apply+" where activity_id='"+activitys.get(i).get("id")+"'");
+                List<Map<String,Object>>activityUserApis=new ArrayList<>();
+                if(!Tool.listIsNull(activityApplys)&&!Tool.isNull(activityApplys.get(0).get("user_api_id"))){
+                    List<String>user_api_ids=Arrays.asList(activityApplys.get(0).get("user_api_id").toString().split(","));
+                    Collections.reverse(user_api_ids);//select出来的用户顺序是正序的,放页面上需要倒过来最新的5个或少于5个的用户
+                    activityUserApis=dao.selectBySQL("select * from "+FSS.user_api+" where id in("+StringUtils.join(user_api_ids,",")+") order by FIELD(id,"+StringUtils.join(user_api_ids,",")+") limit 0,5");
+                    for (int i1 = 0; i1 < activityUserApis.size(); i1++) {
+                        Tool.removeMapParmeByKey(activityUserApis.get(i1),new String[]{"createtime","phone","sex","object_name","name"});
+                    }
+                }
+                activitys.get(i).put("applyUsers",activityUserApis);
+                activitys.get(i).put("thumb",Tool.mapGetKeyNotEmpty(activitys.get(i),"thumb")&&activitys.get(i).get("thumb").toString().startsWith("[")&&activitys.get(i).get("thumb").toString().endsWith("]")&&!JSONArray.fromObject(activitys.get(i).get("thumb").toString()).isEmpty()?JSONObject.fromObject(JSONArray.fromObject(activitys.get(i).get("thumb").toString()).get(i)).get("url"):"");
+                if(!Tool.isNull(activitys.get(i).get("tag_id"))&&Arrays.asList(activitys.get(i).get("tag_id").toString().trim().split(",")).contains("-2")){
+                    activitys.get(i).put("hot",true);
+                }else{
+                    activitys.get(i).put("hot",false);
+                }
+                Tool.removeMapParmeByKey(activitys.get(i),new String[]{"create_time","content","update_time","publish_ip","tag_id","source_id","description"
+                        ,"is_ok","apply_num","city_id","uid","video","video_object_name","end_time","start_time"});
+                activity.put("data",activitys.get(i));
+                news.add(activity);
+            }
+            //2条作品
+            List<Map<String,Object>>workss=dao.selectBySQL("select * from "+FSS.works+" where status='1' ORDER BY update_time desc,create_time desc limit "+(Integer.valueOf(pageNum)*2)+",2");
+            for (int i = 0; i < workss.size(); i++) {
+                if(!Tool.isNull(workss.get(i).get("role"))&&!Tool.isNull(workss.get(i).get("user_id"))&&("manager".equals(workss.get(i).get("role"))||"userapi".equals(workss.get(i).get("role")))){
+                    Map<String,Object>works=new HashMap<>();
+                    works.put("type",FSS.works+("manager".equals(workss.get(i).get("role"))?"_manager":"_user"));
+                    repeatWoksFragment(workss,i);
+                    works.put("data",workss.get(i));
+                    news.add(works);
+                }
+            }
+            // 1条课堂
+            List<Map<String,Object>>classrooms=dao.selectBySQL("select concat('"+FSS.classroom+"') as type,"+FSS.classroom+".* from "+FSS.classroom+" ORDER BY update_time desc,create_time desc limit "+(Integer.valueOf(pageNum)*1)+",1");
+            for (int i = 0; i < classrooms.size(); i++) {
+                Map<String,Object>classroom=new HashMap<>();
+                classroom.put("type",FSS.classroom);
+                if(!Tool.isNull(classrooms.get(i).get("column_id"))){
+                    classrooms.get(i).put("column_id",getColumnNameByColumnId(classrooms.get(i).get("column_id")));
+                }
+                if(!Tool.isNull(classrooms.get(i).get("tag_id"))&&Arrays.asList(classrooms.get(i).get("tag_id").toString().trim().split(",")).contains("-2")){
+                    classrooms.get(i).put("hot",true);
+                }else{
+                    classrooms.get(i).put("hot",false);
+                }
+                Tool.removeMapParmeByKey(classrooms.get(i),new String[]{"images","create_time","description","video","sort","coverphoto","content","start_time","update_time","shor_title","shor_title","user_description","city_id","posters_title","tag_id"});
+                classroom.put("data",classrooms.get(i));
+                news.add(classroom);
+            }
+            // 6条资讯,全部按最新修改时间→提交时间排序
+            List<Map<String,Object>>informations=dao.selectBySQL("select concat('"+FSS.information+"') as type,"+FSS.information+".* from "+FSS.information+" ORDER BY update_time desc,create_time desc limit "+(Integer.valueOf(pageNum)*6)+",6");
+            for (int i = 0; i < informations.size(); i++) {
+                if(!Tool.isNull(informations.get(i).get("column_id"))){
+                    informations.get(i).put("column_id",getColumnNameByColumnId(informations.get(i).get("column_id")));
+                }
+                if(!Tool.isNull(informations.get(i).get("tag_id"))&&informations.get(i).get("tag_id").toString().contains("-2")){
+                    informations.get(i).put("hot",true);
+                }else{
+                    informations.get(i).put("hot",false);
+                }
+                Tool.removeMapParmeByKey(informations.get(i),new String[]{"create_time","content","uid","update_time","publish_ip","source_id","city_id","images","tag_id"});
+                Map<String,Object>information=new HashMap<>();
+                information.put("type", FSS.information);
+                information.put("data",informations.get(i));
+                news.add(information);
+            }
+            Map<String,Object>result=new HashMap<>();
+            result.put("hasNext",!Tool.listIsNull(news)&&news.size()>9);
+            //1条广告(上面内容加起来一共大于9条,就加一条广告进去,并且要排除掉首页接口一已经用过的两条广告)
+            if(!Tool.listIsNull(news)&&news.size()>9){
+                List<Map<String,Object>>banners=dao.selectBySQL("SELECT * FROM "+FSS.banner+" AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM "+FSS.banner+")-(SELECT MIN(id) FROM "+FSS.banner+"))+(SELECT MIN(id) FROM "+FSS.banner+")) AS id) AS t2 WHERE t1.id-ROUND(RAND()) >= t2.id and is_ok='1' and type='"+FSS.banner+"' and FIND_IN_SET('-1',tag_id) order by submit_time desc LIMIT "+(Integer.valueOf(pageNum)*1)+",1");
+                for (int i = 0; i < banners.size(); i++) {
+                    if(!Tool.isNull(banners.get(i).get("tag_id"))&&Arrays.asList(banners.get(i).get("tag_id").toString().trim().split(",")).contains("-2")){
+                        banners.get(i).put("hot",true);
+                    }else{
+                        banners.get(i).put("hot",false);
+                    }
+                    List<Map<String,Object>>tags=dao.selectBySQL("select * from "+FSS.tag+" where id in("+banners.get(i).get("tag_id")+") and id not in(-1,-2)");
+                    List<String>tagNames=new ArrayList<>();
+                    for (Map<String, Object> tag : tags) {
+                        if(!Tool.isNull(tag.get("name")))tagNames.add(tag.get("name").toString());
+                    }
+                    banners.get(i).put("tagNames",tagNames);
+                    Tool.removeMapParmeByKey(banners.get(i),new String[]{"item_id","submit_time","object_name","id","type","is_ok","tag_id"});
+                    Map<String,Object>banner=new HashMap<>();
+                    banner.put("type",FSS.banner);
+                    banner.put("data",banners.get(i));
+                    news.add(banner);
+                }
+            }
+            Collections.shuffle(news);
+            result.put("news",news);
+            return ResultMsg.success("查询成功",null,result);
+        }catch (NumberFormatException nume){
+            nume.printStackTrace();
+            return  ResultMsg.fail("系统错误","页码数不是一个数字:\n"+ notEmptySQL().toString(),null);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  ResultMsg.fail("系统错误",e.toString(),e);
+        }
+    }
 }

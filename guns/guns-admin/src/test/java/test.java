@@ -49,4 +49,10 @@ public class test {
         System.err.println(ids.split(",").length);
         System.err.println(idss.size());
     }
+
+    @Test
+    public void randomIntZeroOrOne(){
+        for (int i=0;i<20;i++)
+        System.err.println(new Random().nextInt(2));
+    }
 }

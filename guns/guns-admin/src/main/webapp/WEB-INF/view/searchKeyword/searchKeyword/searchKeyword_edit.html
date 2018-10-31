@@ -1,0 +1,26 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-12">
+                            <input id="id" name="" value="${item.id}" type="hidden"/>
+                            <#input id="content" name="关键词内容" value="${item.content}"  underline="true"/>
+                            <#input id="hitNum" name="命中次数" value="${item.hitNum}" underline="true" readonly="readonly"/>
+                            <#input id="orders" name="排序值" value="${item.orders}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="SearchKeywordInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="SearchKeywordInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/searchKeyword/searchKeyword/searchKeyword_info.js"></script>
+@}

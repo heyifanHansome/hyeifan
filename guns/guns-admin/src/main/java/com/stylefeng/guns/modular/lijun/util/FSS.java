@@ -19,6 +19,8 @@ public class FSS {
 	 */
 	public static final String FILEPATHFILE = "D:/zhyk/uploadFiles/file/";			//文件上传路径
 //	public static final String FILEPATHFILE = "/lijun/zhyk/uploadFiles/file/";			//文件上传路径
+	public static final String SHARE_IMG_MODEL="E:/项目文档、/星厨餐帮/素材/share_img_model.jpg"; //本地环境分享图片模型路径
+//	public static final String SHARE_IMG_MODEL="share_img_model.jpg"; //服务器liunx环境分享图片模型路径
 	/**
 	 * 活动管理表
 	 */

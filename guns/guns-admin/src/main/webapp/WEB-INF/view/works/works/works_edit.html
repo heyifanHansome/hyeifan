@@ -6,10 +6,10 @@
 
                       <input id="images" name="图集Ids" value="${item.images}" type="hidden"/>
 
+
                       <input id="video" name="视频Ids" value="${item.video}" type="hidden"/>
 
                      <input id="practice" name="做法" value='${item.practice}' type="hidden"/>
-
             <#avatar_lijun id="thumb" name="缩略图" underline="true" avatarImg="${item.thumb}" value="${item.thumb}"/>
 
             <div id="example" role="application" style="margin-bottom: 3%">
@@ -17,8 +17,6 @@
                     <h2>请选择活动标签</h2>
                     <select id="tagId" multiple="multiple" data-placeholder="请选择活动标签">
                     </select>
-
-                    <!--<button class="k-button" id="get">Send Invitation</button>-->
                 </div>
 
                 <style>
@@ -26,24 +24,14 @@
                         display: block;
                         margin: 15px 0 5px 0;
                     }
-                    #get {
-                        float: right;
-                        margin: 25px auto 0;
-                    }
                 </style>
-            </div>
-            <div class="col-sm-12">
-                <#select name="角色" id="role"/>
             </div>
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="name" name="作品名称 " value="${item.name}" underline="true"/>
-                            <#select id="status" name="预约" underline="true">
-                            <option value="0">未审查</option>
-                            <option value="1">通过</option>
-                            <option value="2">拒绝</option>
-                            </#select>
-                            <#input id="updateTime" name="更新时间" value="${item.updateTime}" readonly="readonly" underline="true"/>
+                    <#input id="name" name="作品名称 " value="${item.name}" />
+                    <#select id ="userId" name="用户">
+                  </#select>
+                <#input id="remark" name="备注" value="${item.remark}" />
                               <#button btnCss="info" name="添加主料输入框"   icon="fa-check" clickFun="goAdd(1)"/>
                     <div id='oneleftbuttons'>
                     </div>
@@ -55,28 +43,24 @@
                     </div>
                 </div>
             <div class="col-sm-6">
-                <#select id="userId" name="用户名称" underline="true"/>
-                <script>
-                    $('#role').change(function () {
-                        if($(this).val()=="manager"||$(this).val()=="userapi"){
-                            $.post(Feng.ctxPath+"/works/getUserapiOrManagerByRole",{role:$(this).val()},function (data) {
-                                $("#userId").empty();
-                                for (var i = 0; i < data.length; i++) {
-                                    var jsonObj = data[i];
-                                    $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
-                                }
-                                $('#userId').val('${item.userId}');
-                            })
-                        }
-                    });
-                    $('#role').append('<option value="manager">餐厅</option>').append('<option value="userapi">用户</option>').val('${item.role}').change();
-                </script>
-                <#input id="x" name="栏目类型 " value="活动" readonly="readonly" underline="true"/>
-                            <!--<#select id="columnId" name="栏目类型" readonly="readonly" underline="true">-->
-                            <!--</#select>-->
-                            <!--<#input id="practice" name="做法 " value="${item.practice}" underline="true"/>-->
-                            <#input id="remark" name="备注" value="${item.remark}" underline="true"/>
-                            <!--<#input id="createTime" name="创建时间" value="${item.createTime}"   readonly="readonly"  underline="true"/>-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">作品类型<span style="color:red ; font-size: 20px; vertical-align: middle">*</span></label>
+                    <div class="col-sm-9">
+                        <select onchange="typeChange($(this).val())" class="form-control" id="type"  name="type"  underline="true" readonly="readonly">
+                            <option value="1">图文</option>
+                            <option value="2">视频</option>
+                        </select >
+                    </div>
+
+                </div>
+                        <#select id="status" name="预约" >
+                            <option value="0">未审查</option>
+                            <option value="1">通过</option>
+                            <option value="2">拒绝</option>
+                        </#select>
+                        <#select id ="role" name="角色"  >
+                        </#select>
+
                     <#button btnCss="danger" name="取消添加主料输入框" icon="fa-eraser" clickFun="goDel(1)"/>
                     <div id='onerightbuttons'>
                     </div>
@@ -102,7 +86,7 @@
             </fieldset>
 
 
-            <div>
+            <div id="imagesContent">
                 <fieldset  style="margin-top: 3%">
                     <legend>图集上传</legend>
                     <div class="putimg"	>
@@ -111,8 +95,7 @@
                 </fieldset>
             </div>
 
-
-            <div>
+            <div id="videoContent">
                 <fieldset  style="margin-top: 3%">
                     <legend>视频上传</legend>
                     <div class="putimg"	>
@@ -122,12 +105,6 @@
             </div>
 
             <div id="hyfVideo">
-                <!--<div class="row btn-group-m-t">-->
-                    <!--<div class="col-sm-10">-->
-                        <!--<#button btnCss="info" name="审核成功" id="checkVideo" icon="fa-check" clickFun="WorksInfoDlg.checkVideo()"/>-->
-                        <!--<#button btnCss="danger" name="删除当前视频" id="deleteVideo" icon="fa-eraser" clickFun="WorksInfoDlg.deleteVideo()"/>-->
-                    <!--</div>-->
-                <!--</div>-->
             </div>
 
 
@@ -148,8 +125,36 @@
 <script src="${ctxPath}/static/modular/works/works/works_info.js"></script>
 <script>
 var heyifan;
-
+thisType = ${item.type};
     $(document).ready(function () {
+
+        //联动
+        $('#role').change(function () {
+            if($(this).val()=="manager"||$(this).val()=="userapi"){
+                $.post(Feng.ctxPath+"/works/getUserapiOrManagerByRole",{role:$(this).val()},function (data) {
+                    $("#userId").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var jsonObj = data[i];
+                        $("#userId").append('<option value="' + jsonObj.id + '">' + jsonObj.name + '</option>');
+                    }
+                })
+            }
+        });
+        $('#role').append('<option value="">--请选择--</option>').append('<option value="manager">餐厅</option>').append('<option value="userapi">用户</option>');
+
+        $("#role").val("${item.role}").change();
+        $("#userId").val("${item.userId}");
+        $("#type").val(thisType);
+        $('#imagesContent').hide();
+        $('#videoContent').hide();
+        if(thisType==1){
+            $('#imagesContent').show();
+            $('#videoContent').hide();
+        }else {
+            $('#imagesContent').hide();
+            $('#videoContent').show();
+        }
+
         multArrays =${multArr} ;
         var dataSource = new kendo.data.DataSource({
             transport: {
@@ -168,8 +173,6 @@ var heyifan;
             dataSource: dataSource,
             value: multArrays
         });
-
-
 
              $('#status').val(${item.status});
              $('#columnId').val(${item.columnId})
